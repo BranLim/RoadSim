@@ -40,7 +40,7 @@ public class Vector3fTest {
     }
 
     @Test
-    void givenVectorOf2x2y2z_whenScallingXBy2_thenNewVectorShouldBe4x2y2z() {
+    void givenVectorOf2x2y2z_whenScalingXBy2_thenNewVectorShouldBe4x2y2z() {
         Vector3f vector = new Vector3f(2.0f, 2.0f, 2.0f);
         Vector3f newVector = new Vector3f(vector).scaleX(2.0f);
 
