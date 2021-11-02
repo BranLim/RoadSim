@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Destroy window instead of cursor.">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/RoadSimApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/RoadSimApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/components/Vector3f.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/KeyListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/KeyListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/MouseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/MouseListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/layhill/roadsim/components/Vector3fTest.java" beforeDir="false" />
+    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Remove unused files and rename folder.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +107,7 @@
       <workItem from="1635610945902" duration="113000" />
       <workItem from="1635611119352" duration="2569000" />
       <workItem from="1635654945175" duration="5535000" />
-      <workItem from="1635855017021" duration="5684000" />
+      <workItem from="1635855017021" duration="5799000" />
     </task>
     <task id="LOCAL-00001" summary="add project files">
       <created>1635611219056</created>
@@ -169,7 +165,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635864902236</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Remove unused files and rename folder.">
+      <created>1635866332778</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1635866332778</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -208,6 +211,7 @@
     <MESSAGE value="Fixed window not showing and implement clean up code." />
     <MESSAGE value="Implement input callback registration and input handling." />
     <MESSAGE value="Destroy window instead of cursor." />
-    <option name="LAST_COMMIT_MESSAGE" value="Destroy window instead of cursor." />
+    <MESSAGE value="Remove unused files and rename folder." />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove unused files and rename folder." />
   </component>
 </project>

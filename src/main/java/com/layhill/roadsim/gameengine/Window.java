@@ -34,12 +34,7 @@ public class Window {
     public void run() {
         init();
         loop();
-
-        glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
-
-        glfwTerminate();
-        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+        cleanup();
     }
 
     private void init() {
@@ -96,5 +91,13 @@ public class Window {
             glfwSwapBuffers(glfwWindow);
             glfwPollEvents();
         }
+    }
+
+    private void cleanup() {
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+
+        glfwTerminate();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 }
