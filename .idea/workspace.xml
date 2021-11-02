@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Fixed window not showing and implement clean up code.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/KeyListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/MouseListener.java" afterDir="false" />
+    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Implement input callback registration and input handling.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/RoadSimApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/RoadSimApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/Window.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -110,7 +107,7 @@
       <workItem from="1635610945902" duration="113000" />
       <workItem from="1635611119352" duration="2569000" />
       <workItem from="1635654945175" duration="5535000" />
-      <workItem from="1635855017021" duration="3872000" />
+      <workItem from="1635855017021" duration="4989000" />
     </task>
     <task id="LOCAL-00001" summary="add project files">
       <created>1635611219056</created>
@@ -154,7 +151,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635860736936</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Implement input callback registration and input handling.">
+      <created>1635863829613</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1635863829613</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -191,6 +195,7 @@
     <MESSAGE value="Remove files in .idea/libraries" />
     <MESSAGE value="Create OpenGL window" />
     <MESSAGE value="Fixed window not showing and implement clean up code." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed window not showing and implement clean up code." />
+    <MESSAGE value="Implement input callback registration and input handling." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement input callback registration and input handling." />
   </component>
 </project>

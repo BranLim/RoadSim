@@ -3,6 +3,8 @@ package com.layhill.roadsim.layeng;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
+import java.util.Objects;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -34,10 +36,10 @@ public class Window {
         loop();
 
         glfwFreeCallbacks(glfwWindow);
-        glfwDestroyCursor(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
 
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     private void init() {
@@ -79,13 +81,12 @@ public class Window {
 
     private void loop() {
         while (!glfwWindowShouldClose(glfwWindow)) {
-            glfwPollEvents();
 
             glClearColor(0.80f, 0.80f, 0.80f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
-                System.out.println("Space key is pressed");
+            if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
+                glfwSetWindowShouldClose(glfwWindow,true);
             }
 
             if (MouseListener.isMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
@@ -93,7 +94,7 @@ public class Window {
             }
 
             glfwSwapBuffers(glfwWindow);
+            glfwPollEvents();
         }
-
     }
 }
