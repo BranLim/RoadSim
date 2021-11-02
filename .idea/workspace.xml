@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Remove files in .idea/libraries">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/Window.java" afterDir="false" />
+    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Create OpenGL window">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/RoadSimApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/RoadSimApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/layeng/Window.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +77,7 @@
     <configuration name="RoadSimApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.layhill.roadsim.RoadSimApp" />
       <module name="RoadSimulator" />
-      <option name="PROGRAM_PARAMETERS" value="-XstartOnFirstThread" />
+      <option name="VM_PARAMETERS" value="-XstartOnFirstThread" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.layhill.roadsim.*" />
@@ -107,7 +106,8 @@
       <workItem from="1635610829611" duration="39000" />
       <workItem from="1635610945902" duration="113000" />
       <workItem from="1635611119352" duration="2569000" />
-      <workItem from="1635654945175" duration="4017000" />
+      <workItem from="1635654945175" duration="5535000" />
+      <workItem from="1635855017021" duration="985000" />
     </task>
     <task id="LOCAL-00001" summary="add project files">
       <created>1635611219056</created>
@@ -137,7 +137,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635655217124</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Create OpenGL window">
+      <created>1635672606233</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1635672606233</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,6 +179,7 @@
     <MESSAGE value="Add project files" />
     <MESSAGE value="Add game libraries" />
     <MESSAGE value="Remove files in .idea/libraries" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove files in .idea/libraries" />
+    <MESSAGE value="Create OpenGL window" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create OpenGL window" />
   </component>
 </project>
