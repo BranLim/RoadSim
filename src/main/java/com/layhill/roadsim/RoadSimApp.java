@@ -5,7 +5,7 @@ import com.layhill.roadsim.layeng.Window;
 public class RoadSimApp {
 
     public static void main(String... args){
-        Window window = Window.get();
+        Window window = Window.getInstance();
         window.run();
     }
 

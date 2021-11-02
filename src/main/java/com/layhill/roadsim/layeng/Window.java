@@ -25,7 +25,7 @@ public class Window {
         private static final Window window = new Window();
     }
 
-    public static Window get() {
+    public static Window getInstance() {
         return WindowHolder.window;
     }
 
@@ -61,6 +61,8 @@ public class Window {
             throw new IllegalStateException("Cannot create GLFW window");
         }
 
+        registerInputCallback();
+
         glfwMakeContextCurrent(glfwWindow);
         glfwSwapInterval(1);
         glfwShowWindow(glfwWindow);
@@ -68,11 +70,27 @@ public class Window {
         GL.createCapabilities();
     }
 
+    private void registerInputCallback() {
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePositionChangedCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
+    }
+
     private void loop() {
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
-            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+            glClearColor(0.80f, 0.80f, 0.80f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
+
+            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
+                System.out.println("Space key is pressed");
+            }
+
+            if (MouseListener.isMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
+                System.out.println("Mouse button 1 is pressed");
+            }
 
             glfwSwapBuffers(glfwWindow);
         }
