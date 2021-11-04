@@ -18,6 +18,7 @@ public class Window {
     private String title;
     private long glfwWindow;
     private Time time;
+    private Scene currentScene;
 
     private Window() {
         width = 1920;
@@ -39,8 +40,21 @@ public class Window {
         cleanup();
     }
 
+    public void changeScene(int sceneSelection) {
+        switch (sceneSelection) {
+            case 0:
+                currentScene = new MainMenuScene();
+                currentScene.init();
+                break;
+            case 1:
+                currentScene = new GameScene();
+                currentScene.init();
+        }
+    }
+
     private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
+        time = Time.getInstance();
 
         if (!glfwInit()) {
             throw new IllegalStateException("Cannot initialise GLFW");
@@ -54,6 +68,8 @@ public class Window {
         glfwShowWindow(glfwWindow);
 
         GL.createCapabilities();
+
+        changeScene(0);
     }
 
     private long createPlatformSpecificWindow() {
@@ -83,26 +99,25 @@ public class Window {
     }
 
     private void loop() {
-        time = Time.getInstance();
+        time.tick();
         while (!glfwWindowShouldClose(glfwWindow)) {
-
             glClearColor(0.80f, 0.80f, 0.80f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
             if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
-            if (time.getCurrentTime() > 0 ){
+            if (time.getCurrentTime() > 0) {
                 System.out.println(String.format("Delta time: %f", time.getDeltaTime()));
-                System.out.println(String.format("Framerate: %f", 1.0f/time.getDeltaTime()));
+                System.out.println(String.format("Framerate: %f", 1.0f / time.getDeltaTime()));
             }
-            if (MouseListener.isMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
-                System.out.println("Mouse button 1 is pressed");
+            if (currentScene != null) {
+                currentScene.update(time.getDeltaTime());
             }
 
             glfwSwapBuffers(glfwWindow);
             glfwPollEvents();
-            time.mark();
+            time.tick();
         }
     }
 

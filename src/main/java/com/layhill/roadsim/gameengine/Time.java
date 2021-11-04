@@ -26,7 +26,7 @@ public class Time {
         return currentTime;
     }
 
-    public void mark() {
+    public void tick() {
         beginTime = currentTime;
         currentTime = System.nanoTime() * 1.0E-9;
         deltaTime = currentTime - beginTime;

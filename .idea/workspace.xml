@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Remove unused files and rename folder.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Scene.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Time.java" afterDir="false" />
+    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Refactor code.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/GameScene.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/MainMenuScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Scene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Time.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Time.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -68,8 +70,12 @@
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.layhill.roadsim.gameengine" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/test/java" />
       <recent name="$PROJECT_DIR$/src/main/java" />
@@ -111,7 +117,8 @@
       <workItem from="1635610945902" duration="113000" />
       <workItem from="1635611119352" duration="2569000" />
       <workItem from="1635654945175" duration="5535000" />
-      <workItem from="1635855017021" duration="5799000" />
+      <workItem from="1635855017021" duration="6923000" />
+      <workItem from="1635955978005" duration="7348000" />
     </task>
     <task id="LOCAL-00001" summary="add project files">
       <created>1635611219056</created>
@@ -176,7 +183,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635866332778</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Refactor code.">
+      <created>1635866438739</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1635866438739</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -216,6 +230,23 @@
     <MESSAGE value="Implement input callback registration and input handling." />
     <MESSAGE value="Destroy window instead of cursor." />
     <MESSAGE value="Remove unused files and rename folder." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove unused files and rename folder." />
+    <MESSAGE value="Refactor code." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor code." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Time.java</url>
+          <line>34</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/MainMenuScene.java</url>
+          <line>16</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
