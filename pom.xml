@@ -14,6 +14,7 @@
         <lwjgl.version>3.2.3</lwjgl.version>
         <joml.version>1.10.2</joml.version>
         <lwjgl.natives>natives-macos</lwjgl.natives>
+        <slf4j.version>1.7.32</slf4j.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -95,7 +96,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
