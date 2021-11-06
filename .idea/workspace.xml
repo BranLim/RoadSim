@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Add basic scene changing logic">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/Renderer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/shaders/default.glsl" afterDir="false" />
+    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Add default shader to render a box">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/GameScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/GameScene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Scene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/shaders/default.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/shaders/default.glsl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +116,7 @@
       <workItem from="1635611119352" duration="2569000" />
       <workItem from="1635654945175" duration="5535000" />
       <workItem from="1635855017021" duration="6923000" />
-      <workItem from="1635955978005" duration="9893000" />
+      <workItem from="1635955978005" duration="11744000" />
     </task>
     <task id="LOCAL-00001" summary="add project files">
       <created>1635611219056</created>
@@ -196,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636044358222</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Add default shader to render a box">
+      <created>1636195668854</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1636195668854</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -238,7 +244,8 @@
     <MESSAGE value="Remove unused files and rename folder." />
     <MESSAGE value="Refactor code." />
     <MESSAGE value="Add basic scene changing logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add basic scene changing logic" />
+    <MESSAGE value="Add default shader to render a box" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add default shader to render a box" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

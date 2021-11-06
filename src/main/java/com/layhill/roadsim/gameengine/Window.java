@@ -42,13 +42,14 @@ public class Window {
 
     public void changeScene(int sceneSelection) {
         switch (sceneSelection) {
-            case 0:
+            case 0 -> {
                 currentScene = new MainMenuScene();
                 currentScene.init();
-                break;
-            case 1:
+            }
+            case 1 -> {
                 currentScene = new GameScene();
                 currentScene.init();
+            }
         }
     }
 
@@ -69,7 +70,7 @@ public class Window {
 
         GL.createCapabilities();
 
-        changeScene(0);
+        changeScene(1);
     }
 
     private long createPlatformSpecificWindow() {
@@ -108,8 +109,8 @@ public class Window {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
             if (time.getCurrentTime() > 0) {
-                System.out.println(String.format("Delta time: %f", time.getDeltaTime()));
-                System.out.println(String.format("Framerate: %f", 1.0f / time.getDeltaTime()));
+                System.out.printf("Delta time: %f%n", time.getDeltaTime());
+                System.out.printf("Framerate: %f%n", 1.0f / time.getDeltaTime());
             }
             if (currentScene != null) {
                 currentScene.update(time.getDeltaTime());
