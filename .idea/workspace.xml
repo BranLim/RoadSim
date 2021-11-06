@@ -5,10 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Add default shader to render a box">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/Shader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/ShaderFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/ShaderProgram.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/assets/shaders/simplefragment.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RoadSimulator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/RoadSimulator.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/GameScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/GameScene.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/shaders/default.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/shaders/default.glsl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/Renderer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/shaders/default.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/shaders/simplevertex.glsl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +124,7 @@
       <workItem from="1635611119352" duration="2569000" />
       <workItem from="1635654945175" duration="5535000" />
       <workItem from="1635855017021" duration="6923000" />
-      <workItem from="1635955978005" duration="11744000" />
+      <workItem from="1635955978005" duration="21028000" />
     </task>
     <task id="LOCAL-00001" summary="add project files">
       <created>1635611219056</created>
@@ -202,7 +210,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636195668854</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Add default shader to render a box">
+      <created>1636201327071</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1636201327071</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

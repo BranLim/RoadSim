@@ -1,8 +1,13 @@
 package com.layhill.roadsim.gameengine;
 
+import com.layhill.roadsim.gameengine.graphics.Shader;
+import com.layhill.roadsim.gameengine.graphics.ShaderFactory;
+import com.layhill.roadsim.gameengine.graphics.ShaderProgram;
+import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -10,34 +15,10 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-
+@Slf4j
 public class GameScene extends Scene {
 
-    private String vertexShaderSrc = "#version 330 core\n" +
-            "layout(location=0) in vec3 aPos;\n" +
-            "layout(location=1) in vec4 aColor;\n" +
-            "\n" +
-            "out vec4 fColor;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    fColor = aColor;\n" +
-            "    gl_Position = vec4(aPos, 1.0);\n" +
-            "}";
-    private String fragmentShaderSrc = "#version 330 core\n" +
-            "\n" +
-            "in vec4 fColor;\n" +
-            "\n" +
-            "out vec4 color;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    color = fColor;\n" +
-            "}";
-
-    private int vertexID;
-    private int fragmentID;
-    private int shaderProgram;
+    private ShaderProgram shaderProgram;
     private int vaoID;
     private int vboID;
     private int eboID;
@@ -68,41 +49,17 @@ public class GameScene extends Scene {
     }
 
     private void loadAndCompileShaders() {
-        vertexID = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexID, vertexShaderSrc);
-        glCompileShader(vertexID);
+        try {
+            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplevertex.glsl").orElse(null);
+            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplefragment.glsl").orElse(null);
 
-        int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
-        if (success == GL_FALSE) {
-            int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: defaultShader.glsl \n\t Vertex shader compile failed");
-            System.out.println(glGetShaderInfoLog(vertexID, len));
-            throw new RuntimeException("Unable to compile vertex shader");
-        }
+            shaderProgram = new ShaderProgram();
+            shaderProgram.addShader(vertexShader);
+            shaderProgram.addShader(fragmentShader);
+            shaderProgram.init();
 
-        fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentID, fragmentShaderSrc);
-        glCompileShader(fragmentID);
-
-        success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
-        if (success == GL_FALSE) {
-            int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: defaultShader.glsl \n\t Fragment shader compile failed");
-            System.out.println(glGetShaderInfoLog(fragmentID, len));
-            throw new RuntimeException("Unable to compile fragment shader");
-        }
-
-        shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexID);
-        glAttachShader(shaderProgram, fragmentID);
-        glLinkProgram(shaderProgram);
-
-        success = glGetProgrami(shaderProgram, GL_LINK_STATUS);
-        if (success == GL_FALSE) {
-            int len = glGetShaderi(shaderProgram, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: defaultShader.glsl \n\t Shader link failed");
-            System.out.println(glGetShaderInfoLog(shaderProgram, len));
-            throw new RuntimeException("Unable to link vertex and fragment shader");
+        } catch (IOException e) {
+            log.error("Error loading shader from file");
         }
     }
 
@@ -146,7 +103,7 @@ public class GameScene extends Scene {
     @Override
     public void update(double deltaTime) {
 
-        glUseProgram(shaderProgram);
+        shaderProgram.start();
         glBindVertexArray(vaoID);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
@@ -158,6 +115,6 @@ public class GameScene extends Scene {
         glDisableVertexAttribArray(1);
 
         glBindVertexArray(0);
-        glUseProgram(0);
+        shaderProgram.stop();
     }
 }
