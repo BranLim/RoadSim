@@ -108,7 +108,7 @@ public class Window {
             if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
-            if (time.getCurrentTime() > 0) {
+            if (time.getCurrentTime() > 0.0) {
                 System.out.printf("Delta time: %f%n", time.getDeltaTime());
                 System.out.printf("Framerate: %f%n", 1.0f / time.getDeltaTime());
             }

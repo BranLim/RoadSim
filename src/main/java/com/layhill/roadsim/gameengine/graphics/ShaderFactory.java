@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
@@ -17,7 +19,8 @@ public class ShaderFactory {
 
     public static Optional<Shader> loadShaderFromFile(String filename) throws IOException {
         URL file = ShaderFactory.class.getClassLoader().getResource(filename);
-        String shaderFileContent = new String(Files.readAllBytes(Paths.get(file.getPath())));
+        Path filePath = Paths.get(Objects.requireNonNull(file).getPath());
+        String shaderFileContent = new String(Files.readAllBytes(filePath));
         log.info("Loaded shader file: {}", filename);
         String[] splitString = shaderFileContent.split("(#type)( )+([a-zA-Z]+)");
         if (splitString.length == 0) {
@@ -39,7 +42,7 @@ public class ShaderFactory {
                 return Optional.of(new Shader(shaderSource.toString(), GL_FRAGMENT_SHADER));
             }
             default -> {
-                log.error("Invalid shader type");
+                log.error("Invalid shader type: {}", shaderType);
                 return Optional.empty();
             }
         }

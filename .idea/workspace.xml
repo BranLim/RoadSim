@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Refactor code for better separation of concerns.">
+    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Added proper logging via lombok">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/Camera.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RoadSimulator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/RoadSimulator.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/ShaderFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/ShaderFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +116,7 @@
       <workItem from="1635611119352" duration="2569000" />
       <workItem from="1635654945175" duration="5535000" />
       <workItem from="1635855017021" duration="6923000" />
-      <workItem from="1635955978005" duration="21623000" />
+      <workItem from="1635955978005" duration="25766000" />
     </task>
     <task id="LOCAL-00001" summary="add project files">
       <created>1635611219056</created>
@@ -215,7 +216,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636218633677</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Added proper logging via lombok">
+      <created>1636219217005</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1636219217005</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -259,7 +267,8 @@
     <MESSAGE value="Add basic scene changing logic" />
     <MESSAGE value="Add default shader to render a box" />
     <MESSAGE value="Refactor code for better separation of concerns." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor code for better separation of concerns." />
+    <MESSAGE value="Added proper logging via lombok" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added proper logging via lombok" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
