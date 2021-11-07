@@ -1,7 +1,10 @@
 package com.layhill.roadsim.gameengine.graphics;
 
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +17,7 @@ public class ShaderProgram {
     private List<Shader> shaders = new ArrayList<>();
     private boolean loaded;
 
-    public ShaderProgram(){
+    public ShaderProgram() {
 
     }
 
@@ -51,11 +54,20 @@ public class ShaderProgram {
         glDeleteProgram(programId);
         shaders.clear();
     }
+
+    public void uploadMat4f(String varName, Matrix4f matrix) {
+        int varLocation = glGetUniformLocation(programId, varName);
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
+        matrix.get(matBuffer);
+        glUniformMatrix4fv(varLocation, false, matBuffer);
+    }
+
     private void compileShaders() {
         for (Shader shader : shaders) {
             shader.compile();
         }
     }
+
     private void createProgramAndAttachCompiledShaders() {
         programId = glCreateProgram();
         for (Shader shader : shaders) {
@@ -70,7 +82,7 @@ public class ShaderProgram {
         }
     }
 
-    private void detachAndDeleteAllShaders(){
+    private void detachAndDeleteAllShaders() {
         for (Shader shader : shaders) {
             glDetachShader(programId, shader.id());
             glDeleteShader(shader.id());

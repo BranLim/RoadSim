@@ -1,11 +1,12 @@
 package com.layhill.roadsim.gameengine;
 
+import com.layhill.roadsim.gameengine.graphics.Camera;
 import com.layhill.roadsim.gameengine.graphics.Shader;
 import com.layhill.roadsim.gameengine.graphics.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.ShaderProgram;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -24,10 +25,10 @@ public class GameScene extends Scene {
     private int eboID;
 
     private float[] squareVertexAndColourArray = {
-            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, //Bottom right in red
-            -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, //Top left in blue
-            0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, //Top right in green
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, //Bottom left in yellow
+            20.5f, -20.5f, 50.0f, 1.0f, 0.0f, 0.0f, 1.0f, //Bottom right in red
+            -20.5f, 20.5f, 50.0f, 0.0f, 1.0f, 0.0f, 1.0f, //Top left in blue
+            20.5f, 20.5f, 50.0f, 0.0f, 0.0f, 1.0f, 1.0f, //Top right in green
+            -20.5f, -20.5f, 50.0f, 1.0f, 1.0f, 0.0f, 1.0f, //Bottom left in yellow
     };
 
     //In counter-clockwise order
@@ -41,6 +42,9 @@ public class GameScene extends Scene {
 
     @Override
     public void init() {
+        camera = new Camera(new Vector3f(), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, 1.0f));
+        camera.init();
+
         loadAndCompileShaders();
         FloatBuffer vertexBuffer = generateVAO();
         generateVBO(vertexBuffer);
@@ -104,6 +108,9 @@ public class GameScene extends Scene {
     public void update(double deltaTime) {
 
         shaderProgram.start();
+        shaderProgram.uploadMat4f("uProjection", camera.getProjection());
+        shaderProgram.uploadMat4f("uView", camera.getView());
+
         glBindVertexArray(vaoID);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);

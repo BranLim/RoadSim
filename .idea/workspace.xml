@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Added proper logging via lombok">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/Camera.java" afterDir="false" />
+    <list default="true" id="48f0d595-9b3b-4e08-aa3c-11e38cbcdee9" name="Changes" comment="Create a camera">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Window.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/ShaderFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/ShaderFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/GameScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/GameScene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Scene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Time.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Time.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/ShaderProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/graphics/ShaderProgram.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/shaders/simplevertex.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/shaders/simplevertex.glsl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +119,7 @@
       <workItem from="1635611119352" duration="2569000" />
       <workItem from="1635654945175" duration="5535000" />
       <workItem from="1635855017021" duration="6923000" />
-      <workItem from="1635955978005" duration="25766000" />
+      <workItem from="1635955978005" duration="30892000" />
     </task>
     <task id="LOCAL-00001" summary="add project files">
       <created>1635611219056</created>
@@ -223,7 +226,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636219217005</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Create a camera">
+      <created>1636289619960</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1636289619960</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -268,14 +278,15 @@
     <MESSAGE value="Add default shader to render a box" />
     <MESSAGE value="Refactor code for better separation of concerns." />
     <MESSAGE value="Added proper logging via lombok" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added proper logging via lombok" />
+    <MESSAGE value="Create a camera" />
+    <option name="LAST_COMMIT_MESSAGE" value="Create a camera" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/layhill/roadsim/gameengine/Time.java</url>
-          <line>34</line>
+          <line>37</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

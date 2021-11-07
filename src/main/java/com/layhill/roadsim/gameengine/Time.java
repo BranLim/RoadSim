@@ -14,22 +14,25 @@ public class Time {
         beginTime = System.nanoTime() * 1.0E-9;
     }
 
-    public static Time getInstance(){
+    public static Time getInstance() {
         return TimeHolder.time;
     }
 
-    public double getDeltaTime(){
+    public double getDeltaTime() {
         return deltaTime;
     }
 
-    public double getCurrentTime(){
+    public double getCurrentTime() {
         return currentTime;
     }
 
     public void tick() {
         beginTime = currentTime;
         currentTime = System.nanoTime() * 1.0E-9;
-        deltaTime = currentTime - beginTime;
+        if (beginTime > 0.0) {
+            deltaTime = currentTime - beginTime;
+        }
+
     }
 
 
