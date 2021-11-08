@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.Platform;
@@ -11,6 +12,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+@Slf4j
 public class Window {
 
     private int width;
@@ -109,8 +111,8 @@ public class Window {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
             if (time.getCurrentTime() > 0.0) {
-                System.out.printf("Delta time: %f%n", time.getDeltaTime());
-                System.out.printf("Framerate: %f%n", 1.0f / time.getDeltaTime());
+                log.info("Delta time: {}", time.getDeltaTime());
+                log.info("Framerate: {}", 1.0f / time.getDeltaTime());
             }
             if (currentScene != null) {
                 currentScene.update(time.getDeltaTime());

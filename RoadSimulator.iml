@@ -28,6 +28,8 @@
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-glfw:natives-macos:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-openal:natives-macos:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-opengl:natives-macos:3.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-nanovg:natives-macos:3.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-nfd:natives-macos:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl:lwjgl-stb:natives-macos:3.2.3" level="project" />
     <orderEntry type="library" name="Maven: org.joml:joml:1.10.2" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.32" level="project" />
