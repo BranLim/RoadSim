@@ -51,6 +51,8 @@ public class ShaderProgram {
             return;
         }
         loaded = false;
+        stop();
+        detachAndDeleteAllShaders();
         glDeleteProgram(programId);
         shaders.clear();
     }
@@ -60,6 +62,11 @@ public class ShaderProgram {
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
         matrix.get(matBuffer);
         glUniformMatrix4fv(varLocation, false, matBuffer);
+    }
+
+    public void uploadTexture(String varName, int slot){
+        int varLocation = glGetUniformLocation(programId, varName);
+        glUniform1i(varLocation, slot);
     }
 
     private void compileShaders() {

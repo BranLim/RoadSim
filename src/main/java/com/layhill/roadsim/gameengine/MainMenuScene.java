@@ -17,4 +17,9 @@ public class MainMenuScene extends Scene{
             Window.getInstance().changeScene(1);
         }
     }
+
+    @Override
+    public void cleanUp() {
+
+    }
 }

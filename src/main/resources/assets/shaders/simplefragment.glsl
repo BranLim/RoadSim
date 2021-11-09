@@ -10,5 +10,6 @@ out vec4 color;
 
 void main()
 {
-    color = texture2D(fTexture,fTextCoord ) * fColor;
+    color = texture(fTexture, fTextCoord );
+    //color = fColor;
 }

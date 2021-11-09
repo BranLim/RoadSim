@@ -125,6 +125,9 @@ public class Window {
     }
 
     private void cleanup() {
+        if (currentScene != null) {
+            currentScene.cleanUp();
+        }
         glfwFreeCallbacks(glfwWindow);
         glfwDestroyWindow(glfwWindow);
 

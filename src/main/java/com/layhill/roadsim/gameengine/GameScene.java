@@ -10,8 +10,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30.*;
 
 @Slf4j
 public class GameScene extends Scene {
@@ -20,13 +19,15 @@ public class GameScene extends Scene {
     private int vaoID;
     private int vboID;
     private int eboID;
+    private Texture texture;
 
     private float[] squareVertexAndColourArray = {
-            20.5f, -20.5f, 150.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.f, 0.f,//Bottom right in red
-            -20.5f, 20.5f, 150.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.f, 1.f,//Top left in blue
-            20.5f, 20.5f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.f, 1.f//Top right in green
-            - 20.5f, -20.5f, 150.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.f, 0.f//Bottom left in yellow
+            20.5f, -20.5f, 100.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.f, 1.f,//Bottom right in red
+            -20.5f, 20.5f, 100.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.f, 0.f,//Top left in blue
+            20.5f, 20.5f, 100.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.f, 0.f,//Top right in green
+            -20.5f, -20.5f, 100.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.f, 1.f//Bottom left in yellow
     };
+
 
     //In counter-clockwise order
     private int[] elementArray = {
@@ -39,24 +40,23 @@ public class GameScene extends Scene {
 
     @Override
     public void init() {
-        camera = new Camera(new Vector3f(), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, 10.0f));
+        camera = new Camera(new Vector3f(), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, 1.0f));
         camera.init();
 
+        loadAndCompileShaders();
 
-        Texture texture = TextureFactory.loadAsTextureFromFile("assets/texture/bricks.png", GL_TEXTURE_2D).orElse(null);
+        texture = TextureFactory.loadAsTextureFromFile("assets/textures/bricks.jpg", GL_TEXTURE_2D).orElse(null);
         if (texture != null) {
             texture.generate();
             texture.bind();
-
-
+            texture.prepare();
+            texture.render();
         }
 
-
-        loadAndCompileShaders();
         FloatBuffer vertexBuffer = generateVAO();
         generateVBO(vertexBuffer);
         generateEBO();
-        sendDataToGpu();
+        allocateMemoryOnGPU();
     }
 
     private void loadAndCompileShaders() {
@@ -74,11 +74,11 @@ public class GameScene extends Scene {
         }
     }
 
-    private void sendDataToGpu() {
+    private void allocateMemoryOnGPU() {
         int positionSize = 3;
         int colourSize = 4;
-        int textureSize = 2;
-        int vertexSizeBytes = (positionSize + colourSize + textureSize) * Float.BYTES;
+        int uvSize = 2;
+        int vertexSizeBytes = (positionSize + colourSize + uvSize) * Float.BYTES;
 
         glVertexAttribPointer(0, positionSize, GL_FLOAT, false, vertexSizeBytes, 0);
         glEnableVertexAttribArray(0);
@@ -86,8 +86,10 @@ public class GameScene extends Scene {
         glVertexAttribPointer(1, colourSize, GL_FLOAT, false, vertexSizeBytes, positionSize * Float.BYTES);
         glEnableVertexAttribArray(1);
 
-        glVertexAttribPointer(2, colourSize, GL_FLOAT, false, vertexSizeBytes, positionSize + colourSize * Float.BYTES);
+
+        glVertexAttribPointer(2, uvSize, GL_FLOAT, false, vertexSizeBytes, (positionSize + colourSize) * Float.BYTES);
         glEnableVertexAttribArray(2);
+
     }
 
     private FloatBuffer generateVAO() {
@@ -121,17 +123,42 @@ public class GameScene extends Scene {
         shaderProgram.uploadMat4f("uProjection", camera.getProjection());
         shaderProgram.uploadMat4f("uView", camera.getView());
 
+        if (texture != null) {
+            shaderProgram.uploadTexture("fTexture", 0);
+            glActiveTexture(GL_TEXTURE0);
+            texture.bind();
+        }
+
         glBindVertexArray(vaoID);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
 
         glDrawElements(GL_TRIANGLES, elementArray.length, GL_UNSIGNED_INT, 0);
 
         //Unbind everything after rendering
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+        if (texture != null) {
+            texture.unbind();
+        }
 
         glBindVertexArray(0);
         shaderProgram.stop();
     }
+
+    @Override
+    public void cleanUp() {
+        glDeleteVertexArrays(vaoID);
+        if (texture != null) {
+            texture.dispose();
+        }
+        if (shaderProgram != null) {
+            shaderProgram.dispose();
+        }
+
+    }
+
+
 }
