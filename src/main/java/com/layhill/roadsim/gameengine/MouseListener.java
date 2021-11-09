@@ -88,7 +88,7 @@ public class MouseListener {
         return (float) getInstance().scrollY;
     }
 
-    public static boolean isDraggin() {
+    public static boolean isDragging() {
         return getInstance().isDragging;
     }
 

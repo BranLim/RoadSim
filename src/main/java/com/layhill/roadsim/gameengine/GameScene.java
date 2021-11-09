@@ -1,9 +1,6 @@
 package com.layhill.roadsim.gameengine;
 
-import com.layhill.roadsim.gameengine.graphics.Camera;
-import com.layhill.roadsim.gameengine.graphics.Shader;
-import com.layhill.roadsim.gameengine.graphics.ShaderFactory;
-import com.layhill.roadsim.gameengine.graphics.ShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.*;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -25,10 +22,10 @@ public class GameScene extends Scene {
     private int eboID;
 
     private float[] squareVertexAndColourArray = {
-            20.5f, -20.5f, 50.0f, 1.0f, 0.0f, 0.0f, 1.0f, //Bottom right in red
-            -20.5f, 20.5f, 50.0f, 0.0f, 1.0f, 0.0f, 1.0f, //Top left in blue
-            20.5f, 20.5f, 50.0f, 0.0f, 0.0f, 1.0f, 1.0f, //Top right in green
-            -20.5f, -20.5f, 50.0f, 1.0f, 1.0f, 0.0f, 1.0f, //Bottom left in yellow
+            20.5f, -20.5f, 150.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.f, 0.f,//Bottom right in red
+            -20.5f, 20.5f, 150.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.f, 1.f,//Top left in blue
+            20.5f, 20.5f, 150.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.f, 1.f//Top right in green
+            - 20.5f, -20.5f, 150.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.f, 0.f//Bottom left in yellow
     };
 
     //In counter-clockwise order
@@ -42,8 +39,18 @@ public class GameScene extends Scene {
 
     @Override
     public void init() {
-        camera = new Camera(new Vector3f(), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, 1.0f));
+        camera = new Camera(new Vector3f(), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, 10.0f));
         camera.init();
+
+
+        Texture texture = TextureFactory.loadAsTextureFromFile("assets/texture/bricks.png", GL_TEXTURE_2D).orElse(null);
+        if (texture != null) {
+            texture.generate();
+            texture.bind();
+
+
+        }
+
 
         loadAndCompileShaders();
         FloatBuffer vertexBuffer = generateVAO();
@@ -70,14 +77,17 @@ public class GameScene extends Scene {
     private void sendDataToGpu() {
         int positionSize = 3;
         int colourSize = 4;
-        int floatSizeBytes = 4;
-        int vertexSizeBytes = (positionSize + colourSize) * floatSizeBytes;
+        int textureSize = 2;
+        int vertexSizeBytes = (positionSize + colourSize + textureSize) * Float.BYTES;
 
         glVertexAttribPointer(0, positionSize, GL_FLOAT, false, vertexSizeBytes, 0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, colourSize, GL_FLOAT, false, vertexSizeBytes, positionSize * floatSizeBytes);
+        glVertexAttribPointer(1, colourSize, GL_FLOAT, false, vertexSizeBytes, positionSize * Float.BYTES);
         glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, colourSize, GL_FLOAT, false, vertexSizeBytes, positionSize + colourSize * Float.BYTES);
+        glEnableVertexAttribArray(2);
     }
 
     private FloatBuffer generateVAO() {
