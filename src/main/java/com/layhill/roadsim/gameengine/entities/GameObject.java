@@ -108,8 +108,8 @@ public class GameObject {
             return;
         }
         shaderProgram.start();
-        shaderProgram.uploadMat4f("uProjection", camera.getProjection());
-        shaderProgram.uploadMat4f("uView", camera.getView());
+        shaderProgram.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        shaderProgram.uploadMat4f("uView", camera.getViewMatrix());
 
         if (texture != null) {
             shaderProgram.uploadTexture("fTexture", 0);

@@ -4,14 +4,6 @@ import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.*;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
-
-import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 
 @Slf4j
 public class GameScene extends Scene {
@@ -23,8 +15,7 @@ public class GameScene extends Scene {
 
     @Override
     public void init() {
-        camera = new Camera(new Vector3f(), new Vector3f(0.0f, 10.0f, -10.0f), new Vector3f(0.0f, 0.0f, 1.0f));
-        camera.init();
+        camera = new Camera(new Vector3f(), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, 10.0f));
 
         gameObject = new GameObject();
         gameObject.init();
@@ -33,6 +24,15 @@ public class GameScene extends Scene {
 
     @Override
     public void update(double deltaTime) {
+        if (MouseListener.isMouseButtonPressed(0)) {
+            float pitchAmount = MouseListener.getDeltaY() * 0.01f;
+            float yawAmount = MouseListener.getDeltaX() * 0.01f;
+            log.info("Pitch {} Yaw {}", pitchAmount, yawAmount);
+            camera.lookUpOrDown(pitchAmount);
+            camera.lookLeftOrRight(yawAmount);
+            camera.calculateViewMatrix();
+        }
+
         gameObject.render(camera);
     }
 
