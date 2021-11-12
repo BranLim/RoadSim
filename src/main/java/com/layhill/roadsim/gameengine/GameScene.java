@@ -23,16 +23,13 @@ public class GameScene extends Scene {
 
 
     @Override
-    public void update(double deltaTime) {
-        if (MouseListener.isMouseButtonPressed(0)) {
-            float pitchAmount = MouseListener.getDeltaY() * 0.01f;
-            float yawAmount = MouseListener.getDeltaX() * 0.01f;
-            log.info("Pitch {} Yaw {}", pitchAmount, yawAmount);
-            camera.lookUpOrDown(pitchAmount);
-            camera.lookLeftOrRight(yawAmount);
-            camera.calculateViewMatrix();
-        }
+    public void update(float deltaTime) {
 
+        if (MouseListener.isActiveInWindow()){
+            camera.turn(deltaTime);
+            MouseListener.endFrame();
+        }
+        camera.move(deltaTime);
         gameObject.render(camera);
     }
 

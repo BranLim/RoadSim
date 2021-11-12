@@ -12,7 +12,7 @@ public class MainMenuScene extends Scene{
     }
 
     @Override
-    public void update(double deltaTime) {
+    public void update(float deltaTime) {
         if (KeyListener.isKeyPressed(GLFW.GLFW_KEY_RIGHT) ){
             Window.getInstance().changeScene(1);
         }

@@ -9,7 +9,7 @@ public abstract class Scene {
     public void init() {
     }
 
-    public abstract void update(double deltaTime);
+    public abstract void update(float deltaTime);
 
     public abstract void cleanUp();
 }

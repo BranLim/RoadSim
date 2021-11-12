@@ -95,6 +95,7 @@ public class Window {
     }
 
     private void registerInputCallback() {
+        glfwSetCursorEnterCallback(glfwWindow, MouseListener::mouseEnteredCallback);
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePositionChangedCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
         glfwSetScrollCallback(glfwWindow, MouseListener::mouseScrollCallback);
@@ -110,17 +111,35 @@ public class Window {
             if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
+            handleMouseInput();
+            /*
             if (time.getCurrentTime() > 0.0) {
                 log.info("Delta time: {}", time.getDeltaTime());
                 log.info("Framerate: {}", 1.0f / time.getDeltaTime());
             }
+            */
+
             if (currentScene != null) {
-                currentScene.update(time.getDeltaTime());
+                currentScene.update((float)time.getDeltaTime());
             }
 
             glfwSwapBuffers(glfwWindow);
             glfwPollEvents();
             time.tick();
+        }
+    }
+
+    private void handleMouseInput() {
+        if (MouseListener.hasMouseEntered()
+                && glfwGetWindowAttrib(glfwWindow, GLFW_HOVERED) == GLFW_TRUE) {
+            if (MouseListener.isMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
+                MouseListener.setActiveInWindow();
+                glfwSetInputMode(glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                if (glfwRawMouseMotionSupported()) {
+                    glfwSetInputMode(glfwWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+                }
+            }
+
         }
     }
 

@@ -1,7 +1,6 @@
 package com.layhill.roadsim.gameengine;
 
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class MouseListener {
 
@@ -12,7 +11,9 @@ public class MouseListener {
     private double scrollY = 0.0;
     private double scrollX = 0.0;
     private boolean isDragging = false;
-    private boolean mouseButtonPressed[] = new boolean[3];
+    private boolean hasMouseEntered = false;
+    private final boolean[] mouseButtonPressed = new boolean[3];
+    private boolean activeInWindow = false;
 
     private static final class MouseListenerHolder {
         private static final MouseListener mouseListener = new MouseListener();
@@ -64,6 +65,10 @@ public class MouseListener {
         currentInstance.lastY = currentInstance.yPos;
     }
 
+    public static void mouseEnteredCallback(long window, boolean entered) {
+        getInstance().hasMouseEntered = entered;
+    }
+
     public static float getX() {
         return (float) getInstance().xPos;
     }
@@ -92,10 +97,22 @@ public class MouseListener {
         return getInstance().isDragging;
     }
 
+    public static boolean hasMouseEntered() {
+        return getInstance().hasMouseEntered;
+    }
+
     public static boolean isMouseButtonPressed(int button) {
         if (button > getInstance().mouseButtonPressed.length) {
             return false;
         }
         return getInstance().mouseButtonPressed[button];
+    }
+
+    public static void setActiveInWindow() {
+        getInstance().activeInWindow = true;
+    }
+
+    public static boolean isActiveInWindow() {
+        return getInstance().activeInWindow;
     }
 }
