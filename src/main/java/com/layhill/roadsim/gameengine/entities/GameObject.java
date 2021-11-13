@@ -57,7 +57,7 @@ public class GameObject {
     }
 
     private void setMesh(int attribute) {
-        mesh = new MeshModel(vaoId, attribute, MeshLoader.getMeshData(), MeshLoader.getMeshDataIndices());
+        mesh = new MeshModel(vaoId, attribute, MeshLoader.getMeshData());
         attributes.add(attribute);
         mesh.uploadToGpu();
     }

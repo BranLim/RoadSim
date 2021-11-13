@@ -58,7 +58,11 @@ public class Mesh {
         return vertexCount;
     }
 
+    public boolean hasVertexNormals(){
+        return vertexNormals !=null && !vertexNormals.isEmpty();
+    }
+
     public boolean hasVertexIndices(){
-        return vertexIndices !=null && vertexIndices.size() > 0;
+        return vertexIndices !=null && !vertexIndices.isEmpty();
     }
 }

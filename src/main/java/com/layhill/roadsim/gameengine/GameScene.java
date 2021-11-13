@@ -21,7 +21,6 @@ public class GameScene extends Scene {
         gameObject.init();
     }
 
-
     @Override
     public void update(float deltaTime) {
 
