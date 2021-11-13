@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
+import com.layhill.roadsim.gameengine.data.Mesh;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -16,33 +17,33 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 
 public class MeshModel implements Renderable {
 
+    private List<Integer> vbos = new ArrayList<>();
     private int vaoId;
     private int attributePointerId;
     private int vertexCount;
     private boolean uploadedToGpu = false;
+    private Mesh mesh;
 
-    private List<Vector3f> meshData;
-    private List<Integer> meshDataIndices;
-    private List<Integer> vbos = new ArrayList<>();
 
-    public MeshModel(int vaoId, int attributePointerId, List<Vector3f> meshData, List<Integer> meshDataIndices) {
+    public MeshModel(int vaoId, int attributePointerId, Mesh mesh) {
         this.vaoId = vaoId;
         this.attributePointerId = attributePointerId;
-        this.meshData = meshData;
-        this.meshDataIndices = meshDataIndices;
-        vertexCount = meshDataIndices.size();
+        this.mesh = mesh;
+        vertexCount = mesh.getVertexCount();
     }
 
     @Override
     public void uploadToGpu() {
 
-        uploadMeshDataIndicesBuffer();
+        if (mesh.hasVertexIndices()){
+            uploadMeshDataIndicesBuffer();
+        }
 
         int bufferId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, bufferId);
         vbos.add(bufferId);
 
-        FloatBuffer dataBuffer = meshDataToFloatBuffer();
+        FloatBuffer dataBuffer = mesh.verticesToFloatBuffer();
         glBufferData(GL_ARRAY_BUFFER, dataBuffer, GL_STATIC_DRAW);
 
         glVertexAttribPointer(attributePointerId, 3, GL_FLOAT, false, 0, 0);
@@ -72,25 +73,8 @@ public class MeshModel implements Renderable {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferId);
         vbos.add(bufferId);
 
-        IntBuffer buffer = dataToIntBuffer();
+        IntBuffer buffer = mesh.vertexIndicesToIntBuffer();
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     }
 
-    private FloatBuffer meshDataToFloatBuffer() {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(meshData.size() * 3);
-        for (var position : meshData) {
-            buffer.put(position.x);
-            buffer.put(position.y);
-            buffer.put(position.z);
-        }
-        buffer.flip();
-        return buffer;
-    }
-
-    private IntBuffer dataToIntBuffer() {
-        IntBuffer buffer = BufferUtils.createIntBuffer(meshDataIndices.size());
-        buffer.put(meshDataIndices.stream().mapToInt(i -> i).toArray());
-        buffer.flip();
-        return buffer;
-    }
 }

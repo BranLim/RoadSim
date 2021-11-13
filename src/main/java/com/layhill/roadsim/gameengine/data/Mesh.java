@@ -11,12 +11,18 @@ public class Mesh {
 
     private List<Vector3f> vertices;
     private List<Vector3f> vertexNormals;
-    private List<Integer> verticesIndex;
+    private List<Integer> vertexIndices;
+    private int vertexCount;
 
-    public Mesh(List<Vector3f> vertices, List<Vector3f> vertexNormals, List<Integer> verticesIndex) {
+    public Mesh(List<Vector3f> vertices, List<Vector3f> vertexNormals, List<Integer> vertexIndices) {
         this.vertices = vertices;
         this.vertexNormals = vertexNormals;
-        this.verticesIndex = verticesIndex;
+        this.vertexIndices = vertexIndices;
+        if (vertexIndices == null) {
+            vertexCount = vertices.size() * 3;
+        } else {
+            vertexCount = vertexIndices.size();
+        }
     }
 
     public FloatBuffer verticesToFloatBuffer() {
@@ -28,8 +34,11 @@ public class Mesh {
     }
 
     public IntBuffer vertexIndicesToIntBuffer() {
-        IntBuffer buffer = BufferUtils.createIntBuffer(verticesIndex.size());
-        buffer.put(verticesIndex.stream().mapToInt(i -> i).toArray());
+        if (vertexIndices == null) {
+            return BufferUtils.createIntBuffer(0);
+        }
+        IntBuffer buffer = BufferUtils.createIntBuffer(vertexIndices.size());
+        buffer.put(vertexIndices.stream().mapToInt(i -> i).toArray());
         buffer.flip();
         return buffer;
     }
@@ -43,5 +52,13 @@ public class Mesh {
         }
         buffer.flip();
         return buffer;
+    }
+
+    public int getVertexCount() {
+        return vertexCount;
+    }
+
+    public boolean hasVertexIndices(){
+        return vertexIndices !=null && vertexIndices.size() > 0;
     }
 }
