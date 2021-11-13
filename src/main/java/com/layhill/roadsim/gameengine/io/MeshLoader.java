@@ -1,5 +1,6 @@
-package com.layhill.roadsim.gameengine.objects;
+package com.layhill.roadsim.gameengine.io;
 
+import com.layhill.roadsim.gameengine.graphics.gl.MeshModel;
 import org.joml.Vector3f;
 
 import java.util.List;
@@ -21,5 +22,7 @@ public class MeshLoader {
                 0, 1, 3 //Bottom left triangle
         );
     }
+
+    //public static MeshModel load
 
 }

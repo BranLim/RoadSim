@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.objects;
+package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import org.joml.Vector3f;
@@ -17,13 +17,13 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 public class MeshModel implements Renderable {
 
     private int vaoId;
-    private List<Integer> vbos = new ArrayList<>();
     private int attributePointerId;
     private int vertexCount;
+    private boolean uploadedToGpu = false;
+
     private List<Vector3f> meshData;
     private List<Integer> meshDataIndices;
-
-    private boolean uploadedToGpu = false;
+    private List<Integer> vbos = new ArrayList<>();
 
     public MeshModel(int vaoId, int attributePointerId, List<Vector3f> meshData, List<Integer> meshDataIndices) {
         this.vaoId = vaoId;

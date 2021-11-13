@@ -1,8 +1,8 @@
 package com.layhill.roadsim.gameengine.entities;
 
 import com.layhill.roadsim.gameengine.graphics.*;
-import com.layhill.roadsim.gameengine.objects.MeshLoader;
-import com.layhill.roadsim.gameengine.objects.MeshModel;
+import com.layhill.roadsim.gameengine.io.MeshLoader;
+import com.layhill.roadsim.gameengine.graphics.gl.MeshModel;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 
