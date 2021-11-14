@@ -35,26 +35,22 @@ public class MeshLoader {
     }
 
     public static Optional<Mesh> loadObjAsMesh(String file) throws IOException {
-        List<Vector3f> preprocessedVertices = new ArrayList<>();
+
+        List<Vector3f> processedVertices = new ArrayList<>();
+
         List<Vector3f> preprocessedVertexNormals = new ArrayList<>();
         List<Vector2f> preprocessedTextureCoords = new ArrayList<>();
-        List<Integer> vertexIndices = new ArrayList<>();
         List<String> preprocessedMeshFaceMappings = new ArrayList<>();
-
-        List<Vector3f> postProcessedVertices = new ArrayList<>();
-        List<Vector3f> postProcessedVertexNormals = new ArrayList<>();
-        List<Vector2f> postProcessedTextureCoords = new ArrayList<>();
-
-
         try (var lines = Files.lines(Paths.get(file))) {
             lines.forEach(line -> {
                 try {
-                    String[] contents = line.split(" ");
-                    if (OBJ_DATA_PREFIXES.stream().anyMatch(prefix -> contents[0].startsWith(prefix))) {
+                    if (OBJ_DATA_PREFIXES.stream().anyMatch(line::startsWith)) {
+                        String[] contents = line.split(" ");
                         switch (contents[0].trim()) {
-                            case "v" -> preprocessedVertices.add(transformObj3DCoordinates(contents));
+                            case "v" -> processedVertices.add(transformObj3DCoordinates(contents));
                             case "vn" -> preprocessedVertexNormals.add(transformObj3DCoordinates(contents));
                             case "vt" -> preprocessedTextureCoords.add(transformObj2DCoordinates(contents));
+                            case "f" -> preprocessedMeshFaceMappings.add(line.substring(line.indexOf("f") + 1));
                         }
                     }
                 } catch (IllegalArgumentException e) {
@@ -63,7 +59,23 @@ public class MeshLoader {
                 }
             });
         }
-        return Optional.of(new Mesh(postProcessedVertices, postProcessedVertices, vertexIndices));
+
+        float[] sortedVertexNormals = new float[preprocessedVertexNormals.size()*3];
+        float[] sortedTextureCoordinates = new float[preprocessedTextureCoords.size()*2];
+        List<Integer> vertexIndices = new ArrayList<>();
+        for (String mappingLine : preprocessedMeshFaceMappings) {
+            String [] perVertexMappings = mappingLine.split(" ");
+            for(String mapping: perVertexMappings){
+                int vertexPointer = getVertexPointerBasedOnVertexMapping(mapping);
+                vertexIndices.add(vertexPointer);
+
+            }
+
+        }
+
+        List<Vector3f> postProcessedVertexNormals = new ArrayList<>();
+        List<Vector2f> postProcessedTextureCoords = new ArrayList<>();
+        return Optional.of(new Mesh(processedVertices, postProcessedVertexNormals, vertexIndices));
     }
 
     private static Vector2f transformObj2DCoordinates(String[] contents) {
@@ -82,4 +94,8 @@ public class MeshLoader {
                 Float.parseFloat(contents[3].trim()));
     }
 
+    private static int getVertexPointerBasedOnVertexMapping(String vertexMappings) {
+        String[] vertexMappingComponents = vertexMappings.split("/");
+        return Integer.parseInt(vertexMappingComponents[0]) - 1;
+    }
 }
