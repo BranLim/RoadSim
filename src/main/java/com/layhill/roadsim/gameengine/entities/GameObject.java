@@ -21,8 +21,8 @@ import static org.lwjgl.opengl.GL30.*;
 public class GameObject {
 
     private int vaoId;
-    private int textureBufferId ;
-    private MeshModel mesh;
+    private int textureBufferId;
+    private MeshModel meshModel;
     private ShaderProgram shaderProgram;
     private Texture texture;
     private List<Integer> attributes = new ArrayList<>();
@@ -40,7 +40,7 @@ public class GameObject {
                 1.f, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f
         };
         createVao();
-        setMesh(0);
+        setMeshModel(0);
         setShader();
         setTexture(2, uvMappings);
         unbind();
@@ -56,10 +56,14 @@ public class GameObject {
         glBindVertexArray(vaoId);
     }
 
-    private void setMesh(int attribute) {
-        mesh = new MeshModel(vaoId, attribute, MeshLoader.getMeshData());
-        attributes.add(attribute);
-        mesh.uploadToGpu();
+    private void setMeshModel(int attribute) {
+        try {
+            meshModel = new MeshModel(vaoId, attribute, MeshLoader.loadObjAsMesh("assets/models/stone.obj").get());
+            attributes.add(attribute);
+            meshModel.uploadToGpu();
+        } catch (IOException e) {
+            log.error("Error loading model file.");
+        }
     }
 
     private void setShader() {
@@ -82,7 +86,7 @@ public class GameObject {
 
         FloatBuffer uvBuffer = uvMappingToFloatBuffer(uvMappings);
         glBufferData(GL_ARRAY_BUFFER, uvBuffer, GL_STATIC_DRAW);
-        glVertexAttribPointer(attribute, 2, GL_FLOAT, false, 0,0);
+        glVertexAttribPointer(attribute, 2, GL_FLOAT, false, 0, 0);
         glEnableVertexAttribArray(attribute);
 
         attributes.add(attribute);
@@ -104,7 +108,7 @@ public class GameObject {
     }
 
     public void render(Camera camera) {
-        if (!initialised){
+        if (!initialised) {
             return;
         }
         shaderProgram.start();
@@ -120,7 +124,7 @@ public class GameObject {
         for (var attribute : attributes) {
             glEnableVertexAttribArray(attribute);
         }
-        mesh.render();
+        meshModel.render();
         for (var attribute : attributes) {
             glDisableVertexAttribArray(attribute);
         }
@@ -134,8 +138,8 @@ public class GameObject {
 
     public void cleanUp() {
         glDeleteVertexArrays(vaoId);
-        if (mesh!=null){
-            mesh.dispose();
+        if (meshModel != null) {
+            meshModel.dispose();
         }
         if (texture != null) {
             texture.dispose();
