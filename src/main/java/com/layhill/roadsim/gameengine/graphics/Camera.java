@@ -57,7 +57,7 @@ public class Camera {
     public void move(float deltaTime) {
 
         if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
-            position.z += 4.8f * deltaTime;
+            position.z += 4.8f * deltaTime ;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_A)) {
             position.x -= 2.0f * deltaTime;

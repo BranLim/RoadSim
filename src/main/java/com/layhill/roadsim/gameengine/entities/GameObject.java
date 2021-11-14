@@ -40,7 +40,7 @@ public class GameObject {
                 1.f, 1.f, 0.f, 0.f, 1.f, 0.f, 0.f, 1.f
         };
         createVao();
-        setMeshModel(0);
+        setModel(0);
         setShader();
         setTexture(2, uvMappings);
         unbind();
@@ -56,9 +56,9 @@ public class GameObject {
         glBindVertexArray(vaoId);
     }
 
-    private void setMeshModel(int attribute) {
+    private void setModel(int attribute) {
         try {
-            meshModel = new MeshModel(vaoId, attribute, MeshLoader.loadObjAsMesh("assets/models/stone.obj").get());
+            meshModel = new MeshModel(vaoId, attribute, MeshLoader.loadObjAsMesh("assets/models/stone.obj").get(), null);
             attributes.add(attribute);
             meshModel.uploadToGpu();
         } catch (IOException e) {

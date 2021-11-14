@@ -2,6 +2,7 @@ package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.data.Mesh;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
+import com.layhill.roadsim.gameengine.graphics.Texture;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
@@ -23,12 +24,14 @@ public class MeshModel implements Renderable {
     private int vertexCount;
     private boolean uploadedToGpu = false;
     private Mesh mesh;
+    private Texture texture;
 
 
-    public MeshModel(int vaoId, int attributePointerId, Mesh mesh) {
+    public MeshModel(int vaoId, int attributePointerId, Mesh mesh, Texture texture) {
         this.vaoId = vaoId;
         this.attributePointerId = attributePointerId;
         this.mesh = mesh;
+        this.texture = texture;
         vertexCount = mesh.getVertexCount();
     }
 
