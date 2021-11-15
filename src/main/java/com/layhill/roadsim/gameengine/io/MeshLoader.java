@@ -19,19 +19,6 @@ public class MeshLoader {
 
     private static final List<String> OBJ_DATA_PREFIXES = List.of("v", "vt", "vn", "vp", "f", "l");
 
-    public static Mesh getMeshData() {
-        List<Vector3f> meshData = List.of(
-                new Vector3f(20.5f, -20.5f, 100.0f),
-                new Vector3f(-20.5f, 20.5f, 100.0f),
-                new Vector3f(20.5f, 20.5f, 100.0f),
-                new Vector3f(-20.5f, -20.5f, 100.0f));
-        List<Integer> meshIndices = List.of(
-                2, 1, 0, // Top-right triangle
-                0, 1, 3 //Bottom left triangle
-        );
-        return new Mesh(meshData, null, meshIndices);
-    }
-
     public static Optional<Mesh> loadObjAsMesh(String file) throws IOException {
         URL filePath = ResourceLoader.class.getClassLoader().getResource(file);
         List<Vector3f> processedVertices = new ArrayList<>();
@@ -58,8 +45,8 @@ public class MeshLoader {
             });
         }
 
-        float[] sortedVertexNormals = new float[preprocessedVertexNormals.size() * 3];
-        float[] sortedTextureCoordinates = new float[preprocessedTextureCoords.size() * 2];
+        float[] sortedVertexNormals = new float[processedVertices.size() * 3];
+        float[] sortedTextureCoordinates = new float[processedVertices.size() * 2];
         List<Integer> vertexIndices = generateVertexIndicesAndSortVertexNormalsAndTextureCoordinates(preprocessedVertexNormals,
                 preprocessedTextureCoords, preprocessedMeshFaceMappings, sortedVertexNormals, sortedTextureCoordinates);
 
@@ -74,7 +61,7 @@ public class MeshLoader {
             postProcessedTextureCoords.add(new Vector2f(sortedTextureCoordinates[i], sortedTextureCoordinates[i + 1]));
         }
 
-        return Optional.of(new Mesh(processedVertices, postProcessedVertexNormals, vertexIndices));
+        return Optional.of(new Mesh(processedVertices, postProcessedVertexNormals, postProcessedTextureCoords, vertexIndices));
     }
 
     private static List<Integer> generateVertexIndicesAndSortVertexNormalsAndTextureCoordinates(List<Vector3f> preprocessedVertexNormals,
@@ -102,7 +89,7 @@ public class MeshLoader {
                                                   float[] sortedTextureCoordinates) {
         Vector2f currentTexCoord = preprocessedTextureCoords.get(Integer.parseInt(vertexMappingComponent) - 1);
         sortedTextureCoordinates[vertexPointer * 2] = currentTexCoord.x;
-        sortedTextureCoordinates[vertexPointer * 2 + 1] = currentTexCoord.y;
+        sortedTextureCoordinates[vertexPointer * 2 + 1] = 1 - currentTexCoord.y;
     }
 
     private static void extractVertexNormal(String vertexMappingComponent,

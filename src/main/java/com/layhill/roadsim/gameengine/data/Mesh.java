@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.data;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
@@ -11,12 +12,15 @@ public class Mesh {
 
     private List<Vector3f> vertices;
     private List<Vector3f> vertexNormals;
+    private List<Vector2f> textureCoordinates;
     private List<Integer> vertexIndices;
     private int vertexCount;
 
-    public Mesh(List<Vector3f> vertices, List<Vector3f> vertexNormals, List<Integer> vertexIndices) {
+    public Mesh(List<Vector3f> vertices, List<Vector3f> vertexNormals, List<Vector2f> textureCoordinates,
+                List<Integer> vertexIndices) {
         this.vertices = vertices;
         this.vertexNormals = vertexNormals;
+        this.textureCoordinates = textureCoordinates;
         this.vertexIndices = vertexIndices;
         if (vertexIndices == null) {
             vertexCount = vertices.size() * 3;
@@ -26,11 +30,26 @@ public class Mesh {
     }
 
     public FloatBuffer verticesToFloatBuffer() {
-        return pointsToFloatBuffer(vertices);
+        return convert3DPointsToFloatBuffer(vertices);
+    }
+
+    public FloatBuffer textureCoordinatesToFloatBuffer() {
+        return convert2DPointsToFloatBuffer(textureCoordinates);
+    }
+
+    private FloatBuffer convert2DPointsToFloatBuffer(List<Vector2f> textureCoordinates) {
+
+        FloatBuffer uvBuffer = BufferUtils.createFloatBuffer(textureCoordinates.size() * 2);
+        for (var textureCoordinate : textureCoordinates) {
+            uvBuffer.put(textureCoordinate.x);
+            uvBuffer.put(textureCoordinate.y);
+        }
+        uvBuffer.flip();
+        return uvBuffer;
     }
 
     public FloatBuffer vertexNormalsToFloatBuffer() {
-        return pointsToFloatBuffer(vertexNormals);
+        return convert3DPointsToFloatBuffer(vertexNormals);
     }
 
     public IntBuffer vertexIndicesToIntBuffer() {
@@ -43,7 +62,7 @@ public class Mesh {
         return buffer;
     }
 
-    private FloatBuffer pointsToFloatBuffer(List<Vector3f> points) {
+    private FloatBuffer convert3DPointsToFloatBuffer(List<Vector3f> points) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(points.size() * 3);
         for (var point : points) {
             buffer.put(point.x);
@@ -58,11 +77,11 @@ public class Mesh {
         return vertexCount;
     }
 
-    public boolean hasVertexNormals(){
-        return vertexNormals !=null && !vertexNormals.isEmpty();
+    public boolean hasVertexNormals() {
+        return vertexNormals != null && !vertexNormals.isEmpty();
     }
 
-    public boolean hasVertexIndices(){
-        return vertexIndices !=null && !vertexIndices.isEmpty();
+    public boolean hasVertexIndices() {
+        return vertexIndices != null && !vertexIndices.isEmpty();
     }
 }

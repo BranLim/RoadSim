@@ -113,12 +113,11 @@ public class Window {
                 glfwSetWindowShouldClose(glfwWindow, true);
             }
             handleMouseInput();
-            /*
+
             if (time.getCurrentTime() > 0.0) {
                 log.info("Delta time: {}", time.getDeltaTime());
                 log.info("Framerate: {}", 1.0f / time.getDeltaTime());
             }
-            */
 
             if (currentScene != null) {
                 currentScene.update((float)time.getDeltaTime());

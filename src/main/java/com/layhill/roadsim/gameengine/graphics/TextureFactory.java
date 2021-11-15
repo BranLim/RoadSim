@@ -23,7 +23,7 @@ public class TextureFactory {
         if (image == null) {
             return Optional.empty();
         }
-        stbi_image_free(image);
+        //stbi_image_free(image);
         return Optional.of(new Texture(image, width.get(0), height.get(0), channels.get(0), textureTarget));
 
     }
