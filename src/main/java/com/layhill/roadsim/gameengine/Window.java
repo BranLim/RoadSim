@@ -14,7 +14,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 public class Window {
-
     private int width;
     private int height;
     private String title;
@@ -106,7 +105,7 @@ public class Window {
         time.tick();
         while (!glfwWindowShouldClose(glfwWindow)) {
             glEnable(GL_DEPTH_TEST);
-            glClearColor(0.80f, 0.80f, 0.80f, 1.0f);
+            glClearColor(0.20f, 0.20f, 0.20f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             if (KeyListener.isKeyPressed(GLFW_KEY_ESCAPE)) {

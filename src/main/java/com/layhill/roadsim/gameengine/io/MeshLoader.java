@@ -10,7 +10,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public class MeshLoader {
 
     private static final List<String> OBJ_DATA_PREFIXES = List.of("v", "vt", "vn", "vp", "f", "l");
 
-    public static Optional<Mesh> loadObjAsMesh(String file) throws IOException {
+    public static Optional<Mesh> loadObjAsMesh(String file) {
         URL filePath = ResourceLoader.class.getClassLoader().getResource(file);
         List<Vector3f> processedVertices = new ArrayList<>();
 
@@ -43,6 +42,9 @@ public class MeshLoader {
                     log.error(e.getMessage());
                 }
             });
+        }catch(IOException err){
+            log.error("Error reading file at {}", filePath.getPath());
+            return Optional.empty();
         }
 
         float[] sortedVertexNormals = new float[processedVertices.size() * 3];

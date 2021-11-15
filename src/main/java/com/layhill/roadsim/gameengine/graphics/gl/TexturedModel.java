@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class MeshModel implements Renderable {
+public class TexturedModel implements Renderable {
 
     private int vaoId;
     private int vertexCount;
@@ -25,7 +25,7 @@ public class MeshModel implements Renderable {
     private List<Integer> vbos = new ArrayList<>();
     private List<Integer> attributes = new ArrayList<>();
 
-    public MeshModel(int vaoId, Mesh mesh, Texture texture) {
+    public TexturedModel(int vaoId, Mesh mesh, Texture texture) {
         this.vaoId = vaoId;
         this.mesh = mesh;
         this.texture = texture;
@@ -70,7 +70,6 @@ public class MeshModel implements Renderable {
             texture.bind();
             texture.prepare();
             texture.unbind();
-
         }
         uploadedToGpu = true;
     }
