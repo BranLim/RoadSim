@@ -15,7 +15,7 @@ public class GameScene extends Scene {
 
     @Override
     public void init() {
-        camera = new Camera(new Vector3f(0.0f,10.0f,-50.0f), new Vector3f(0.0f, 1.0f, 0), new Vector3f(0.0f, 0.0f, 5.0f));
+        camera = new Camera(new Vector3f(0.0f,10.0f,50.0f), new Vector3f(0.0f, 1.0f, 0), new Vector3f(0.0f, 0.0f, -5.0f));
 
         gameObject = new GameObject();
         gameObject.init();

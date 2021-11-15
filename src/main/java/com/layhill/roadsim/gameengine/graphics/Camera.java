@@ -43,11 +43,15 @@ public class Camera {
     }
 
     public void turn(float deltaTime) {
+        Vector3f direction = new Vector3f(lookAt).sub(position).normalize();
+        int pitchSign = (int)Math.signum(direction.y);
+        int yawSign = (int)Math.signum(direction.x);
+
         float pitchAmount = MouseListener.getDeltaY() * 0.1f * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * 0.1f * deltaTime;
 
-        lookAt.y -= pitchAmount;
-        lookAt.x -= yawAmount;
+        lookAt.y -= pitchSign * pitchAmount;
+        lookAt.x -= yawSign * yawAmount;
         if (lookAt.y < -90.0f || lookAt.y > 90.0f) {
             lookAt.y = 90.0f;
         }
@@ -56,8 +60,9 @@ public class Camera {
 
     public void move(float deltaTime) {
 
+        Vector3f direction = new Vector3f(lookAt).sub(position).normalize();
         if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
-            position.z += 4.8f * deltaTime ;
+            position.z +=  (int)Math.signum(direction.z) * 4.8f * deltaTime ;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_A)) {
             position.x -= 2.0f * deltaTime;
@@ -66,7 +71,7 @@ public class Camera {
             position.x += 2.0f * deltaTime;
         }
         if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
-            position.z -= 3.8f * deltaTime;
+            position.z -= (int)Math.signum(direction.z) * 3.8f * deltaTime;
         }
         calculateViewMatrix();
     }
