@@ -2,19 +2,22 @@ package com.layhill.roadsim.gameengine.graphics;
 
 import com.layhill.roadsim.gameengine.KeyListener;
 import com.layhill.roadsim.gameengine.MouseListener;
+import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Camera {
 
+    private static final float SPEED = 10.f;
     private Vector3f position;
     private Vector3f upDirection;
     private Vector3f lookAt;
     private Matrix4f projection = new Matrix4f();
     private Matrix4f viewMatrix = new Matrix4f();
+    private float currentSpeed = 0.f;
+    private float currentTurnSpeed = 0.1f;
 
     public Camera(Vector3f position, Vector3f upDirection, Vector3f lookAt) {
         this.position = position;
@@ -43,36 +46,36 @@ public class Camera {
     }
 
     public void turn(float deltaTime) {
-        Vector3f direction = new Vector3f(lookAt).sub(position).normalize();
-        int pitchSign = (int)Math.signum(direction.y);
-        int yawSign = (int)Math.signum(direction.x);
 
-        float pitchAmount = MouseListener.getDeltaY() * 0.1f * deltaTime;
-        float yawAmount = MouseListener.getDeltaX() * 0.1f * deltaTime;
+        float pitchAmount = MouseListener.getDeltaY() * currentTurnSpeed * deltaTime;
+        float yawAmount = MouseListener.getDeltaX() * currentTurnSpeed * deltaTime;
 
-        lookAt.y -= pitchSign * pitchAmount;
-        lookAt.x -= yawSign * yawAmount;
-        if (lookAt.y < -90.0f || lookAt.y > 90.0f) {
-            lookAt.y = 90.0f;
-        }
+        viewMatrix.identity()
+                .rotateX(pitchAmount)
+                .rotateY(yawAmount)
+                .rotateZ(pitchAmount);
         calculateViewMatrix();
     }
 
     public void move(float deltaTime) {
 
-        Vector3f direction = new Vector3f(lookAt).sub(position).normalize();
+        AxisAngle4f rotation = viewMatrix.getRotation(new AxisAngle4f());
+        float rotationAngle = rotation.angle;
+
+        currentSpeed = 0;
         if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
-            position.z +=  (int)Math.signum(direction.z) * 4.8f * deltaTime ;
+            currentSpeed = SPEED;
+        } else if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
+            currentSpeed = -SPEED;
         }
-        if (KeyListener.isKeyPressed(GLFW_KEY_A)) {
-            position.x -= 2.0f * deltaTime;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_D)) {
-            position.x += 2.0f * deltaTime;
-        }
-        if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
-            position.z -= (int)Math.signum(direction.z) * 3.8f * deltaTime;
-        }
+
+        float distance = currentSpeed * deltaTime;
+        float dx = (float) Math.sin(rotationAngle) * distance;
+        float dz = (float) Math.cos(rotationAngle) * distance;
+
+        Vector3f distanceTravelled = new Vector3f(dx, 0, dz);
+
+        this.position = new Vector3f(this.position).sub(distanceTravelled);
         calculateViewMatrix();
     }
 }
