@@ -17,7 +17,10 @@ public class Camera {
     private Matrix4f projection = new Matrix4f();
     private Matrix4f viewMatrix = new Matrix4f();
     private float currentSpeed = 0.f;
-    private float currentTurnSpeed = 0.1f;
+    private float currentTurnSpeed = 0.8f;
+    private float xRotate = 0.f;
+    private float yRotate = 0.f;
+    private float zRotate = 0.f;
 
     public Camera(Vector3f position, Vector3f upDirection, Vector3f lookAt) {
         this.position = position;
@@ -50,10 +53,18 @@ public class Camera {
         float pitchAmount = MouseListener.getDeltaY() * currentTurnSpeed * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * currentTurnSpeed * deltaTime;
 
-        viewMatrix.identity()
-                .rotateX(pitchAmount)
-                .rotateY(yawAmount)
-                .rotateZ(pitchAmount);
+        xRotate += pitchAmount;
+        yRotate += yawAmount;
+        if (lookAt.x < -180.f || lookAt.x > 180.f){
+            lookAt.x = 180.f;
+        }
+
+        Vector3f forwardDirection = lookAt.sub(position).normalize();
+
+        float turnAmount = (float) Math.tan(Math.toRadians(yRotate)) * forwardDirection.z;
+        System.out.println("Turn amount: "+ turnAmount);
+        lookAt.x -= turnAmount;
+
         calculateViewMatrix();
     }
 
