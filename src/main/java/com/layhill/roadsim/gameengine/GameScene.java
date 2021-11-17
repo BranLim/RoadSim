@@ -27,7 +27,7 @@ public class GameScene extends Scene {
     public void init() {
         createAndBindVao();
         shaderProgram = loadShaders();
-        camera = new Camera(new Vector3f(0.0f, 0.0f, -20.0f), new Vector3f(0.0f, 1.0f, 0), new Vector3f(0.0f, 0.0f, 5.0f));
+        camera = new Camera(new Vector3f(0.0f, 0.0f, 5.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -20.0f));
         Optional<Texture> texture = TextureFactory.loadAsTextureFromFile("assets/textures/stone_texture.jpg", GL_TEXTURE_2D);
         Optional<Mesh> mesh = MeshLoader.loadObjAsMesh("assets/models/stone.obj");
 
