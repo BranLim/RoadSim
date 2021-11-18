@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -16,7 +18,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 @Slf4j
 public class GameScene extends Scene {
-    private GameObject gameObject;
+    private List<GameObject> gameObjects = new ArrayList<>();
     private ShaderProgram shaderProgram;
     private int vaoId;
 
@@ -28,15 +30,31 @@ public class GameScene extends Scene {
         createAndBindVao();
         shaderProgram = loadShaders();
         camera = new Camera(new Vector3f(0.0f, 0.0f, 5.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -20.0f));
-        Optional<Texture> texture = TextureFactory.loadAsTextureFromFile("assets/textures/stone_texture.jpg", GL_TEXTURE_2D);
-        Optional<Mesh> mesh = MeshLoader.loadObjAsMesh("assets/models/stone.obj");
 
-        if (mesh.isPresent() && texture.isPresent()) {
-            TexturedModel model = new TexturedModel(vaoId, mesh.get(), texture.get());
+        Optional<Texture> grassTexture = TextureFactory.loadAsTextureFromFile("assets/textures/grass_texture.jpg", GL_TEXTURE_2D);
+        Optional<Mesh> terrainMesh = MeshLoader.loadObjAsMesh("assets/models/grassland.obj");
+
+
+        if (terrainMesh.isPresent() && grassTexture.isPresent()) {
+            TexturedModel model = new TexturedModel(vaoId, terrainMesh.get(), grassTexture.get());
             model.uploadToGpu();
 
-            gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), 0.f, 0.f, 0.f, 1.0f, model, shaderProgram);
+            GameObject gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), 0.f, 0.f, 0.f, 1.0f, model, shaderProgram);
+            gameObjects.add(gameObject);
         }
+
+        Optional<Texture> stoneTexture = TextureFactory.loadAsTextureFromFile("assets/textures/stone_texture.jpg", GL_TEXTURE_2D);
+        Optional<Mesh> stoneMesh = MeshLoader.loadObjAsMesh("assets/models/stone.obj");
+
+        if (stoneMesh.isPresent() && stoneTexture.isPresent()) {
+            TexturedModel model = new TexturedModel(vaoId, stoneMesh.get(), stoneTexture.get());
+            model.uploadToGpu();
+
+            GameObject gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), 0.f, 0.f, 0.f, 1.0f, model, shaderProgram);
+            gameObjects.add(gameObject);
+        }
+
+
         unbind();
     }
 
@@ -52,7 +70,9 @@ public class GameScene extends Scene {
         shaderProgram.uploadMat4f("uProjection", camera.getProjectionMatrix());
         shaderProgram.uploadMat4f("uView", camera.getViewMatrix());
         shaderProgram.uploadTexture("fTexture", 0);
-        gameObject.render();
+        for(GameObject gameObject : gameObjects){
+            gameObject.render();
+        }
 
         unbind();
         shaderProgram.stop();
@@ -63,7 +83,7 @@ public class GameScene extends Scene {
         if (shaderProgram != null) {
             shaderProgram.dispose();
         }
-        if (gameObject != null) {
+        for(GameObject gameObject : gameObjects){
             gameObject.cleanUp();
         }
 

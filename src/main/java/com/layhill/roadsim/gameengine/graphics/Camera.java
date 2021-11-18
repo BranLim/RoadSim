@@ -52,9 +52,9 @@ public class Camera {
 
         currentSpeed = 0.0f;
         if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
-            currentSpeed = SPEED;
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
             currentSpeed = -SPEED;
+        } else if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
+            currentSpeed = SPEED;
         }
 
         float distance = currentSpeed * deltaTime;
