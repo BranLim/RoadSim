@@ -28,7 +28,7 @@ public class Camera {
         this.front = front;
         Vector3f direction = new Vector3f(front).sub(position).normalize();
         orientation.lookAlong(direction, upDirection);
-        projection.setPerspective((float) Math.toRadians(38.0), 1.0f, 1.0f, 1000.0f);
+        projection.setPerspective((float) Math.toRadians(60.0), 1.7f, 1.0f, 1000.0f);
     }
 
     public Matrix4f getProjectionMatrix() {
@@ -37,7 +37,7 @@ public class Camera {
 
     public Matrix4f getViewMatrix() {
         Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.rotate(orientation).translate(position);
+        viewMatrix.identity().rotate(orientation).translate(new Vector3f(position).negate());
         return viewMatrix;
     }
 
@@ -58,6 +58,6 @@ public class Camera {
         }
 
         float distance = currentSpeed * deltaTime;
-        position.add(orientation.positiveZ(new Vector3f()).mul(distance).negate());
+        position.add(orientation.positiveZ(new Vector3f()).mul(distance));
     }
 }

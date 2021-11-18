@@ -12,6 +12,7 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class TexturedModel implements Renderable {
@@ -55,7 +56,7 @@ public class TexturedModel implements Renderable {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         if (texture != null) {
-            attributePointerId = 2;
+            attributePointerId = 1;
 
             int textureBufferId = glGenBuffers();
             glBindBuffer(GL_ARRAY_BUFFER, textureBufferId);
