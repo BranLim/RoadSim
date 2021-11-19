@@ -35,7 +35,9 @@ public class Camera {
 
     public Matrix4f getViewMatrix() {
         Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.rotate(orientation).translate(new Vector3f(position).negate());
+        viewMatrix.identity()
+                .rotate(orientation)
+                .translate(new Vector3f(position).negate());
         return viewMatrix;
     }
 

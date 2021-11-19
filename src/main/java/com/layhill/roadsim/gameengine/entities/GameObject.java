@@ -30,11 +30,11 @@ public class GameObject {
     public Matrix4f getTransformationMatrix() {
         Matrix4f matrix = new Matrix4f();
         matrix.identity()
-                .translate(position)
-                .rotate((float) Math.toRadians(rotateX), new Vector3f(1.f, 0.f, 0.f))
-                .rotate((float) Math.toRadians(rotateY), new Vector3f(0.f, 1.f, 0.f))
-                .rotate((float) Math.toRadians(rotateZ), new Vector3f(0.f, 0.f, 1.f))
-                .scale(new Vector3f(scale, scale, scale));
+                .translate(position, matrix)
+                .rotate((float) Math.toRadians(rotateX), new Vector3f(1.f, 0.f, 0.f), matrix)
+                .rotate((float) Math.toRadians(rotateY), new Vector3f(0.f, 1.f, 0.f), matrix)
+                .rotate((float) Math.toRadians(rotateZ), new Vector3f(0.f, 0.f, 1.f), matrix)
+                .scale(new Vector3f(scale, scale, scale), matrix);
 
         return matrix;
     }
