@@ -16,20 +16,17 @@ public class Camera {
     private Vector3f upDirection;
     private Vector3f front;
     private Matrix4f projection = new Matrix4f();
-    private Quaternionf orientation = new Quaternionf();
+    private Quaternionf orientation;
     private float currentSpeed = 0.f;
     private float mouseSensitivity = TURNSPEED;
 
 
     public Camera(Vector3f position, Vector3f upDirection, Vector3f front) {
         this.position = position;
-        this.position.negate();
         this.upDirection = upDirection;
         this.front = front;
-        Vector3f direction = new Vector3f(front).sub(this.position).normalize();
-        //orientation.rotateX(-45.f);
-        orientation.lookAlong(direction, upDirection);
-        projection.setPerspective((float) Math.toRadians(60.0), 1.7f, 1.0f, 1000.0f);
+        orientation = com.layhill.roadsim.gameengine.utils.Math.lookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
+        projection.setPerspective((float) Math.toRadians(60.0), 1920f/1080f, 1.0f, 1000.0f);
     }
 
     public Matrix4f getProjectionMatrix() {
@@ -38,7 +35,7 @@ public class Camera {
 
     public Matrix4f getViewMatrix() {
         Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.identity().rotate(orientation).translate(new Vector3f(position).negate());
+        viewMatrix.rotate(orientation).translate(new Vector3f(position).negate());
         return viewMatrix;
     }
 

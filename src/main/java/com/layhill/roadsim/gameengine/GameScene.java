@@ -9,9 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL30.*;
@@ -20,7 +18,7 @@ import static org.lwjgl.opengl.GL30.*;
 public class GameScene extends Scene {
     private List<Integer> vaos = new ArrayList<>();
     private List<GameObject> gameObjects = new ArrayList<>();
-    private ShaderProgram shaderProgram;
+    private Map<Integer,ShaderProgram> shaderPrograms = new HashMap<>();
     private Light light;
 
     public GameScene() {
@@ -31,10 +29,11 @@ public class GameScene extends Scene {
 
         int vao = createAndBindVao();
         vaos.add(vao);
-        shaderProgram = loadShaders();
+        ShaderProgram shaderProgram = loadShaders();
+        shaderPrograms.put(vao,shaderProgram);
 
-        camera = new Camera(new Vector3f(-25.0f, 50.0f, 25.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
-        light = new Light(new Vector3f(0.f, 150.f, 50.f), new Vector3f(1.0f, 1.0f, 1.0f));
+        camera = new Camera(new Vector3f(0.0f, 10.0f, 50.f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
+        light = new Light(new Vector3f(-10.f, 50.f, 10.f), new Vector3f(1.0f, 1.0f, 1.0f));
 
         Optional<Texture> grassTexture = TextureFactory.loadAsTextureFromFile("assets/textures/grass_texture.jpg", GL_TEXTURE_2D);
         Optional<Mesh> terrainMesh = MeshLoader.loadObjAsMesh("assets/models/terrain.obj");
@@ -43,13 +42,16 @@ public class GameScene extends Scene {
             TexturedModel model = new TexturedModel(vao, terrainMesh.get(), grassTexture.get());
             model.uploadToGpu();
 
-            GameObject gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), -45.0f, 0, -38.0f, 5.0f, model, shaderProgram);
+            GameObject gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), 180.f, 0.f, 0.f, 1.0f, model, shaderProgram);
             gameObjects.add(gameObject);
         }
 
         unbind();
         vao = createAndBindVao();
         vaos.add(vao);
+        shaderProgram = loadShaders();
+        shaderPrograms.put(vao,shaderProgram);
+
         Optional<Texture> stoneTexture = TextureFactory.loadAsTextureFromFile("assets/textures/stone_texture.jpg", GL_TEXTURE_2D);
         Optional<Mesh> stoneMesh = MeshLoader.loadObjAsMesh("assets/models/stone.obj");
 
@@ -57,7 +59,7 @@ public class GameScene extends Scene {
             TexturedModel model = new TexturedModel(vao, stoneMesh.get(), stoneTexture.get());
             model.uploadToGpu();
 
-            GameObject gameObject = new GameObject(new Vector3f(0.f, 5.f, -10.f), -45.0f, 0.f, -38.0f, 2.0f, model, shaderProgram);
+            GameObject gameObject = new GameObject(new Vector3f(0.f, 15.f, 0.f), 0.f, 0.f, 0.0f, 2.0f, model, shaderProgram);
             gameObjects.add(gameObject);
         }
 
@@ -71,32 +73,39 @@ public class GameScene extends Scene {
             camera.turn(deltaTime);
             MouseListener.endFrame();
         }
-        shaderProgram.start();
+
         camera.move(deltaTime);
-        shaderProgram.uploadMat4f("uProjection", camera.getProjectionMatrix());
-        shaderProgram.uploadMat4f("uView", camera.getViewMatrix());
-        shaderProgram.uploadTexture("fTexture", 0);
+
+
 
         for (Integer vao : vaos) {
             bindVao(vao);
+
+            ShaderProgram  shaderProgram = shaderPrograms.get(vao);
+            shaderProgram.start();
+            shaderProgram.uploadMat4f("uProjection", camera.getProjectionMatrix());
+            shaderProgram.uploadMat4f("uView", camera.getViewMatrix());
+            shaderProgram.uploadTexture("fTexture", 0);
+            shaderProgram.uploadVec3f("uLightPosition", light.getPosition());
+            shaderProgram.uploadVec3f("fLightColour", light.getColour());
             for (GameObject gameObject : gameObjects) {
-                shaderProgram.uploadVec3f("uLightPosition", light.getPosition());
-                shaderProgram.uploadVec3f("fLightColour", light.getColour());
+
                 shaderProgram.uploadMat4f("uTransformation", gameObject.getTransformationMatrix());
                 gameObject.render();
             }
 
             unbind();
+            shaderProgram.stop();
         }
-
-        shaderProgram.stop();
     }
 
     @Override
     public void cleanUp() {
-        if (shaderProgram != null) {
-            shaderProgram.dispose();
+        for(Map.Entry<Integer, ShaderProgram> shaderProgramEntry : shaderPrograms.entrySet()){
+            shaderProgramEntry.getValue().dispose();
         }
+         shaderPrograms.clear();
+
         for (GameObject gameObject : gameObjects) {
             gameObject.cleanUp();
         }
