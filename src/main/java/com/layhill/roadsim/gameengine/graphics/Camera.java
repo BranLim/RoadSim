@@ -26,7 +26,8 @@ public class Camera {
         this.position.negate();
         this.upDirection = upDirection;
         this.front = front;
-        Vector3f direction = new Vector3f(front).sub(position).normalize();
+        Vector3f direction = new Vector3f(front).sub(this.position).normalize();
+        //orientation.rotateX(-45.f);
         orientation.lookAlong(direction, upDirection);
         projection.setPerspective((float) Math.toRadians(60.0), 1.7f, 1.0f, 1000.0f);
     }
@@ -45,7 +46,7 @@ public class Camera {
         float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
-        orientation.rotateLocalX(pitchAmount).rotateLocalY(yawAmount);
+        orientation.rotateLocalX(-pitchAmount).rotateLocalY(-yawAmount);
     }
 
     public void move(float deltaTime) {

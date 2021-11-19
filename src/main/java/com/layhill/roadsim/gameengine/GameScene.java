@@ -21,28 +21,32 @@ public class GameScene extends Scene {
     private List<Integer> vaos = new ArrayList<>();
     private List<GameObject> gameObjects = new ArrayList<>();
     private ShaderProgram shaderProgram;
+    private Light light;
 
     public GameScene() {
     }
 
     @Override
     public void init() {
+
         int vao = createAndBindVao();
         vaos.add(vao);
         shaderProgram = loadShaders();
-        camera = new Camera(new Vector3f(0.0f, 50.0f, 25.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
+
+        camera = new Camera(new Vector3f(-25.0f, 50.0f, 25.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
+        light = new Light(new Vector3f(0.f, 150.f, 50.f), new Vector3f(1.0f, 1.0f, 1.0f));
 
         Optional<Texture> grassTexture = TextureFactory.loadAsTextureFromFile("assets/textures/grass_texture.jpg", GL_TEXTURE_2D);
         Optional<Mesh> terrainMesh = MeshLoader.loadObjAsMesh("assets/models/terrain.obj");
-
 
         if (terrainMesh.isPresent() && grassTexture.isPresent()) {
             TexturedModel model = new TexturedModel(vao, terrainMesh.get(), grassTexture.get());
             model.uploadToGpu();
 
-            GameObject gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), 90.f, 0.f, 0.f, 5.0f, model, shaderProgram);
+            GameObject gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), -45.0f, 0, -38.0f, 5.0f, model, shaderProgram);
             gameObjects.add(gameObject);
         }
+
         unbind();
         vao = createAndBindVao();
         vaos.add(vao);
@@ -53,7 +57,7 @@ public class GameScene extends Scene {
             TexturedModel model = new TexturedModel(vao, stoneMesh.get(), stoneTexture.get());
             model.uploadToGpu();
 
-            GameObject gameObject = new GameObject(new Vector3f(0.f, 5.f, -10.f), 0.f, 0.f, 0.f, 1.0f, model, shaderProgram);
+            GameObject gameObject = new GameObject(new Vector3f(0.f, 5.f, -10.f), -45.0f, 0.f, -38.0f, 2.0f, model, shaderProgram);
             gameObjects.add(gameObject);
         }
 
@@ -72,9 +76,12 @@ public class GameScene extends Scene {
         shaderProgram.uploadMat4f("uProjection", camera.getProjectionMatrix());
         shaderProgram.uploadMat4f("uView", camera.getViewMatrix());
         shaderProgram.uploadTexture("fTexture", 0);
+
         for (Integer vao : vaos) {
             bindVao(vao);
             for (GameObject gameObject : gameObjects) {
+                shaderProgram.uploadVec3f("uLightPosition", light.getPosition());
+                shaderProgram.uploadVec3f("fLightColour", light.getColour());
                 shaderProgram.uploadMat4f("uTransformation", gameObject.getTransformationMatrix());
                 gameObject.render();
             }

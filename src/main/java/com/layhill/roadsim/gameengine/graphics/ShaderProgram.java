@@ -2,6 +2,7 @@ package com.layhill.roadsim.gameengine.graphics;
 
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -96,4 +97,8 @@ public class ShaderProgram {
         }
     }
 
+    public void uploadVec3f(String varName, Vector3f value) {
+        int varLocation = glGetUniformLocation(programId, varName);
+        glUniform3f(varLocation, value.x, value.y, value.z);
+    }
 }

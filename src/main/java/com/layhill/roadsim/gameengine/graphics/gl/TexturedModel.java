@@ -72,6 +72,18 @@ public class TexturedModel implements Renderable {
             texture.prepare();
             texture.unbind();
         }
+
+        attributePointerId = 2;
+        int normalBufferId = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER,normalBufferId );
+        vbos.add(normalBufferId);
+
+        FloatBuffer normalBuffer = mesh.vertexNormalsToFloatBuffer();
+        glBufferData(GL_ARRAY_BUFFER, normalBuffer, GL_STATIC_DRAW);
+        glVertexAttribPointer(attributePointerId, 3, GL_FLOAT, false, 0, 0);
+        glEnableVertexAttribArray(attributePointerId);
+        attributes.add(attributePointerId);
+
         uploadedToGpu = true;
     }
 
