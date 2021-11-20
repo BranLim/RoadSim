@@ -12,12 +12,15 @@ uniform vec3 uLightPosition;
 out vec2 fTextCoord;
 out vec3 fSurfaceNormal;
 out vec3 fLightDirection;
+out vec3 fToCameraCentre;
 
 void main()
 {
+
     vec4 worldPosition = uTransformation * vec4(aPos, 1.0);
     gl_Position = uProjection * uView * worldPosition;
 
+    fToCameraCentre = (inverse(uView) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
     fTextCoord = aTextCoord;
     fSurfaceNormal = (worldPosition * vec4(aSurfaceNormal, 0.0)).xyz;
     fLightDirection = uLightPosition - worldPosition.xyz;

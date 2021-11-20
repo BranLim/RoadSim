@@ -8,6 +8,8 @@ public abstract class Uniform {
         this.name = name;
     }
 
+    //public void
+
 
     public void uploadToUniformLocation(int programId) {
 

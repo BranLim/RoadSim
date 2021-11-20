@@ -105,6 +105,9 @@ public class Window {
         time.tick();
         while (!glfwWindowShouldClose(glfwWindow)) {
             glEnable(GL_DEPTH_TEST);
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+
             glClearColor(0.20f, 0.20f, 0.20f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -114,12 +117,12 @@ public class Window {
             handleMouseInput();
 
             if (time.getCurrentTime() > 0.0) {
-             //   log.info("Delta time: {}", time.getDeltaTime());
-            //    log.info("Framerate: {}", 1.0f / time.getDeltaTime());
+                log.info("Delta time: {}", time.getDeltaTime());
+                log.info("Framerate: {}", 1.0f / time.getDeltaTime());
             }
 
             if (currentScene != null) {
-                currentScene.update((float)time.getDeltaTime());
+                currentScene.update((float) time.getDeltaTime());
             }
 
             glfwSwapBuffers(glfwWindow);
