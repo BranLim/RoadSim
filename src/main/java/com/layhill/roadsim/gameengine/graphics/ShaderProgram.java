@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics;
 
+import com.layhill.roadsim.gameengine.graphics.gl.Uniform;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -16,6 +17,7 @@ public class ShaderProgram {
 
     private int programId;
     private List<Shader> shaders = new ArrayList<>();
+    private List<Uniform> uniformData = new ArrayList();
     private boolean loaded;
 
     public ShaderProgram() {
@@ -59,8 +61,6 @@ public class ShaderProgram {
     }
 
 
-
-
     private void compileShaders() {
         for (Shader shader : shaders) {
             shader.compile();
@@ -88,12 +88,19 @@ public class ShaderProgram {
         }
     }
 
-    public void uploadFloat(String varName, float value){
+    public void storeUniform(Uniform... uniforms) {
+        if (uniforms == null) {
+            return;
+        }
+        uniformData.addAll(List.of(uniforms));
+    }
+
+    public void uploadFloat(String varName, float value) {
         int varLocation = glGetUniformLocation(programId, varName);
         glUniform1f(varLocation, value);
     }
 
-    public void uploadTexture(String varName, int slot){
+    public void uploadTexture(String varName, int slot) {
         int varLocation = glGetUniformLocation(programId, varName);
         glUniform1i(varLocation, slot);
     }
