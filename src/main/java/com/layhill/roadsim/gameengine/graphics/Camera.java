@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Camera {
 
     private static final float SPEED = 10.f;
-    private static final float TURNSPEED = .025f;
+    private static final float TURNSPEED = .25f;
     private Vector3f position;
     private Vector3f upDirection;
     private Vector3f front;
@@ -26,7 +26,7 @@ public class Camera {
         this.upDirection = upDirection;
         this.front = front;
         orientation = com.layhill.roadsim.gameengine.utils.Math.lookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
-        projection.setPerspective((float) Math.toRadians(60.0), 1920f/1080f, 1.0f, 1000.0f);
+        projection.setPerspective((float) Math.toRadians(60.0), 1920f / 1080f, 1.0f, 1000.0f);
     }
 
     public Matrix4f getProjectionMatrix() {
@@ -45,7 +45,7 @@ public class Camera {
         float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
-        orientation.rotateLocalX(-pitchAmount).rotateLocalY(-yawAmount);
+        orientation.rotateLocalX((float) Math.toRadians(-pitchAmount)).rotateLocalY((float) Math.toRadians(-yawAmount));
     }
 
     public void move(float deltaTime) {

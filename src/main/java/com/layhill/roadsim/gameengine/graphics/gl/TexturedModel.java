@@ -130,4 +130,7 @@ public class TexturedModel implements Renderable {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     }
 
+    public Texture getTexture() {
+        return texture;
+    }
 }

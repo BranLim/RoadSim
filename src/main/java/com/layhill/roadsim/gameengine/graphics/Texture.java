@@ -12,6 +12,8 @@ public class Texture {
     private int height;
     private int channel;
     private ByteBuffer image;
+    private float shineDampener = 1.f;
+    private float reflectivity = 0.f;
 
     protected Texture(ByteBuffer image, int width, int height, int channel, int target) {
         this.width = width;
@@ -48,5 +50,21 @@ public class Texture {
     public void dispose(){
         unbind();
         glDeleteTextures(texId);
+    }
+
+    public float getShineDampener() {
+        return shineDampener;
+    }
+
+    public float getReflectivity() {
+        return reflectivity;
+    }
+
+    public void setShineDampener(float shineDampener){
+        this.shineDampener = shineDampener;
+    }
+
+    public void setReflectivity(float reflectivity){
+        this.reflectivity = reflectivity;
     }
 }

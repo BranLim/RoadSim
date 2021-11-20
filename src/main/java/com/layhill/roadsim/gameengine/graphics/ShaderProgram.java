@@ -58,17 +58,8 @@ public class ShaderProgram {
         shaders.clear();
     }
 
-    public void uploadMat4f(String varName, Matrix4f matrix) {
-        int varLocation = glGetUniformLocation(programId, varName);
-        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
-        matrix.get(matBuffer);
-        glUniformMatrix4fv(varLocation, false, matBuffer);
-    }
 
-    public void uploadTexture(String varName, int slot){
-        int varLocation = glGetUniformLocation(programId, varName);
-        glUniform1i(varLocation, slot);
-    }
+
 
     private void compileShaders() {
         for (Shader shader : shaders) {
@@ -97,8 +88,26 @@ public class ShaderProgram {
         }
     }
 
+    public void uploadFloat(String varName, float value){
+        int varLocation = glGetUniformLocation(programId, varName);
+        glUniform1f(varLocation, value);
+    }
+
+    public void uploadTexture(String varName, int slot){
+        int varLocation = glGetUniformLocation(programId, varName);
+        glUniform1i(varLocation, slot);
+    }
+
     public void uploadVec3f(String varName, Vector3f value) {
         int varLocation = glGetUniformLocation(programId, varName);
         glUniform3f(varLocation, value.x, value.y, value.z);
     }
+
+    public void uploadMat4f(String varName, Matrix4f matrix) {
+        int varLocation = glGetUniformLocation(programId, varName);
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
+        matrix.get(matBuffer);
+        glUniformMatrix4fv(varLocation, false, matBuffer);
+    }
+
 }

@@ -34,7 +34,7 @@ public class GameScene extends Scene {
 
 
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
-        light = new Light(new Vector3f(50.f, 20.f, 10.f), new Vector3f(1.0f, 1.0f, 1.0f));
+        light = new Light(new Vector3f(50.f, 50.f, 10.f), new Vector3f(1.0f, 1.0f, 1.0f));
 
         Optional<Texture> grassTexture = TextureFactory.loadAsTextureFromFile("assets/textures/grass_texture.jpg", GL_TEXTURE_2D);
         Optional<Mesh> terrainMesh = MeshLoader.loadObjAsMesh("assets/models/terrain.obj");
@@ -57,6 +57,9 @@ public class GameScene extends Scene {
 
         if (stoneMesh.isPresent() && stoneTexture.isPresent()) {
             TexturedModel model = new TexturedModel(vao, stoneMesh.get(), stoneTexture.get());
+            var texture = model.getTexture();
+            texture.setReflectivity(0.8f);
+            texture.setShineDampener(2.0f);
             model.uploadToGpu();
 
             GameObject gameObject = new GameObject(new Vector3f(0.f, 10.f, 0.f), 0.f, 0.f, 0.0f, 2.0f, model, shaderProgram);
@@ -64,8 +67,6 @@ public class GameScene extends Scene {
         }
 
         unbind();
-
-
     }
 
     @Override
@@ -77,19 +78,23 @@ public class GameScene extends Scene {
         }
 
         camera.move(deltaTime);
+
         shaderProgram.start();
+        shaderProgram.uploadMat4f("uProjection", camera.getProjectionMatrix());
+        shaderProgram.uploadMat4f("uView", camera.getViewMatrix());
+        shaderProgram.uploadVec3f("uLightPosition", light.getPosition());
+        shaderProgram.uploadVec3f("fLightColour", light.getColour());
+        shaderProgram.uploadVec3f("uGlobalLightDirection", new Vector3f(-40.f, 100.f, -30.f));
+        shaderProgram.uploadVec3f("uGlobalLightColour", new Vector3f(1.f, 1.f, 1.f));
+
 
         for (Integer vao : vaos) {
             bindVao(vao);
-
-            shaderProgram.uploadMat4f("uProjection", camera.getProjectionMatrix());
-            shaderProgram.uploadMat4f("uView", camera.getViewMatrix());
-            shaderProgram.uploadVec3f("uLightPosition", light.getPosition());
-            shaderProgram.uploadVec3f("fLightColour", light.getColour());
-            shaderProgram.uploadVec3f("uGlobalLightDirection", new Vector3f(-40.f, 50.f, -30.f));
             shaderProgram.uploadTexture("fTexture", 0);
 
             for (GameObject gameObject : gameObjects) {
+                shaderProgram.uploadFloat("uReflectivity", gameObject.getTexture().getReflectivity());
+                shaderProgram.uploadFloat("uShineDampen", gameObject.getTexture().getShineDampener());
                 shaderProgram.uploadMat4f("uTransformation", gameObject.getTransformationMatrix());
                 gameObject.render();
             }
