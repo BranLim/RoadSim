@@ -1,9 +1,12 @@
 package com.layhill.roadsim.gameengine.graphics;
 
+import lombok.extern.slf4j.Slf4j;
+
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
 
+@Slf4j
 public class Shader {
 
     private int shaderId = -1;
@@ -22,8 +25,8 @@ public class Shader {
 
         if (glGetShaderi(shaderId, GL_COMPILE_STATUS) == GL_FALSE) {
             int len = glGetShaderi(shaderId, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: defaultShader.glsl \n\t Vertex shader compile failed");
-            System.out.println(glGetShaderInfoLog(shaderId, len));
+            log.error("ERROR: defaultShader.glsl \n\t Vertex shader compile failed");
+            log.error(glGetShaderInfoLog(shaderId, len));
             throw new RuntimeException("Unable to compile vertex shader");
         }
     }

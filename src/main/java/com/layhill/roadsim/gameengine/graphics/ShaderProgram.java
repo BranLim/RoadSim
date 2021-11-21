@@ -1,6 +1,8 @@
 package com.layhill.roadsim.gameengine.graphics;
 
+import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.gl.Uniform;
+import com.layhill.roadsim.gameengine.graphics.gl.UniformMatrix4f;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -17,8 +19,11 @@ public class ShaderProgram {
 
     private int programId;
     private List<Shader> shaders = new ArrayList<>();
-    private List<Uniform> uniformData = new ArrayList();
-    private boolean loaded;
+    private List<Uniform> uniformData = new ArrayList<>();
+    private boolean initialised;
+    private UniformMatrix4f projection = new UniformMatrix4f("uProjection");
+    private UniformMatrix4f view = new UniformMatrix4f("uView");
+    private UniformMatrix4f modelTransformation = new UniformMatrix4f("uTransformation");
 
     public ShaderProgram() {
 
@@ -32,14 +37,17 @@ public class ShaderProgram {
     }
 
     public void init() {
+
+        programId = glCreateProgram();
         compileShaders();
-        createProgramAndAttachCompiledShaders();
+        attachCompiledShaders();
         detachAndDeleteAllShaders();
-        loaded = true;
+        setupUniformData(projection, view, modelTransformation);
+        initialised = true;
     }
 
     public void start() {
-        if (!loaded) {
+        if (!initialised) {
             throw new IllegalStateException("Shader program not initialised or loaded.");
         }
         glUseProgram(programId);
@@ -50,10 +58,10 @@ public class ShaderProgram {
     }
 
     public void dispose() {
-        if (!loaded) {
+        if (!initialised) {
             return;
         }
-        loaded = false;
+        initialised = false;
         stop();
         detachAndDeleteAllShaders();
         glDeleteProgram(programId);
@@ -67,8 +75,7 @@ public class ShaderProgram {
         }
     }
 
-    private void createProgramAndAttachCompiledShaders() {
-        programId = glCreateProgram();
+    private void attachCompiledShaders() {
         for (Shader shader : shaders) {
             glAttachShader(programId, shader.id());
         }
@@ -88,11 +95,11 @@ public class ShaderProgram {
         }
     }
 
-    public void storeUniform(Uniform... uniforms) {
-        if (uniforms == null) {
-            return;
-        }
+    private void setupUniformData(Uniform... uniforms) {
         uniformData.addAll(List.of(uniforms));
+        for (var uniform : uniformData) {
+            uniform.getUniformLocation(programId);
+        }
     }
 
     public void uploadFloat(String varName, float value) {
@@ -115,6 +122,21 @@ public class ShaderProgram {
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
         matrix.get(matBuffer);
         glUniformMatrix4fv(varLocation, false, matBuffer);
+    }
+
+    public void loadCamera(Camera camera) {
+        if (!initialised || camera == null) {
+            return;
+        }
+        projection.load(camera.getProjectionMatrix());
+        view.load(camera.getViewMatrix());
+    }
+
+    public void loadModelTransformation(GameObject gameObject){
+        if (!initialised || gameObject == null) {
+            return;
+        }
+        modelTransformation.load(gameObject.getTransformationMatrix());
     }
 
 }

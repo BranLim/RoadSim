@@ -3,7 +3,7 @@ package com.layhill.roadsim.gameengine.graphics.gl;
 
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 
-public abstract class Uniform<T> {
+public abstract class Uniform {
 
     private String name;
     private int location = -1;
@@ -12,9 +12,7 @@ public abstract class Uniform<T> {
         this.name = name;
     }
 
-    public abstract void load(T value);
-
-    public void determineAndSetUniformLocation(int programId) {
+    public void getUniformLocation(int programId) {
         location = glGetUniformLocation(programId, name);
     }
 

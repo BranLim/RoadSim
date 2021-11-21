@@ -41,7 +41,7 @@ public class Camera {
         return viewMatrix;
     }
 
-    public void turn(float deltaTime) {
+    public void rotate(float deltaTime) {
         float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 

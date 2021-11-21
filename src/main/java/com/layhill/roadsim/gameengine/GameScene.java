@@ -18,8 +18,8 @@ import static org.lwjgl.opengl.GL30.*;
 public class GameScene extends Scene {
     private List<Integer> vaos = new ArrayList<>();
     private List<GameObject> gameObjects = new ArrayList<>();
-    private Map<Integer,ShaderProgram> shaderPrograms = new HashMap<>();
-    private ShaderProgram shaderProgram ;
+    private Map<Integer, ShaderProgram> shaderPrograms = new HashMap<>();
+    private ShaderProgram shaderProgram;
     private Light light;
 
     public GameScene() {
@@ -30,8 +30,7 @@ public class GameScene extends Scene {
 
         int vao = createAndBindVao();
         vaos.add(vao);
-         shaderProgram = loadShaders();
-
+        shaderProgram = loadShaders();
 
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
         light = new Light(new Vector3f(50.f, 50.f, 10.f), new Vector3f(1.0f, 1.0f, 1.0f));
@@ -73,20 +72,18 @@ public class GameScene extends Scene {
     public void update(float deltaTime) {
 
         if (MouseListener.isActiveInWindow()) {
-            camera.turn(deltaTime);
+            camera.rotate(deltaTime);
             MouseListener.endFrame();
         }
 
         camera.move(deltaTime);
 
         shaderProgram.start();
-        shaderProgram.uploadMat4f("uProjection", camera.getProjectionMatrix());
-        shaderProgram.uploadMat4f("uView", camera.getViewMatrix());
+        shaderProgram.loadCamera(camera);
         shaderProgram.uploadVec3f("uLightPosition", light.getPosition());
         shaderProgram.uploadVec3f("fLightColour", light.getColour());
         shaderProgram.uploadVec3f("uGlobalLightDirection", new Vector3f(-40.f, 100.f, -30.f));
         shaderProgram.uploadVec3f("uGlobalLightColour", new Vector3f(1.f, 1.f, 1.f));
-
 
         for (Integer vao : vaos) {
             bindVao(vao);
@@ -95,7 +92,7 @@ public class GameScene extends Scene {
             for (GameObject gameObject : gameObjects) {
                 shaderProgram.uploadFloat("uReflectivity", gameObject.getTexture().getReflectivity());
                 shaderProgram.uploadFloat("uShineDampen", gameObject.getTexture().getShineDampener());
-                shaderProgram.uploadMat4f("uTransformation", gameObject.getTransformationMatrix());
+                shaderProgram.loadModelTransformation(gameObject);
                 gameObject.render();
             }
 
@@ -106,10 +103,10 @@ public class GameScene extends Scene {
 
     @Override
     public void cleanUp() {
-        for(Map.Entry<Integer, ShaderProgram> shaderProgramEntry : shaderPrograms.entrySet()){
+        for (Map.Entry<Integer, ShaderProgram> shaderProgramEntry : shaderPrograms.entrySet()) {
             shaderProgramEntry.getValue().dispose();
         }
-         shaderPrograms.clear();
+        shaderPrograms.clear();
 
         for (GameObject gameObject : gameObjects) {
             gameObject.cleanUp();
