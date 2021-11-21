@@ -1,7 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.data.Mesh;
-import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.Texture;
 
 import java.nio.FloatBuffer;
@@ -11,13 +10,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 
-public class TexturedModel implements Renderable {
+public class TexturedModel {
 
     private String id;
     private int vaoId;
@@ -57,7 +54,6 @@ public class TexturedModel implements Renderable {
         return vertexCount;
     }
 
-    @Override
     public void uploadToGpu() {
 
         if (mesh.hasVertexIndices()) {
@@ -109,31 +105,6 @@ public class TexturedModel implements Renderable {
         attributes.add(attributePointerId);
 
         uploadedToGpu = true;
-    }
-
-
-    @Override
-    public void render() {
-        if (!uploadedToGpu) {
-            return;
-        }
-        glBindVertexArray(vaoId);
-        for (var attribute : attributes) {
-            glEnableVertexAttribArray(attribute);
-        }
-        if (texture != null) {
-            glActiveTexture(GL_TEXTURE0);
-            texture.bind();
-        }
-        glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
-
-        for (var attribute : attributes) {
-            glDisableVertexAttribArray(attribute);
-        }
-
-        if (texture != null) {
-            texture.unbind();
-        }
     }
 
     public void dispose() {

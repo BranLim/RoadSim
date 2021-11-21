@@ -120,7 +120,6 @@ public class Window {
                 currentScene.update((float) time.getDeltaTime());
             }
 
-            glfwSwapBuffers(glfwWindow);
             glfwPollEvents();
             time.tick();
         }

@@ -15,17 +15,15 @@ public class GameObject {
     private float rotateZ;
     private float scale;
     private TexturedModel texturedModel;
-    private ShaderProgram shaderProgram;
 
     public GameObject(Vector3f position, float rotateX, float rotateY, float rotateZ, float scale,
-                      TexturedModel meshModel, ShaderProgram shaderProgram) {
+                      TexturedModel meshModel) {
         this.position = position;
         this.rotateX = rotateX;
         this.rotateY = rotateY;
         this.rotateZ = rotateZ;
         this.scale = scale;
         this.texturedModel = meshModel;
-        this.shaderProgram = shaderProgram;
     }
 
     public Matrix4f getTransformationMatrix() {
@@ -38,10 +36,6 @@ public class GameObject {
                 .scale(new Vector3f(scale, scale, scale), matrix);
 
         return matrix;
-    }
-
-    public void render() {
-        texturedModel.render();
     }
 
     public TexturedModel getTexturedModel(){

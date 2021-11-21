@@ -18,8 +18,6 @@ import static org.lwjgl.opengl.GL30.*;
 public class GameScene extends Scene {
     private List<Integer> vaos = new ArrayList<>();
     private List<GameObject> gameObjects = new ArrayList<>();
-    private Map<Integer, ShaderProgram> shaderPrograms = new HashMap<>();
-    private ShaderProgram shaderProgram;
     private Light light;
     private RenderingManager renderingManager;
 
@@ -32,7 +30,6 @@ public class GameScene extends Scene {
 
         int vao = createAndBindVao();
         vaos.add(vao);
-        shaderProgram = loadShaders();
 
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
         light = new Light(new Vector3f(50.f, 50.f, 10.f), new Vector3f(1.0f, 1.0f, 1.0f));
@@ -44,7 +41,7 @@ public class GameScene extends Scene {
             TexturedModel model = new TexturedModel(vao, terrainMesh.get(), grassTexture.get());
             model.uploadToGpu();
 
-            GameObject gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), 0.f, 0.f, 0.f, 10.0f, model, shaderProgram);
+            GameObject gameObject = new GameObject(new Vector3f(0.f, 0.f, 0.f), 0.f, 0.f, 0.f, 10.0f, model);
             gameObjects.add(gameObject);
         }
 
@@ -63,7 +60,7 @@ public class GameScene extends Scene {
             texture.setShineDampener(2.0f);
             model.uploadToGpu();
 
-            GameObject gameObject = new GameObject(new Vector3f(0.f, 10.f, 0.f), 0.f, 0.f, 0.0f, 2.0f, model, shaderProgram);
+            GameObject gameObject = new GameObject(new Vector3f(0.f, 10.f, 0.f), 0.f, 0.f, 0.0f, 2.0f, model);
             gameObjects.add(gameObject);
         }
 
@@ -80,23 +77,17 @@ public class GameScene extends Scene {
 
         camera.move(deltaTime);
 
-        shaderProgram.uploadVec3f("uLightPosition", light.getPosition());
-        shaderProgram.uploadVec3f("uLightColour", light.getColour());
-
         for (GameObject gameObject : gameObjects) {
             renderingManager.addToQueue(gameObject);
         }
+        renderingManager.addToQueue(light);
         renderingManager.run(camera);
-
     }
 
     @Override
     public void cleanUp() {
-        for (Map.Entry<Integer, ShaderProgram> shaderProgramEntry : shaderPrograms.entrySet()) {
-            shaderProgramEntry.getValue().dispose();
-        }
-        shaderPrograms.clear();
 
+        renderingManager.cleanUp();
         for (GameObject gameObject : gameObjects) {
             gameObject.cleanUp();
         }
@@ -117,20 +108,5 @@ public class GameScene extends Scene {
 
     private void unbind() {
         glBindVertexArray(0);
-    }
-
-    private ShaderProgram loadShaders() {
-        ShaderProgram shaderProgram = new ShaderProgram();
-        try {
-            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplevertex.glsl").orElse(null);
-            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplefragment.glsl").orElse(null);
-
-            shaderProgram.addShader(vertexShader);
-            shaderProgram.addShader(fragmentShader);
-            shaderProgram.init();
-        } catch (IOException e) {
-            log.error("Error loading shader from file", e);
-        }
-        return shaderProgram;
     }
 }

@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Camera {
 
     private static final float SPEED = 10.f;
-    private static final float TURNSPEED = .25f;
+    private static final float TURNSPEED = .01f;
     private Vector3f position;
     private Vector3f upDirection;
     private Vector3f front;
@@ -19,7 +19,6 @@ public class Camera {
     private Quaternionf orientation;
     private float currentSpeed = 0.f;
     private float mouseSensitivity = TURNSPEED;
-
 
     public Camera(Vector3f position, Vector3f upDirection, Vector3f front) {
         this.position = position;
@@ -45,19 +44,26 @@ public class Camera {
         float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
-        orientation.rotateLocalX((float) Math.toRadians(-pitchAmount)).rotateLocalY((float) Math.toRadians(-yawAmount));
+        orientation.rotateLocalX(-pitchAmount).rotateLocalY(-yawAmount);
     }
 
     public void move(float deltaTime) {
 
-        currentSpeed = 0.0f;
+        currentSpeed = SPEED;
+        float distance = currentSpeed * deltaTime;
         if (KeyListener.isKeyPressed(GLFW_KEY_W)) {
-            currentSpeed = -SPEED;
-        } else if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
-            currentSpeed = SPEED;
+            position.sub(orientation.positiveZ(new Vector3f()).mul(distance));
+        }
+        if (KeyListener.isKeyPressed(GLFW_KEY_S)) {
+            position.add(orientation.positiveZ(new Vector3f()).mul(distance));
+        }
+        if (KeyListener.isKeyPressed(GLFW_KEY_A)) {
+            position.sub(orientation.positiveX(new Vector3f()).mul(distance));
+        }
+        if (KeyListener.isKeyPressed(GLFW_KEY_D)){
+            position.add(orientation.positiveX(new Vector3f()).mul(distance));
         }
 
-        float distance = currentSpeed * deltaTime;
-        position.add(orientation.positiveZ(new Vector3f()).mul(distance));
+
     }
 }

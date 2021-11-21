@@ -44,7 +44,7 @@ void main()
     float brightness = max(dotln, 0.0f);
     float globalBrightness = max(dotGln, 0.2f);
 
-    vec3 diffuse = (globalBrightness * uGlobalLightColour) + (brightness * attenuation * fLightColour);
+    vec3 diffuse = (globalBrightness * uGlobalLightColour) + (brightness * attenuation * uLightColour);
     vec3 specular = calculateSpecularReflection(unitGlobalLightDirection, unitSurfaceNormal, unitToCamera);
 
     color = vec4(diffuse, 1.0) * texture(fTexture, fTextCoord) + vec4(specular, 1.0);

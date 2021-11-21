@@ -51,7 +51,7 @@ public class ShaderProgram {
         compileShaders();
         attachCompiledShaders();
         detachAndDeleteAllShaders();
-        setupUniformData(projection, view, modelTransformation);
+        setupUniformData(projection, view, modelTransformation, globalLightDirection, globalLightColour, lightPosition, lightColour);
         initialised = true;
     }
 

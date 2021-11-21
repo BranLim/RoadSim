@@ -4,18 +4,14 @@ import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.Texture;
-import org.joml.Matrix4f;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glDrawElements;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -27,7 +23,6 @@ public class GlRenderer implements Renderer {
     public GlRenderer(List<ShaderProgram> shaderPrograms) {
         this.shaderPrograms = shaderPrograms;
     }
-
 
     public void prepare() {
         glEnable(GL_DEPTH_TEST);
@@ -48,7 +43,6 @@ public class GlRenderer implements Renderer {
             }
             unbindTexturedModel(model);
         }
-
     }
 
     private void prepareEntity(GameObject gameObject) {
@@ -65,6 +59,7 @@ public class GlRenderer implements Renderer {
         Texture texture = texturedModel.getTexture();
         if (texture != null) {
             for(ShaderProgram shaderProgram: shaderPrograms){
+                shaderProgram.uploadTexture("fTexture",0);
                 shaderProgram.uploadFloat("uReflectivity",texture.getReflectivity());
                 shaderProgram.uploadFloat("uShineDampen", texture.getShineDampener());
             }
