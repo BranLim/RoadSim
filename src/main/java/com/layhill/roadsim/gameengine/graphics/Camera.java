@@ -63,7 +63,5 @@ public class Camera {
         if (KeyListener.isKeyPressed(GLFW_KEY_D)){
             position.add(orientation.positiveX(new Vector3f()).mul(distance));
         }
-
-
     }
 }

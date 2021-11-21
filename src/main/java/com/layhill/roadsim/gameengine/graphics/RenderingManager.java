@@ -51,7 +51,6 @@ public class RenderingManager {
             for(Light light: lights){
                 shaderProgram.loadPositionalLight(light.getPosition(), light.getColour());
             }
-
         }
         renderer.processEntities(window, entities);
         renderer.show(window);

@@ -29,7 +29,7 @@ public class GlRenderer implements Renderer {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
-        glClearColor(0.20f, 0.20f, 0.20f, 1.0f);
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 

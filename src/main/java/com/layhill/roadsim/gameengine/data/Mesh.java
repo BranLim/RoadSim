@@ -6,7 +6,13 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Mesh {
 
@@ -26,6 +32,28 @@ public class Mesh {
             vertexCount = vertices.size() * 3;
         } else {
             vertexCount = vertexIndices.size();
+        }
+    }
+
+    public Mesh(float[] vertices, float[] normals, float[] textureCoordinates, int[] vertexIndices) {
+        this.vertices = new ArrayList<>();
+        vertexNormals = new ArrayList<>();
+        this.textureCoordinates = new ArrayList<>();
+
+        for (int i = 0; i < vertices.length; i += 3) {
+            this.vertices.add(new Vector3f(vertices[i], vertices[i + 1], vertices[i + 2]));
+        }
+
+        for (int i = 0; i < normals.length; i += 3) {
+            vertexNormals.add(new Vector3f(normals[i], normals[i + 1], normals[i + 2]));
+        }
+
+        for (int i = 0; i < textureCoordinates.length; i += 2) {
+            this.textureCoordinates.add(new Vector2f(textureCoordinates[i], textureCoordinates[i + 1]));
+        }
+
+        if (vertexIndices != null) {
+            this.vertexIndices = Arrays.stream(vertexIndices).boxed().collect(Collectors.toList());
         }
     }
 
