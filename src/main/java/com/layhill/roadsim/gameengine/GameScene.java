@@ -21,8 +21,10 @@ public class GameScene extends Scene {
     private Map<Integer, ShaderProgram> shaderPrograms = new HashMap<>();
     private ShaderProgram shaderProgram;
     private Light light;
+    private RenderingManager renderingManager;
 
-    public GameScene() {
+    public GameScene(RenderingManager renderingManager) {
+        this.renderingManager = renderingManager;
     }
 
     @Override
@@ -78,27 +80,14 @@ public class GameScene extends Scene {
 
         camera.move(deltaTime);
 
-        shaderProgram.start();
-        shaderProgram.loadCamera(camera);
         shaderProgram.uploadVec3f("uLightPosition", light.getPosition());
-        shaderProgram.uploadVec3f("fLightColour", light.getColour());
-        shaderProgram.uploadVec3f("uGlobalLightDirection", new Vector3f(-40.f, 100.f, -30.f));
-        shaderProgram.uploadVec3f("uGlobalLightColour", new Vector3f(1.f, 1.f, 1.f));
+        shaderProgram.uploadVec3f("uLightColour", light.getColour());
 
-        for (Integer vao : vaos) {
-            bindVao(vao);
-            shaderProgram.uploadTexture("fTexture", 0);
-
-            for (GameObject gameObject : gameObjects) {
-                shaderProgram.uploadFloat("uReflectivity", gameObject.getTexture().getReflectivity());
-                shaderProgram.uploadFloat("uShineDampen", gameObject.getTexture().getShineDampener());
-                shaderProgram.loadModelTransformation(gameObject);
-                gameObject.render();
-            }
-
-            unbind();
-            shaderProgram.stop();
+        for (GameObject gameObject : gameObjects) {
+            renderingManager.addToQueue(gameObject);
         }
+        renderingManager.run(camera);
+
     }
 
     @Override

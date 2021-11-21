@@ -44,6 +44,10 @@ public class GameObject {
         texturedModel.render();
     }
 
+    public TexturedModel getTexturedModel(){
+        return texturedModel;
+    }
+
     public Texture getTexture(){
         return texturedModel.getTexture();
     }

@@ -8,7 +8,7 @@ public class UniformVector3f extends Uniform {
 
     private Vector3f value;
 
-    protected UniformVector3f(String name) {
+    public UniformVector3f(String name) {
         super(name);
     }
 

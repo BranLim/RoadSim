@@ -8,6 +8,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL15.*;
@@ -17,6 +19,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class TexturedModel implements Renderable {
 
+    private String id;
     private int vaoId;
     private int vertexCount;
     private boolean uploadedToGpu = false;
@@ -27,10 +30,31 @@ public class TexturedModel implements Renderable {
     private List<Integer> attributes = new ArrayList<>();
 
     public TexturedModel(int vaoId, Mesh mesh, Texture texture) {
+        id = UUID.randomUUID().toString();
         this.vaoId = vaoId;
         this.mesh = mesh;
         this.texture = texture;
         vertexCount = mesh.getVertexCount();
+    }
+
+    public Texture getTexture() {
+        return texture;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public int getVaoId() {
+        return vaoId;
+    }
+
+    public List<Integer> getAttributes(){
+        return attributes;
+    }
+
+    public int getVertexCount(){
+        return vertexCount;
     }
 
     @Override
@@ -75,7 +99,7 @@ public class TexturedModel implements Renderable {
 
         attributePointerId = 2;
         int normalBufferId = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER,normalBufferId );
+        glBindBuffer(GL_ARRAY_BUFFER, normalBufferId);
         vbos.add(normalBufferId);
 
         FloatBuffer normalBuffer = mesh.vertexNormalsToFloatBuffer();
@@ -97,10 +121,10 @@ public class TexturedModel implements Renderable {
         for (var attribute : attributes) {
             glEnableVertexAttribArray(attribute);
         }
-       if (texture!=null){
-           glActiveTexture(GL_TEXTURE0);
-           texture.bind();
-       }
+        if (texture != null) {
+            glActiveTexture(GL_TEXTURE0);
+            texture.bind();
+        }
         glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
 
         for (var attribute : attributes) {
@@ -130,7 +154,22 @@ public class TexturedModel implements Renderable {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     }
 
-    public Texture getTexture() {
-        return texture;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TexturedModel that = (TexturedModel) o;
+        return id.equals(that.id);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+
 }

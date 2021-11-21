@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine;
 
+import com.layhill.roadsim.gameengine.graphics.RenderingManager;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -48,7 +49,7 @@ public class Window {
                 currentScene.init();
             }
             case 1 -> {
-                currentScene = new GameScene();
+                currentScene = new GameScene(new RenderingManager(glfwWindow));
                 currentScene.init();
             }
         }

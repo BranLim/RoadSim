@@ -3,6 +3,7 @@ package com.layhill.roadsim.gameengine.graphics;
 import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.gl.Uniform;
 import com.layhill.roadsim.gameengine.graphics.gl.UniformMatrix4f;
+import com.layhill.roadsim.gameengine.graphics.gl.UniformVector3f;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -21,9 +22,17 @@ public class ShaderProgram {
     private List<Shader> shaders = new ArrayList<>();
     private List<Uniform> uniformData = new ArrayList<>();
     private boolean initialised;
+
     private UniformMatrix4f projection = new UniformMatrix4f("uProjection");
     private UniformMatrix4f view = new UniformMatrix4f("uView");
     private UniformMatrix4f modelTransformation = new UniformMatrix4f("uTransformation");
+
+    private UniformVector3f globalLightDirection = new UniformVector3f("uGlobalLightDirection");
+    private UniformVector3f globalLightColour = new UniformVector3f("uGlobalLightColour");
+
+    private UniformVector3f lightPosition = new UniformVector3f("uLightPosition");
+    private UniformVector3f lightColour = new UniformVector3f("uLightColour");
+
 
     public ShaderProgram() {
 
@@ -132,11 +141,21 @@ public class ShaderProgram {
         view.load(camera.getViewMatrix());
     }
 
-    public void loadModelTransformation(GameObject gameObject){
+    public void loadModelTransformation(GameObject gameObject) {
         if (!initialised || gameObject == null) {
             return;
         }
         modelTransformation.load(gameObject.getTransformationMatrix());
+    }
+
+    public void loadGlobalLight(Vector3f direction, Vector3f colour) {
+        globalLightDirection.load(direction);
+        globalLightColour.load(colour);
+    }
+
+    public void loadPositionalLight(Vector3f position, Vector3f colour) {
+        lightPosition.load(position);
+        lightColour.load(colour);
     }
 
 }

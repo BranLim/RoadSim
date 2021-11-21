@@ -31,6 +31,30 @@ public class Texture {
         glBindTexture(target, texId);
     }
 
+    public float getShineDampener() {
+        return shineDampener;
+    }
+
+    public float getReflectivity() {
+        return reflectivity;
+    }
+
+    public void setShineDampener(float shineDampener){
+        this.shineDampener = shineDampener;
+    }
+
+    public void setReflectivity(float reflectivity){
+        this.reflectivity = reflectivity;
+    }
+
+    public int getGlTexTarget() {
+        return target;
+    }
+
+    public int getGlTexId() {
+        return texId;
+    }
+
     public void prepare(){
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -52,19 +76,5 @@ public class Texture {
         glDeleteTextures(texId);
     }
 
-    public float getShineDampener() {
-        return shineDampener;
-    }
 
-    public float getReflectivity() {
-        return reflectivity;
-    }
-
-    public void setShineDampener(float shineDampener){
-        this.shineDampener = shineDampener;
-    }
-
-    public void setReflectivity(float reflectivity){
-        this.reflectivity = reflectivity;
-    }
 }

@@ -7,7 +7,7 @@ in vec2 fTextCoord;
 in vec3 fToCameraCentre;
 
 uniform sampler2D fTexture;
-uniform vec3 fLightColour;
+uniform vec3 uLightColour;
 uniform vec3 uGlobalLightDirection;
 uniform vec3 uGlobalLightColour;
 uniform float uReflectivity;
