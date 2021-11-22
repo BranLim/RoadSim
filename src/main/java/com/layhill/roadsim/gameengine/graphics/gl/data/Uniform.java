@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.graphics.gl;
+package com.layhill.roadsim.gameengine.graphics.gl.data;
 
 
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;

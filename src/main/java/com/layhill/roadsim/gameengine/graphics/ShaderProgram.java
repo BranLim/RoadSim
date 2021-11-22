@@ -1,9 +1,9 @@
 package com.layhill.roadsim.gameengine.graphics;
 
 import com.layhill.roadsim.gameengine.entities.GameObject;
-import com.layhill.roadsim.gameengine.graphics.gl.Uniform;
-import com.layhill.roadsim.gameengine.graphics.gl.UniformMatrix4f;
-import com.layhill.roadsim.gameengine.graphics.gl.UniformVector3f;
+import com.layhill.roadsim.gameengine.graphics.gl.data.Uniform;
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
