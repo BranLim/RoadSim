@@ -1,14 +1,15 @@
 package com.layhill.roadsim.gameengine.entities;
 
 import com.layhill.roadsim.gameengine.data.Mesh;
-import org.joml.Vector3f;
+import com.layhill.roadsim.gameengine.graphics.Texture;
+import com.layhill.roadsim.gameengine.graphics.TextureFactory;
+import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 public class TerrainGenerator {
 
-    public static Terrain generate(int gridX, int gridZ) {
+    public static Terrain generate(int startingX, int startingZ) {
         int totalVertexCount = Terrain.VERTEX_COUNT_PER_SIDE * Terrain.VERTEX_COUNT_PER_SIDE;
         float[] vertices = new float[totalVertexCount * 3];
         float[] normals = new float[totalVertexCount * 3];
@@ -52,6 +53,10 @@ public class TerrainGenerator {
 
         Mesh mesh = new Mesh(vertices, normals, textureCoordinates, vertexIndices);
 
-        return new Terrain(gridX, gridZ, mesh, null);
+        Optional<Texture> texture = TextureFactory.loadAsTextureFromFile("", 0);
+
+        TexturedModel texturedModel = texture.map(value -> new TexturedModel(-1, mesh, value)).orElse(null);
+
+        return new Terrain(startingX, startingZ, texturedModel);
     }
 }
