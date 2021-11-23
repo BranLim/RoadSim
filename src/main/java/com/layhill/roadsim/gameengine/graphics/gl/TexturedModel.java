@@ -34,6 +34,15 @@ public class TexturedModel {
         vertexCount = mesh.getVertexCount();
     }
 
+    public TexturedModel(int vaoId, List<Integer> attributes, Mesh mesh, List<Texture> textures) {
+        id = UUID.randomUUID().toString();
+        this.vaoId = vaoId;
+        this.attributes = attributes;
+        this.mesh = mesh;
+
+        vertexCount = mesh.getVertexCount();
+    }
+
     public Texture getTexture() {
         return texture;
     }
