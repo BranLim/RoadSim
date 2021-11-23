@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.graphics;
+package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -6,75 +6,31 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Texture {
 
-    private int texId;
-    private int target;
     private int width;
     private int height;
     private int channel;
     private ByteBuffer image;
-    private float shineDampener = 1.f;
-    private float reflectivity = 0.f;
 
-    protected Texture(ByteBuffer image, int width, int height, int channel, int target) {
+    public Texture(ByteBuffer image, int width, int height, int channel) {
         this.width = width;
         this.height = height;
         this.image = image;
         this.channel = channel;
-        this.target = target;
     }
 
-    public void generate(){
-        texId = glGenTextures();
+    public int getWidth() {
+        return width;
     }
 
-    public void bind(){
-        glBindTexture(target, texId);
+    public int getHeight() {
+        return height;
     }
 
-    public float getShineDampener() {
-        return shineDampener;
+    public ByteBuffer getImage(){
+        return image;
     }
 
-    public float getReflectivity() {
-        return reflectivity;
+    public int getChannel() {
+        return channel;
     }
-
-    public void setShineDampener(float shineDampener){
-        this.shineDampener = shineDampener;
-    }
-
-    public void setReflectivity(float reflectivity){
-        this.reflectivity = reflectivity;
-    }
-
-    public int getGlTexTarget() {
-        return target;
-    }
-
-    public int getGlTexId() {
-        return texId;
-    }
-
-    public void prepare(){
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        switch (channel) {
-            case 3 -> glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-            case 4 -> glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-        }
-    }
-
-    public void unbind(){
-        glBindTexture(target, 0);
-    }
-
-    public void dispose(){
-        unbind();
-        glDeleteTextures(texId);
-    }
-
-
 }

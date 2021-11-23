@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.entities;
+package com.layhill.roadsim.gameengine.graphics.models;
 
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 

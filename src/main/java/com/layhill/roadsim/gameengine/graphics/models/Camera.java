@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.graphics;
+package com.layhill.roadsim.gameengine.graphics.models;
 
 import com.layhill.roadsim.gameengine.KeyListener;
 import com.layhill.roadsim.gameengine.MouseListener;

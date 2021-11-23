@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.data;
+package com.layhill.roadsim.gameengine.graphics.models;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -6,13 +6,10 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Mesh {
 

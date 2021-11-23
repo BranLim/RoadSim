@@ -3,6 +3,11 @@ package com.layhill.roadsim.gameengine.graphics;
 import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.gl.GlRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.Shader;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.models.Camera;
+import com.layhill.roadsim.gameengine.graphics.models.Light;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
@@ -61,7 +66,7 @@ public class RenderingManager {
         entities.clear();
     }
 
-    public void cleanUp() {
+    public void dispose() {
        for(ShaderProgram shaderProgram: shaderPrograms){
            shaderProgram.stop();
            shaderProgram.dispose();

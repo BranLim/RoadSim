@@ -1,6 +1,6 @@
 package com.layhill.roadsim.gameengine.io;
 
-import com.layhill.roadsim.gameengine.data.Mesh;
+import com.layhill.roadsim.gameengine.graphics.models.Mesh;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -19,7 +20,9 @@ public class MeshLoader {
     private static final List<String> OBJ_DATA_PREFIXES = List.of("v", "vt", "vn", "vp", "f", "l");
 
     public static Optional<Mesh> loadObjAsMesh(String file) {
-        URL filePath = ResourceLoader.class.getClassLoader().getResource(file);
+        URL filePath = MeshLoader.class.getClassLoader().getResource(file);
+        Objects.requireNonNull(filePath);
+
         List<Vector3f> processedVertices = new ArrayList<>();
 
         List<Vector3f> preprocessedVertexNormals = new ArrayList<>();

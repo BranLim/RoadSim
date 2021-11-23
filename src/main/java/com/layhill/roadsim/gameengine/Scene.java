@@ -1,6 +1,6 @@
 package com.layhill.roadsim.gameengine;
 
-import com.layhill.roadsim.gameengine.graphics.Camera;
+import com.layhill.roadsim.gameengine.graphics.models.Camera;
 
 public abstract class Scene {
 

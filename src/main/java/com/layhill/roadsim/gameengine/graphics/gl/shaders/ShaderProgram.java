@@ -1,6 +1,7 @@
-package com.layhill.roadsim.gameengine.graphics;
+package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
 import com.layhill.roadsim.gameengine.entities.GameObject;
+import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.gl.data.Uniform;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;

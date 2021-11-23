@@ -1,15 +1,8 @@
-package com.layhill.roadsim.gameengine.entities;
-
-import com.layhill.roadsim.gameengine.data.Mesh;
-import com.layhill.roadsim.gameengine.graphics.Texture;
-import com.layhill.roadsim.gameengine.graphics.TextureFactory;
-import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
-
-import java.util.Optional;
+package com.layhill.roadsim.gameengine.graphics.models;
 
 public class TerrainGenerator {
 
-    public static Terrain generate(int startingX, int startingZ) {
+    public static Mesh generateTerrainMesh(int startingX, int startingZ) {
         int totalVertexCount = Terrain.VERTEX_COUNT_PER_SIDE * Terrain.VERTEX_COUNT_PER_SIDE;
         float[] vertices = new float[totalVertexCount * 3];
         float[] normals = new float[totalVertexCount * 3];
@@ -50,13 +43,6 @@ public class TerrainGenerator {
                 vertexIndices[pointer++] = bottomRight;
             }
         }
-
-        Mesh mesh = new Mesh(vertices, normals, textureCoordinates, vertexIndices);
-
-        Optional<Texture> texture = TextureFactory.loadAsTextureFromFile("", 0);
-
-        TexturedModel texturedModel = texture.map(value -> new TexturedModel(-1, mesh, value)).orElse(null);
-
-        return new Terrain(startingX, startingZ, texturedModel);
+        return new Mesh(vertices, normals, textureCoordinates, vertexIndices);
     }
 }
