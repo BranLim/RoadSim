@@ -1,7 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.models.Mesh;
-import com.layhill.roadsim.gameengine.graphics.Texture;
+import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 
@@ -67,7 +67,7 @@ public final class GLResourceLoader {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_STATIC_DRAW);
     }
 
-    public GLTexture loadTexture(Texture texture, int target) {
+    public GLTexture loadTexture(RawTexture texture, int target) {
 
         int textureId = glGenTextures();
         glBindTexture(target, textureId);

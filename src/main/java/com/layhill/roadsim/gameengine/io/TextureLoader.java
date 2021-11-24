@@ -1,6 +1,6 @@
 package com.layhill.roadsim.gameengine.io;
 
-import com.layhill.roadsim.gameengine.graphics.Texture;
+import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import org.lwjgl.BufferUtils;
 
 import java.net.URL;
@@ -13,7 +13,7 @@ import static org.lwjgl.stb.STBImage.stbi_load;
 
 public class TextureLoader {
 
-    public static Optional<Texture> loadAsTextureFromFile(String filepath) {
+    public static Optional<RawTexture> loadAsTextureFromFile(String filepath) {
         URL file = TextureLoader.class.getClassLoader().getResource(filepath);
         IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
@@ -22,6 +22,6 @@ public class TextureLoader {
         if (image == null) {
             return Optional.empty();
         }
-        return Optional.of(new Texture(image, width.get(0), height.get(0), channels.get(0)));
+        return Optional.of(new RawTexture(image, width.get(0), height.get(0), channels.get(0)));
     }
 }

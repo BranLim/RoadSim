@@ -4,14 +4,14 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Texture {
+public class RawTexture {
 
     private int width;
     private int height;
     private int channel;
     private ByteBuffer image;
 
-    public Texture(ByteBuffer image, int width, int height, int channel) {
+    public RawTexture(ByteBuffer image, int width, int height, int channel) {
         this.width = width;
         this.height = height;
         this.image = image;

@@ -1,8 +1,8 @@
 package com.layhill.roadsim.gameengine.resources;
 
+import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.models.Mesh;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
-import com.layhill.roadsim.gameengine.graphics.Texture;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
@@ -29,14 +29,14 @@ public final class ResourceManager {
 
     public TexturedModel loadTexturedModel(String modelFilePath, String textureFilePath, String referenceName) {
         Optional<Mesh> meshOpt = MeshLoader.loadObjAsMesh(modelFilePath);
-        Optional<Texture> textureOpt = TextureLoader.loadAsTextureFromFile(textureFilePath);
+        Optional<RawTexture> textureOpt = TextureLoader.loadAsTextureFromFile(textureFilePath);
         if (meshOpt.isPresent() && textureOpt.isPresent()) {
-            GLModel rawModel = resourceLoader.loadToVao(meshOpt.get());
-            Texture texture = textureOpt.get();
+            GLModel glModel = resourceLoader.loadToVao(meshOpt.get());
+            RawTexture rawTexture = textureOpt.get();
 
-            GLTexture rawTexture = resourceLoader.loadTexture(texture, GL_TEXTURE_2D);
-            Material material = new Material(rawTexture);
-            TexturedModel texturedModel = new TexturedModel(rawModel, material);
+            GLTexture glTexture = resourceLoader.loadTexture(rawTexture, GL_TEXTURE_2D);
+            Material material = new Material(glTexture);
+            TexturedModel texturedModel = new TexturedModel(glModel, material);
             texturedModels.put(referenceName, texturedModel);
             return texturedModel;
         }
