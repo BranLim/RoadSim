@@ -16,7 +16,6 @@ out vec3 fToCameraCentre;
 
 void main()
 {
-
     vec4 worldPosition = uTransformation * vec4(aPos, 1.0);
     gl_Position = uProjection * uView * worldPosition;
 

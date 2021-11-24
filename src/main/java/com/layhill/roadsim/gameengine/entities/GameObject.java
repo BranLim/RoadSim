@@ -1,13 +1,12 @@
 package com.layhill.roadsim.gameengine.entities;
 
-import com.layhill.roadsim.gameengine.graphics.Texture;
+import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 @Slf4j
-public class GameObject {
+public class GameObject implements Renderable {
     private Vector3f position;
     private float rotateX;
     private float rotateY;
@@ -25,18 +24,27 @@ public class GameObject {
         this.texturedModel = meshModel;
     }
 
-    public Matrix4f getTransformationMatrix() {
-        Matrix4f matrix = new Matrix4f();
-        matrix.identity()
-                .translate(position, matrix)
-                .rotate((float) Math.toRadians(rotateX), new Vector3f(1.f, 0.f, 0.f), matrix)
-                .rotate((float) Math.toRadians(rotateY), new Vector3f(0.f, 1.f, 0.f), matrix)
-                .rotate((float) Math.toRadians(rotateZ), new Vector3f(0.f, 0.f, 1.f), matrix)
-                .scale(new Vector3f(scale, scale, scale), matrix);
-
-        return matrix;
+    public Vector3f getPosition() {
+        return position;
     }
 
+    public float getRotateX() {
+        return rotateX;
+    }
+
+    public float getRotateY() {
+        return rotateY;
+    }
+
+    public float getRotateZ() {
+        return rotateZ;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    @Override
     public TexturedModel getTexturedModel(){
         return texturedModel;
     }

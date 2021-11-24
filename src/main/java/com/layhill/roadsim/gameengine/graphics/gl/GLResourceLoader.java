@@ -1,9 +1,9 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.models.Mesh;
-import com.layhill.roadsim.gameengine.graphics.Texture;
-import com.layhill.roadsim.gameengine.graphics.gl.objects.GLRawModel;
-import com.layhill.roadsim.gameengine.graphics.gl.objects.GLRawTexture;
+import com.layhill.roadsim.gameengine.graphics.RawTexture;
+import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
+import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -17,6 +17,10 @@ import static org.lwjgl.opengl.GL30.*;
 
 public final class GLResourceLoader {
 
+    private static final class GLResourceLoaderHolder{
+        private static final GLResourceLoader loader = new GLResourceLoader();
+    }
+
     private static final int TRIANGLE_ATTRIBUTE_POSITION = 0;
     private static final int TEXTURE_COORDINATE_ATTRIBUTE_POSITION = 1;
     private static final int VERTEX_NORMAL_ATTRIBUTE_POSITION = 2;
@@ -25,11 +29,15 @@ public final class GLResourceLoader {
     private final List<Integer> vbos = new ArrayList<>();
     private final List<Integer> textureIds = new ArrayList<>();
 
-    public GLResourceLoader() {
+    private GLResourceLoader() {
 
     }
 
-    public GLRawModel loadToVao(Mesh mesh) {
+    public static GLResourceLoader getInstance(){
+        return GLResourceLoaderHolder.loader;
+    }
+
+    public GLModel loadToVao(Mesh mesh) {
         Objects.requireNonNull(mesh);
         List<Integer> attributes = new ArrayList<>();
         int vaoId = glGenVertexArrays();
@@ -48,7 +56,7 @@ public final class GLResourceLoader {
         attributes.add(VERTEX_NORMAL_ATTRIBUTE_POSITION);
 
         glBindVertexArray(0);
-        return new GLRawModel(vaoId, mesh.getVertexCount(), attributes);
+        return new GLModel(vaoId, mesh.getVertexCount(), attributes);
     }
 
     private void storeDataInAttributeList(int attributeIndex, int dataWidth, FloatBuffer data) {
@@ -67,7 +75,7 @@ public final class GLResourceLoader {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_STATIC_DRAW);
     }
 
-    public GLRawTexture loadTexture(Texture texture, int target) {
+    public GLTexture loadTexture(RawTexture texture, int target) {
 
         int textureId = glGenTextures();
         glBindTexture(target, textureId);
@@ -84,7 +92,7 @@ public final class GLResourceLoader {
         }
 
         glBindTexture(target, 0);
-        return new GLRawTexture(textureId, target);
+        return new GLTexture(textureId, target);
     }
 
     public void dispose() {

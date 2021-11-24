@@ -2,6 +2,7 @@ package com.layhill.roadsim.gameengine.graphics.models;
 
 import com.layhill.roadsim.gameengine.KeyListener;
 import com.layhill.roadsim.gameengine.MouseListener;
+import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -24,7 +25,7 @@ public class Camera {
         this.position = position;
         this.upDirection = upDirection;
         this.front = front;
-        orientation = com.layhill.roadsim.gameengine.utils.Math.lookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
+        orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
         projection.setPerspective((float) Math.toRadians(60.0), 1920f / 1080f, 1.0f, 1000.0f);
     }
 
@@ -44,7 +45,7 @@ public class Camera {
         float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
-        orientation.rotateLocalX(-pitchAmount).rotateLocalY(-yawAmount);
+        orientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
     }
 
     public void move(float deltaTime) {

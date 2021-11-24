@@ -1,10 +1,9 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
-import com.layhill.roadsim.gameengine.entities.GameObject;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.gl.data.Uniform;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
+import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -142,11 +141,11 @@ public class ShaderProgram {
         view.load(camera.getViewMatrix());
     }
 
-    public void loadModelTransformation(GameObject gameObject) {
-        if (!initialised || gameObject == null) {
+    public void loadModelTransformation(Matrix4f transformationMatrix) {
+        if (!initialised ) {
             return;
         }
-        modelTransformation.load(gameObject.getTransformationMatrix());
+        modelTransformation.load(transformationMatrix);
     }
 
     public void loadGlobalLight(Vector3f direction, Vector3f colour) {

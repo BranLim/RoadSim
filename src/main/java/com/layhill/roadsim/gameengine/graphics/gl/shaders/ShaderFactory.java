@@ -47,4 +47,34 @@ public class ShaderFactory {
             }
         }
     }
+
+    public static ShaderProgram createTerrainShaderProgram() {
+        ShaderProgram shaderProgram = new ShaderProgram();
+        try {
+            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/terrainvertex.glsl").orElse(null);
+            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplefragment.glsl").orElse(null);
+
+            shaderProgram.addShader(vertexShader);
+            shaderProgram.addShader(fragmentShader);
+            shaderProgram.init();
+        } catch (IOException e) {
+            log.error("Error loading shader from file", e);
+        }
+        return shaderProgram;
+    }
+
+    public static ShaderProgram createDefaultShaderProgram() {
+        ShaderProgram shaderProgram = new ShaderProgram();
+        try {
+            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplevertex.glsl").orElse(null);
+            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplefragment.glsl").orElse(null);
+
+            shaderProgram.addShader(vertexShader);
+            shaderProgram.addShader(fragmentShader);
+            shaderProgram.init();
+        } catch (IOException e) {
+            log.error("Error loading shader from file", e);
+        }
+        return shaderProgram;
+    }
 }
