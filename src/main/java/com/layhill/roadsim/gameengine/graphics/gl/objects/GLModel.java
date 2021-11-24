@@ -3,13 +3,13 @@ package com.layhill.roadsim.gameengine.graphics.gl.objects;
 import java.util.List;
 import java.util.UUID;
 
-public class GLRawModel {
+public class GLModel {
     private String id;
     private int vaoId;
     private int vertexCount;
     private List<Integer> attributes ;
 
-    public GLRawModel(int vaoId, int vertexCount, List<Integer> attributes) {
+    public GLModel(int vaoId, int vertexCount, List<Integer> attributes) {
         this.id = UUID.randomUUID().toString();
         this.vaoId = vaoId;
         this.vertexCount = vertexCount;

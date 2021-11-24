@@ -1,7 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.models;
 
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
-import com.layhill.roadsim.gameengine.graphics.gl.objects.GLRawTexture;
+import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 
 import java.util.UUID;
 
@@ -12,15 +12,15 @@ public class Material {
     private float shineDampener;
     private boolean emissive;
     private float transparency;
-    private GLRawTexture texture;
-    private GLRawTexture specularMap;
+    private GLTexture texture;
+    private GLTexture specularMap;
     private ShaderProgram shaderProgram;
 
     private Material(){
         id = UUID.randomUUID().toString();
     }
 
-    public Material(GLRawTexture texture) {
+    public Material(GLTexture texture) {
         this();
         this.texture = texture;
         reflectivity = 1.f;
@@ -28,7 +28,7 @@ public class Material {
         emissive = false;
     }
 
-    public Material(GLRawTexture texture, GLRawTexture specularMap){
+    public Material(GLTexture texture, GLTexture specularMap){
         this();
         this.texture = texture;
         this.specularMap = specularMap;
@@ -38,7 +38,7 @@ public class Material {
         return id;
     }
 
-    public GLRawTexture getTexture() {
+    public GLTexture getTexture() {
         return texture;
     }
 

@@ -1,11 +1,11 @@
 package com.layhill.roadsim.gameengine.graphics.gl.objects;
 
-public class GLRawTexture {
+public class GLTexture {
 
     private int textureId;
     private int target;
 
-    public GLRawTexture(int textureId, int target) {
+    public GLTexture(int textureId, int target) {
         this.textureId = textureId;
         this.target = target;
     }

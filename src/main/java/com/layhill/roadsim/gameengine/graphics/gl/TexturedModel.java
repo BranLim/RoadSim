@@ -1,7 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.models.Material;
-import com.layhill.roadsim.gameengine.graphics.gl.objects.GLRawModel;
+import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -9,10 +9,10 @@ import java.util.UUID;
 public class TexturedModel {
 
     private String id;
-    private GLRawModel rawModel;
+    private GLModel rawModel;
     private Material material;
 
-    public TexturedModel(GLRawModel rawModel, Material material) {
+    public TexturedModel(GLModel rawModel, Material material) {
         id = UUID.randomUUID().toString();
         this.rawModel = rawModel;
         this.material = material;
@@ -26,7 +26,7 @@ public class TexturedModel {
         return id;
     }
 
-    public GLRawModel getRawModel() {
+    public GLModel getRawModel() {
         return rawModel;
     }
 

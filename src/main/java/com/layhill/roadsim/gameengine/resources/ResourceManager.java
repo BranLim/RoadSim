@@ -6,8 +6,8 @@ import com.layhill.roadsim.gameengine.graphics.Texture;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
-import com.layhill.roadsim.gameengine.graphics.gl.objects.GLRawModel;
-import com.layhill.roadsim.gameengine.graphics.gl.objects.GLRawTexture;
+import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
+import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.io.MeshLoader;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,10 +31,10 @@ public final class ResourceManager {
         Optional<Mesh> meshOpt = MeshLoader.loadObjAsMesh(modelFilePath);
         Optional<Texture> textureOpt = TextureLoader.loadAsTextureFromFile(textureFilePath);
         if (meshOpt.isPresent() && textureOpt.isPresent()) {
-            GLRawModel rawModel = resourceLoader.loadToVao(meshOpt.get());
+            GLModel rawModel = resourceLoader.loadToVao(meshOpt.get());
             Texture texture = textureOpt.get();
 
-            GLRawTexture rawTexture = resourceLoader.loadTexture(texture, GL_TEXTURE_2D);
+            GLTexture rawTexture = resourceLoader.loadTexture(texture, GL_TEXTURE_2D);
             Material material = new Material(rawTexture);
             TexturedModel texturedModel = new TexturedModel(rawModel, material);
             texturedModels.put(referenceName, texturedModel);
