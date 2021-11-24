@@ -1,13 +1,26 @@
 package com.layhill.roadsim.gameengine.utils;
 
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class Math {
+public class Transformation {
 
     public static final float EPSILON = 0.000001f;
 
-    public static Quaternionf lookAt(Vector3f position, Vector3f destination, Vector3f worldForward, Vector3f worldUp){
+    public static Matrix4f createTransformationMatrix(Vector3f position, float rotateX, float rotateY, float rotateZ, float scale) {
+        Matrix4f matrix = new Matrix4f();
+        matrix.identity()
+                .translate(position, matrix)
+                .rotate((float) java.lang.Math.toRadians(rotateX), new Vector3f(1.f, 0.f, 0.f), matrix)
+                .rotate((float) java.lang.Math.toRadians(rotateY), new Vector3f(0.f, 1.f, 0.f), matrix)
+                .rotate((float) java.lang.Math.toRadians(rotateZ), new Vector3f(0.f, 0.f, 1.f), matrix)
+                .scale(new Vector3f(scale, scale, scale), matrix);
+
+        return matrix;
+    }
+
+    public static Quaternionf createLookAt(Vector3f position, Vector3f destination, Vector3f worldForward, Vector3f worldUp){
         Vector3f unitWorldUp = new Vector3f(worldUp).normalize();
         Vector3f unitWorldForward = new Vector3f(worldForward).normalize();
 

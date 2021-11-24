@@ -49,8 +49,11 @@ public class Mesh {
             this.textureCoordinates.add(new Vector2f(textureCoordinates[i], textureCoordinates[i + 1]));
         }
 
-        if (vertexIndices != null) {
+        if (vertexIndices == null || vertexIndices.length == 0) {
+            vertexCount = vertices.length * 3;
+        } else {
             this.vertexIndices = Arrays.stream(vertexIndices).boxed().collect(Collectors.toList());
+            vertexCount = vertexIndices.length;
         }
     }
 

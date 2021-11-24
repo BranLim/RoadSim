@@ -20,7 +20,7 @@ void main()
     gl_Position = uProjection * uView * worldPosition;
 
     fToCameraCentre = (inverse(uView) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-    fTextCoord = aTextCoord;
+    fTextCoord = aTextCoord * 40.0f;
     fSurfaceNormal = (worldPosition * vec4(aSurfaceNormal, 0.0)).xyz;
     fLightDirection = uLightPosition - worldPosition.xyz;
 

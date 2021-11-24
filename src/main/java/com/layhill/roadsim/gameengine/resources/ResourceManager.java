@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
@@ -21,22 +22,20 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 public final class ResourceManager {
 
     private final Map<String, TexturedModel> texturedModels = new HashMap<>();
-    private GLResourceLoader resourceLoader = new GLResourceLoader();
+    private GLResourceLoader resourceLoader = GLResourceLoader.getInstance();
 
     public ResourceManager() {
 
     }
 
     public TexturedModel loadTexturedModel(String modelFilePath, String textureFilePath, String referenceName) {
+        Objects.requireNonNull(referenceName);
+        Objects.requireNonNull(modelFilePath);
         Optional<Mesh> meshOpt = MeshLoader.loadObjAsMesh(modelFilePath);
-        Optional<RawTexture> textureOpt = TextureLoader.loadAsTextureFromFile(textureFilePath);
-        if (meshOpt.isPresent() && textureOpt.isPresent()) {
+        Optional<Material> materialOpt = getMaterialFromTexture(textureFilePath);
+        if (meshOpt.isPresent() && materialOpt.isPresent()) {
             GLModel glModel = resourceLoader.loadToVao(meshOpt.get());
-            RawTexture rawTexture = textureOpt.get();
-
-            GLTexture glTexture = resourceLoader.loadTexture(rawTexture, GL_TEXTURE_2D);
-            Material material = new Material(glTexture);
-            TexturedModel texturedModel = new TexturedModel(glModel, material);
+            TexturedModel texturedModel = new TexturedModel(glModel, materialOpt.orElse(null));
             texturedModels.put(referenceName, texturedModel);
             return texturedModel;
         }
@@ -44,7 +43,28 @@ public final class ResourceManager {
         return null;
     }
 
-    public void dispose(){
+    public TexturedModel loadTexturedModel(Mesh mesh, String textureFilePath, String referenceName) {
+        Objects.requireNonNull(referenceName);
+        Objects.requireNonNull(mesh);
+        GLModel glModel = resourceLoader.loadToVao(mesh);
+        Optional<Material> materialOpt = getMaterialFromTexture(textureFilePath);
+        TexturedModel texturedModel = new TexturedModel(glModel, materialOpt.orElse(null));
+        texturedModels.put(referenceName, texturedModel);
+        return texturedModel;
+    }
+
+    private Optional<Material> getMaterialFromTexture(String textureFilePath) {
+
+        Optional<RawTexture> textureOpt = TextureLoader.loadAsTextureFromFile(textureFilePath);
+        if (textureOpt.isPresent()) {
+            RawTexture rawTexture = textureOpt.get();
+            GLTexture glTexture = resourceLoader.loadTexture(rawTexture, GL_TEXTURE_2D);
+            return Optional.of(new Material(glTexture));
+        }
+        return Optional.empty();
+    }
+
+    public void dispose() {
         texturedModels.clear();
         resourceLoader.dispose();
     }

@@ -17,6 +17,10 @@ import static org.lwjgl.opengl.GL30.*;
 
 public final class GLResourceLoader {
 
+    private static final class GLResourceLoaderHolder{
+        private static final GLResourceLoader loader = new GLResourceLoader();
+    }
+
     private static final int TRIANGLE_ATTRIBUTE_POSITION = 0;
     private static final int TEXTURE_COORDINATE_ATTRIBUTE_POSITION = 1;
     private static final int VERTEX_NORMAL_ATTRIBUTE_POSITION = 2;
@@ -25,8 +29,12 @@ public final class GLResourceLoader {
     private final List<Integer> vbos = new ArrayList<>();
     private final List<Integer> textureIds = new ArrayList<>();
 
-    public GLResourceLoader() {
+    private GLResourceLoader() {
 
+    }
+
+    public static GLResourceLoader getInstance(){
+        return GLResourceLoaderHolder.loader;
     }
 
     public GLModel loadToVao(Mesh mesh) {

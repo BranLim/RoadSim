@@ -1,6 +1,5 @@
 package com.layhill.roadsim.gameengine.graphics;
 
-import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.gl.GlRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.Shader;
@@ -21,70 +20,44 @@ import java.util.Map;
 public class RenderingManager {
 
     private final List<Light> lights = new ArrayList<>();
-    private final Map<TexturedModel, List<GameObject>> entities = new HashMap<>();
-    private List<ShaderProgram> shaderPrograms = new ArrayList<>();
+    private final Map<TexturedModel, List<Renderable>> entities = new HashMap<>();
+
     private Renderer renderer;
     private long window;
 
     public RenderingManager(long window) {
         this.window = window;
-        shaderPrograms.add(loadShaders());
-        renderer = new GlRenderer(shaderPrograms);
+        renderer = new GlRenderer();
     }
 
-    public void addToQueue(GameObject gameObject){
-        List<GameObject> gameObjects = entities.get(gameObject.getTexturedModel());
-        if (gameObjects==null){
-            gameObjects = new ArrayList<>();
-            gameObjects.add(gameObject);
-            entities.put(gameObject.getTexturedModel(),gameObjects );
+    public void addToQueue(Renderable renderableEntity) {
+        List<Renderable> renderableEntities = entities.get(renderableEntity.getTexturedModel());
+        if (renderableEntities == null) {
+            renderableEntities = new ArrayList<>();
+            renderableEntities.add(renderableEntity);
+            entities.put(renderableEntity.getTexturedModel(), renderableEntities);
             return;
         }
-        gameObjects.add(gameObject);
+        renderableEntities.add(renderableEntity);
     }
 
-    public void addToQueue(Light... light){
+    public void addToQueue(Light... light) {
         lights.addAll(List.of(light));
     }
 
     public void run(Camera camera) {
         renderer.prepare();
-        for(ShaderProgram shaderProgram: shaderPrograms){
-            shaderProgram.start();
-            shaderProgram.loadCamera(camera);
-            shaderProgram.loadGlobalLight(new Vector3f(-40.f, 100.f, -30.f),  new Vector3f(1.f, 1.f, 1.f));
-            for(Light light: lights){
-                shaderProgram.loadPositionalLight(light.getPosition(), light.getColour());
-            }
-        }
-        renderer.processEntities(window, entities);
+        renderer.processEntities(window, camera, lights, entities);
         renderer.show(window);
-        for(ShaderProgram shaderProgram: shaderPrograms){
-            shaderProgram.stop();
-        }
         lights.clear();
         entities.clear();
     }
 
     public void dispose() {
-       for(ShaderProgram shaderProgram: shaderPrograms){
-           shaderProgram.stop();
-           shaderProgram.dispose();
-       }
+        renderer.dispose(entities);
+        lights.clear();
+        entities.clear();
+
     }
 
-    private ShaderProgram loadShaders() {
-        ShaderProgram shaderProgram = new ShaderProgram();
-        try {
-            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplevertex.glsl").orElse(null);
-            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplefragment.glsl").orElse(null);
-
-            shaderProgram.addShader(vertexShader);
-            shaderProgram.addShader(fragmentShader);
-            shaderProgram.init();
-        } catch (IOException e) {
-            log.error("Error loading shader from file", e);
-        }
-        return shaderProgram;
-    }
 }

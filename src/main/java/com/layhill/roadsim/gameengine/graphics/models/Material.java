@@ -28,10 +28,13 @@ public class Material {
         emissive = false;
     }
 
-    public Material(GLTexture texture, GLTexture specularMap){
+    public Material(GLTexture texture, GLTexture specularMap,  ShaderProgram shaderProgram){
         this();
         this.texture = texture;
         this.specularMap = specularMap;
+        this.shaderProgram = shaderProgram;
+        reflectivity = 1.f;
+        shineDampener = 1.f;
     }
 
     public String getId() {
@@ -56,5 +59,13 @@ public class Material {
 
     public void setShineDampener(float shineDampener) {
         this.shineDampener = shineDampener;
+    }
+
+    public void attachShaderProgram(ShaderProgram terrainShaderProgram) {
+        shaderProgram = terrainShaderProgram;
+    }
+
+    public ShaderProgram getShaderProgram() {
+        return shaderProgram;
     }
 }

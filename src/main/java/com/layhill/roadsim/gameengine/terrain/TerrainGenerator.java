@@ -1,13 +1,32 @@
-package com.layhill.roadsim.gameengine.graphics.models;
+package com.layhill.roadsim.gameengine.terrain;
+
+import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
+import com.layhill.roadsim.gameengine.graphics.models.Mesh;
+import com.layhill.roadsim.gameengine.resources.ResourceManager;
+
+import java.util.List;
 
 public class TerrainGenerator {
 
-    public static Mesh generateTerrainMesh(int startingX, int startingZ) {
+    public static List<Terrain> generateTerrains(ResourceManager resourceManager) {
+
+        Mesh mesh = TerrainGenerator.generateTerrainMesh();
+        TexturedModel terrainModel = resourceManager.loadTexturedModel(mesh, "assets/textures/grass_texture.jpg", "Terrain");
+        terrainModel.getMaterial().attachShaderProgram(ShaderFactory.createTerrainShaderProgram());
+
+        return List.of(new Terrain(0, 0, terrainModel),
+                new Terrain(0, 1, terrainModel),
+                new Terrain(1, 0, terrainModel),
+                new Terrain(1, 1, terrainModel));
+    }
+
+    public static Mesh generateTerrainMesh() {
         int totalVertexCount = Terrain.VERTEX_COUNT_PER_SIDE * Terrain.VERTEX_COUNT_PER_SIDE;
         float[] vertices = new float[totalVertexCount * 3];
         float[] normals = new float[totalVertexCount * 3];
         float[] textureCoordinates = new float[totalVertexCount * 2];
-        int[] vertexIndices = new int[6 * (Terrain.VERTEX_COUNT_PER_SIDE - 1) * (Terrain.VERTEX_COUNT_PER_SIDE - 1)];
+        int[] vertexIndices = new int[6 * (Terrain.VERTEX_COUNT_PER_SIDE - 1) * (Terrain.VERTEX_COUNT_PER_SIDE * 1)];
 
         int vertexPointer = 0;
         for (int x = 0; x < Terrain.VERTEX_COUNT_PER_SIDE; x++) {
@@ -28,8 +47,8 @@ public class TerrainGenerator {
         }
 
         int pointer = 0;
-        for (int gz = 0; gz < Terrain.VERTEX_COUNT_PER_SIDE; gz++) {
-            for (int gx = 0; gx < Terrain.VERTEX_COUNT_PER_SIDE; gx++) {
+        for (int gz = 0; gz < Terrain.VERTEX_COUNT_PER_SIDE - 1; gz++) {
+            for (int gx = 0; gx < Terrain.VERTEX_COUNT_PER_SIDE - 1; gx++) {
                 int topLeft = (gz * Terrain.VERTEX_COUNT_PER_SIDE) + gx;
                 int topRight = topLeft + 1;
                 int bottomLeft = ((gz + 1) * Terrain.VERTEX_COUNT_PER_SIDE) + gx;
