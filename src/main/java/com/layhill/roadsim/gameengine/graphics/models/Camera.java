@@ -44,7 +44,7 @@ public class Camera {
         float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
-        orientation.rotateLocalX(-pitchAmount).rotateLocalY(-yawAmount);
+        orientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
     }
 
     public void move(float deltaTime) {
