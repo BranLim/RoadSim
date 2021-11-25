@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 public final class GLResourceLoader {
 
-    private static final class GLResourceLoaderHolder{
+    private static final class GLResourceLoaderHolder {
         private static final GLResourceLoader loader = new GLResourceLoader();
     }
 
@@ -33,7 +33,7 @@ public final class GLResourceLoader {
 
     }
 
-    public static GLResourceLoader getInstance(){
+    public static GLResourceLoader getInstance() {
         return GLResourceLoaderHolder.loader;
     }
 
@@ -95,6 +95,22 @@ public final class GLResourceLoader {
         return new GLTexture(textureId, target);
     }
 
+    public void loadCubeMap(RawTexture[] textures) {
+        int textureId = glGenTextures();
+        textureIds.add(textureId);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+
+        int index = 0;
+        for (RawTexture texture : textures) {
+            int internalFormat = imageChannelToGLFormat(texture.getChannel());
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, internalFormat, texture.getWidth(), texture.getHeight(), 0, internalFormat, GL_UNSIGNED_BYTE, texture.getImage());
+            index++;
+        }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    }
+
     public void dispose() {
 
         for (Integer vao : vaos) {
@@ -106,6 +122,14 @@ public final class GLResourceLoader {
         for (int texId : textureIds) {
             glDeleteTextures(texId);
         }
+    }
+
+    private int imageChannelToGLFormat(int channel) {
+        return switch (channel) {
+            case 3 -> GL_RGB;
+            case 4 -> GL_RGBA;
+            default -> throw new IllegalArgumentException("unknown channel");
+        };
     }
 
 }
