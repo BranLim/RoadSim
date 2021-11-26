@@ -1,21 +1,30 @@
 package com.layhill.roadsim.gameengine;
 
 import com.layhill.roadsim.gameengine.entities.GameObject;
-import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
-import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
-import com.layhill.roadsim.gameengine.graphics.models.*;
-import com.layhill.roadsim.gameengine.graphics.*;
+import com.layhill.roadsim.gameengine.graphics.RawTexture;
+import com.layhill.roadsim.gameengine.graphics.Renderable;
+import com.layhill.roadsim.gameengine.graphics.RenderingManager;
+import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
+import com.layhill.roadsim.gameengine.graphics.models.Camera;
+import com.layhill.roadsim.gameengine.graphics.models.Light;
+import com.layhill.roadsim.gameengine.graphics.models.Material;
+import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
+import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Slf4j
 public class GameScene extends Scene {
+    private Skybox skybox;
     private List<Renderable> gameObjects = new ArrayList<>();
     private ResourceManager resourceManager = new ResourceManager();
     private RenderingManager renderingManager;
@@ -27,6 +36,7 @@ public class GameScene extends Scene {
     @Override
     public void init() {
 
+        renderingManager.loadSkybox(null);
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
 
         List<Terrain> terrains = TerrainGenerator.generateTerrains(resourceManager);

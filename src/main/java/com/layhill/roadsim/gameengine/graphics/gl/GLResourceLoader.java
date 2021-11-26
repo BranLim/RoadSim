@@ -1,9 +1,10 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
-import com.layhill.roadsim.gameengine.graphics.models.Mesh;
 import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
+import com.layhill.roadsim.gameengine.graphics.models.Mesh;
+import com.layhill.roadsim.gameengine.skybox.Skybox;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -11,9 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public final class GLResourceLoader {
 
@@ -95,9 +98,15 @@ public final class GLResourceLoader {
         return new GLTexture(textureId, target);
     }
 
-    public void loadCubeMap(RawTexture[] textures) {
+    public Skybox loadCubeMapAsSkybox(Mesh mesh, RawTexture[] textures) {
+        GLModel model = loadToVao(mesh);
+
+        glBindVertexArray(model.getVaoId());
         int textureId = glGenTextures();
         textureIds.add(textureId);
+
+        Skybox skybox = new Skybox(model.getVaoId(), textureId);
+        skybox.setVertexCount(model.getVertexCount());
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
 
@@ -109,6 +118,15 @@ public final class GLResourceLoader {
         }
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+        glBindVertexArray(0);
+
+        return skybox;
     }
 
     public void dispose() {

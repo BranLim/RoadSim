@@ -1,16 +1,16 @@
 package com.layhill.roadsim.gameengine.graphics;
 
+import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.GlRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
-import com.layhill.roadsim.gameengine.graphics.gl.shaders.Shader;
-import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
-import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
+import com.layhill.roadsim.gameengine.graphics.models.Mesh;
+import com.layhill.roadsim.gameengine.io.MeshLoader;
+import com.layhill.roadsim.gameengine.io.TextureLoader;
+import com.layhill.roadsim.gameengine.skybox.Skybox;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Vector3f;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +22,26 @@ public class RenderingManager {
     private final List<Light> lights = new ArrayList<>();
     private final Map<TexturedModel, List<Renderable>> entities = new HashMap<>();
 
+    private Skybox skybox;
     private Renderer renderer;
     private long window;
 
     public RenderingManager(long window) {
         this.window = window;
         renderer = new GlRenderer();
+    }
+
+    public void loadSkybox(String[] skyBoxTextures) {
+        Mesh mesh = MeshLoader.loadObjAsMesh("assets/models/skybox.obj").get();
+        RawTexture rSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Right.jpg").orElse(null);
+        RawTexture lSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Left.jpg").orElse(null);
+        RawTexture tSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Top.jpg").orElse(null);
+        RawTexture bSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Bottom.jpg").orElse(null);
+        RawTexture bkSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Back.jpg").orElse(null);
+        RawTexture frSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Front.jpg").orElse(null);
+        RawTexture[] skyboxTextures = new RawTexture[6];
+        List.of(rSkybox, lSkybox, tSkybox, bSkybox, bkSkybox, frSkybox).toArray(skyboxTextures);
+        skybox = GLResourceLoader.getInstance().loadCubeMapAsSkybox(mesh, skyboxTextures);
     }
 
     public void addToQueue(Renderable renderableEntity) {
@@ -47,6 +61,7 @@ public class RenderingManager {
 
     public void run(Camera camera) {
         renderer.prepare();
+        renderer.renderSkybox(skybox, camera);
         renderer.processEntities(window, camera, lights, entities);
         renderer.show(window);
         lights.clear();
@@ -54,10 +69,9 @@ public class RenderingManager {
     }
 
     public void dispose() {
-        renderer.dispose(entities);
+        renderer.dispose(skybox, entities);
         lights.clear();
         entities.clear();
-
     }
 
 }

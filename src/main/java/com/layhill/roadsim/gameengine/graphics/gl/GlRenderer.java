@@ -6,6 +6,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
+import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -16,11 +17,11 @@ import java.util.Objects;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
 public class GlRenderer implements Renderer {
 
@@ -37,6 +38,29 @@ public class GlRenderer implements Renderer {
 
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    @Override
+    public void renderSkybox(Skybox skybox, Camera camera) {
+        glDepthMask(false);
+        int vaoId = skybox.getVaoId();
+        glBindVertexArray(vaoId);
+        glEnableVertexAttribArray(0);
+
+        ShaderProgram skyboxShader = skybox.getShaderProgram();
+        skyboxShader.start();
+        skyboxShader.loadCamera(camera);
+        skyboxShader.uploadTexture("skybox", 0);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.getTextureId());
+        render(GL_TRIANGLES, skybox.getVertexCount());
+
+        skyboxShader.stop();
+        glDisableVertexAttribArray(0);
+
+        glBindVertexArray(0);
+        glDepthMask(true);
     }
 
     @Override
@@ -107,7 +131,12 @@ public class GlRenderer implements Renderer {
     }
 
     @Override
-    public void dispose(Map<TexturedModel, List<Renderable>> entities) {
+    public void dispose(Skybox skybox, Map<TexturedModel, List<Renderable>> entities) {
+        if (skybox != null) {
+            skybox.getShaderProgram().dispose();
+            glDeleteTextures(skybox.getTextureId());
+            glDeleteVertexArrays(skybox.getVaoId());
+        }
         for (TexturedModel model : entities.keySet()) {
             ShaderProgram shaderProgram = model.getMaterial().getShaderProgram();
             shaderProgram.stop();
