@@ -33,7 +33,8 @@ public class GlRenderer implements Renderer {
 
     public void prepare() {
         glEnable(GL_DEPTH_TEST);
-
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
 
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -41,10 +42,8 @@ public class GlRenderer implements Renderer {
 
     @Override
     public void renderSkybox(Skybox skybox, Camera camera) {
-        glDisable(GL_DEPTH_TEST);
-        glDepthMask(false);
-        glDisable(GL_CULL_FACE);
         glDepthFunc(GL_LEQUAL);
+        glDisable(GL_CULL_FACE);
 
         int vaoId = skybox.getVaoId();
         glBindVertexArray(vaoId);
@@ -66,11 +65,8 @@ public class GlRenderer implements Renderer {
         glBindVertexArray(0);
 
         glDepthFunc(GL_LESS);
-        glDepthMask(true);
-        glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-
     }
 
     @Override

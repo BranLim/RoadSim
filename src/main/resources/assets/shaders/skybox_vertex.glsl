@@ -11,6 +11,7 @@ out vec3 fTexCoord;
 void main()
 {
     fTexCoord = aPos;
-    gl_Position = uProjection * uView * vec4(aPos, 1.0);
+    vec4 pos = uProjection * uView * vec4(aPos, 1.0f);
+    gl_Position = pos.xyww;
 }
 

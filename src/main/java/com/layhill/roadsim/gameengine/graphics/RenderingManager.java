@@ -35,13 +35,13 @@ public class RenderingManager {
         Mesh mesh = MeshLoader.loadObjAsMesh("assets/models/skybox.obj").get();
         RawTexture rSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Right.jpg").orElse(null);
         RawTexture lSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Left.jpg").orElse(null);
-        RawTexture tSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Top.jpg").orElse(null);
-        RawTexture bSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Bottom.jpg").orElse(null);
-        RawTexture frSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Front.jpg").orElse(null);
-        RawTexture bkSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Back.jpg").orElse(null);
+        RawTexture topSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Top.jpg").orElse(null);
+        RawTexture bottomSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Bottom.jpg").orElse(null);
+        RawTexture backSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Back.jpg").orElse(null);
+        RawTexture frontSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Front.jpg").orElse(null);
 
         RawTexture[] skyboxTextures = new RawTexture[6];
-        List.of(rSkybox, lSkybox, tSkybox, bSkybox, frSkybox,bkSkybox).toArray(skyboxTextures);
+        List.of(rSkybox, lSkybox, topSkybox, bottomSkybox,frontSkybox ,backSkybox).toArray(skyboxTextures);
         skybox = GLResourceLoader.getInstance().loadCubeMapAsSkybox(mesh, skyboxTextures);
     }
 
@@ -62,9 +62,8 @@ public class RenderingManager {
 
     public void run(Camera camera) {
         renderer.prepare();
-        renderer.renderSkybox(skybox, camera);
         renderer.processEntities(window, camera, lights, entities);
-
+        renderer.renderSkybox(skybox, camera);
         renderer.show(window);
         lights.clear();
         entities.clear();

@@ -26,7 +26,7 @@ public class Camera {
         this.upDirection = upDirection;
         this.front = front;
         orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
-        projection.setPerspective((float) Math.toRadians(35.0), 1920f / 1080f, 1.0f, 1000.0f);
+        projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
     }
 
     public Matrix4f getProjectionMatrix() {
