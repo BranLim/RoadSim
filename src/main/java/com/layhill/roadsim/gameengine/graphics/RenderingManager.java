@@ -37,10 +37,11 @@ public class RenderingManager {
         RawTexture lSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Left.jpg").orElse(null);
         RawTexture tSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Top.jpg").orElse(null);
         RawTexture bSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Bottom.jpg").orElse(null);
-        RawTexture bkSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Back.jpg").orElse(null);
         RawTexture frSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Front.jpg").orElse(null);
+        RawTexture bkSkybox = TextureLoader.loadAsTextureFromFile("assets/textures/Daylight_Box_Back.jpg").orElse(null);
+
         RawTexture[] skyboxTextures = new RawTexture[6];
-        List.of(rSkybox, lSkybox, tSkybox, bSkybox, bkSkybox, frSkybox).toArray(skyboxTextures);
+        List.of(rSkybox, lSkybox, tSkybox, bSkybox, frSkybox,bkSkybox).toArray(skyboxTextures);
         skybox = GLResourceLoader.getInstance().loadCubeMapAsSkybox(mesh, skyboxTextures);
     }
 
@@ -63,6 +64,7 @@ public class RenderingManager {
         renderer.prepare();
         renderer.renderSkybox(skybox, camera);
         renderer.processEntities(window, camera, lights, entities);
+
         renderer.show(window);
         lights.clear();
         entities.clear();

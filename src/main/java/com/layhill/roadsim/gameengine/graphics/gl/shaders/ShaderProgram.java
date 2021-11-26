@@ -5,6 +5,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -141,8 +142,16 @@ public class ShaderProgram {
         view.load(camera.getViewMatrix());
     }
 
+    public void loadCameraWithoutTranslation(Camera camera) {
+        if (!initialised || camera == null) {
+            return;
+        }
+        projection.load(camera.getProjectionMatrix());
+        view.load(new Matrix4f(new Matrix3f(camera.getViewMatrix())));
+    }
+
     public void loadModelTransformation(Matrix4f transformationMatrix) {
-        if (!initialised ) {
+        if (!initialised) {
             return;
         }
         modelTransformation.load(transformationMatrix);

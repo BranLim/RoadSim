@@ -33,8 +33,7 @@ public class GlRenderer implements Renderer {
 
     public void prepare() {
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
+
 
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -42,25 +41,35 @@ public class GlRenderer implements Renderer {
 
     @Override
     public void renderSkybox(Skybox skybox, Camera camera) {
+        glDisable(GL_DEPTH_TEST);
         glDepthMask(false);
-        int vaoId = skybox.getVaoId();
-        glBindVertexArray(vaoId);
-        glEnableVertexAttribArray(0);
+        glDisable(GL_CULL_FACE);
+        glDepthFunc(GL_LEQUAL);
 
         ShaderProgram skyboxShader = skybox.getShaderProgram();
         skyboxShader.start();
-        skyboxShader.loadCamera(camera);
+        skyboxShader.loadCameraWithoutTranslation(camera);
         skyboxShader.uploadTexture("skybox", 0);
+
+        int vaoId = skybox.getVaoId();
+        glBindVertexArray(vaoId);
+        glEnableVertexAttribArray(0);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.getTextureId());
         render(GL_TRIANGLES, skybox.getVertexCount());
 
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
         skyboxShader.stop();
         glDisableVertexAttribArray(0);
 
         glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
         glDepthMask(true);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+
     }
 
     @Override

@@ -104,11 +104,10 @@ public final class GLResourceLoader {
         glBindVertexArray(model.getVaoId());
         int textureId = glGenTextures();
         textureIds.add(textureId);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
 
         Skybox skybox = new Skybox(model.getVaoId(), textureId);
         skybox.setVertexCount(model.getVertexCount());
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
 
         int index = 0;
         for (RawTexture texture : textures) {
