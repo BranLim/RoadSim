@@ -46,14 +46,14 @@ public class GlRenderer implements Renderer {
         glDisable(GL_CULL_FACE);
         glDepthFunc(GL_LEQUAL);
 
+        int vaoId = skybox.getVaoId();
+        glBindVertexArray(vaoId);
+        glEnableVertexAttribArray(0);
+
         ShaderProgram skyboxShader = skybox.getShaderProgram();
         skyboxShader.start();
         skyboxShader.loadCameraWithoutTranslation(camera);
         skyboxShader.uploadTexture("skybox", 0);
-
-        int vaoId = skybox.getVaoId();
-        glBindVertexArray(vaoId);
-        glEnableVertexAttribArray(0);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.getTextureId());
@@ -64,6 +64,7 @@ public class GlRenderer implements Renderer {
         glDisableVertexAttribArray(0);
 
         glBindVertexArray(0);
+
         glDepthFunc(GL_LESS);
         glDepthMask(true);
         glEnable(GL_DEPTH_TEST);
