@@ -1,6 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.SkyShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 
@@ -44,10 +45,10 @@ public class GLSkyRenderer {
         glBindVertexArray(vaoId);
         glEnableVertexAttribArray(0);
 
-        ShaderProgram skyboxShader = skybox.getShaderProgram();
+        SkyShaderProgram skyboxShader = skybox.getShaderProgram();
         skyboxShader.start();
-        skyboxShader.loadCameraWithoutTranslation(camera);
-        skyboxShader.uploadTexture("skybox", 0);
+        skyboxShader.loadCamera(camera);
+        skyboxShader.loadTexture(0);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.getTextureId());

@@ -35,11 +35,11 @@ public class ShaderFactory {
         switch (shaderType.toLowerCase(Locale.ROOT)) {
             case "vertex" -> {
                 shaderSource.append(splitString[1]);
-                return Optional.of(new Shader(shaderSource.toString(), GL_VERTEX_SHADER));
+                return Optional.of(new Shader(filename,shaderSource.toString(), GL_VERTEX_SHADER));
             }
             case "fragment" -> {
                 shaderSource.append(splitString[1]);
-                return Optional.of(new Shader(shaderSource.toString(), GL_FRAGMENT_SHADER));
+                return Optional.of(new Shader(filename, shaderSource.toString(), GL_FRAGMENT_SHADER));
             }
             default -> {
                 log.error("Invalid shader type: {}", shaderType);
@@ -49,10 +49,10 @@ public class ShaderFactory {
     }
 
     public static ShaderProgram createTerrainShaderProgram() {
-        ShaderProgram shaderProgram = new ShaderProgram();
+        TerrainShaderProgram shaderProgram = new TerrainShaderProgram();
         try {
-            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/terrainvertex.glsl").orElse(null);
-            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplefragment.glsl").orElse(null);
+            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/terrain_vertex.glsl").orElse(null);
+            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/terrain_fragment.glsl").orElse(null);
 
             shaderProgram.addShader(vertexShader);
             shaderProgram.addShader(fragmentShader);
@@ -64,7 +64,7 @@ public class ShaderFactory {
     }
 
     public static ShaderProgram createDefaultShaderProgram() {
-        ShaderProgram shaderProgram = new ShaderProgram();
+        EntityShaderProgram shaderProgram = new EntityShaderProgram();
         try {
             Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplevertex.glsl").orElse(null);
             Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplefragment.glsl").orElse(null);

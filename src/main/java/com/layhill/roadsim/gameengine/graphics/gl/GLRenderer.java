@@ -2,11 +2,12 @@ package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.Renderer;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
-import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -17,11 +18,11 @@ import java.util.Objects;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
 public class GLRenderer implements Renderer {
 
@@ -62,11 +63,15 @@ public class GLRenderer implements Renderer {
         Matrix4f transformationMatrix = Transformation.createTransformationMatrix(renderableEntity.getPosition(),
                 renderableEntity.getRotateX(), renderableEntity.getRotateY(), renderableEntity.getRotateZ(),
                 renderableEntity.getScale());
-        shaderProgram.loadModelTransformation(transformationMatrix);
+        if (shaderProgram.getClass() == EntityShaderProgram.class) {
+            ((EntityShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
+        } else if (shaderProgram.getClass() == TerrainShaderProgram.class) {
+            ((TerrainShaderProgram) shaderProgram).loadTransformation(transformationMatrix);
+        }
 
     }
 
-    private void prepareForRendering(Camera camera, List<Light> lights, TexturedModel texturedModel) {
+    private void prepareForRendering(Camera camera, List<Light> lightsToProcess, TexturedModel texturedModel) {
         glBindVertexArray(texturedModel.getRawModel().getVaoId());
         for (int attribute : texturedModel.getRawModel().getAttributes()) {
             glEnableVertexAttribArray(attribute);
@@ -75,15 +80,25 @@ public class GLRenderer implements Renderer {
         if (material != null) {
             ShaderProgram shaderProgram = material.getShaderProgram();
             shaderProgram.start();
-            shaderProgram.loadCamera(camera);
-            shaderProgram.loadGlobalLight(sunDirection, sunColour);
-            for (Light light : lights) {
-                shaderProgram.loadPositionalLight(light.getPosition(), light.getColour());
+            if (shaderProgram.getClass() == EntityShaderProgram.class) {
+                EntityShaderProgram entityShaderProgram = (EntityShaderProgram) shaderProgram;
+                entityShaderProgram.loadCamera(camera);
+
+                Light[] lights = new Light[lightsToProcess.size()];
+                lightsToProcess.toArray(lights);
+                entityShaderProgram.loadLights(lights);
+                entityShaderProgram.loadSun(sunDirection, sunColour);
+                entityShaderProgram.loadTexture(0);
+
+            } else if (shaderProgram.getClass() == TerrainShaderProgram.class) {
+                TerrainShaderProgram terrainShaderProgram = (TerrainShaderProgram) shaderProgram;
+                terrainShaderProgram.loadSun(sunDirection, sunColour);
+                terrainShaderProgram.loadCamera(camera);
+
+                terrainShaderProgram.loadTexture(0);
             }
-            shaderProgram.uploadTexture("fTexture", 0);
             shaderProgram.uploadFloat("uReflectivity", material.getReflectivity());
             shaderProgram.uploadFloat("uShineDampen", material.getShineDampener());
-
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
         }

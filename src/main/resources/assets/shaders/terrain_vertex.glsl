@@ -7,11 +7,9 @@ layout(location=2) in vec3 aSurfaceNormal;
 uniform mat4 uProjection;
 uniform mat4 uView;
 uniform mat4 uTransformation;
-uniform vec3 uLightPosition;
 
-out vec2 fTextCoord;
+out vec2 fTexCoord;
 out vec3 fSurfaceNormal;
-out vec3 fLightDirection;
 out vec3 fToCameraCentre;
 
 void main()
@@ -20,9 +18,7 @@ void main()
     gl_Position = uProjection * uView * worldPosition;
 
     fToCameraCentre = (inverse(uView) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-    fTextCoord = aTextCoord * 40.0f;
+    fTexCoord = aTextCoord * 40.0f;
     fSurfaceNormal = (worldPosition * vec4(aSurfaceNormal, 0.0)).xyz;
-    fLightDirection = uLightPosition - worldPosition.xyz;
-
 }
 

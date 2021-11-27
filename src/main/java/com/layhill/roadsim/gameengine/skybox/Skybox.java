@@ -2,6 +2,7 @@ package com.layhill.roadsim.gameengine.skybox;
 
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.SkyShaderProgram;
 
 import java.io.IOException;
 
@@ -10,14 +11,14 @@ public class Skybox {
     private int vaoId;
     private int textureId;
     private int vertexCount;
-    private ShaderProgram shaderProgram;
+    private SkyShaderProgram shaderProgram;
 
     public Skybox(int vaoId, int textureId) {
         this.vaoId = vaoId;
         this.textureId = textureId;
 
         try {
-            shaderProgram = new ShaderProgram();
+            shaderProgram = new SkyShaderProgram();
             shaderProgram.addShader(ShaderFactory.loadShaderFromFile("assets/shaders/skybox_vertex.glsl").get());
             shaderProgram.addShader(ShaderFactory.loadShaderFromFile("assets/shaders/skybox_fragment.glsl").get());
             shaderProgram.init();
@@ -35,7 +36,7 @@ public class Skybox {
         return textureId;
     }
 
-    public ShaderProgram getShaderProgram() {
+    public SkyShaderProgram getShaderProgram() {
         return shaderProgram;
     }
 

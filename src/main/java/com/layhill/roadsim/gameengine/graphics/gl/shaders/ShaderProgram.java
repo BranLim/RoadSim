@@ -1,39 +1,20 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
 import com.layhill.roadsim.gameengine.graphics.gl.data.Uniform;
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL20.*;
 
 @Slf4j
-public class ShaderProgram {
+public abstract class ShaderProgram {
 
     private int programId;
     private List<Shader> shaders = new ArrayList<>();
     private List<Uniform> uniformData = new ArrayList<>();
     private boolean initialised;
-
-    private UniformMatrix4f projection = new UniformMatrix4f("uProjection");
-    private UniformMatrix4f view = new UniformMatrix4f("uView");
-    private UniformMatrix4f modelTransformation = new UniformMatrix4f("uTransformation");
-
-    private UniformVector3f globalLightDirection = new UniformVector3f("uGlobalLightDirection");
-    private UniformVector3f globalLightColour = new UniformVector3f("uGlobalLightColour");
-
-    private UniformVector3f lightPosition = new UniformVector3f("uLightPosition");
-    private UniformVector3f lightColour = new UniformVector3f("uLightColour");
-
 
     public ShaderProgram() {
 
@@ -52,7 +33,7 @@ public class ShaderProgram {
         compileShaders();
         attachCompiledShaders();
         detachAndDeleteAllShaders();
-        setupUniformData(projection, view, modelTransformation, globalLightDirection, globalLightColour, lightPosition, lightColour);
+        setupUniformData();
         initialised = true;
     }
 
@@ -82,6 +63,13 @@ public class ShaderProgram {
     private void compileShaders() {
         for (Shader shader : shaders) {
             shader.compile();
+
+            if (glGetShaderi(shader.id(), GL_COMPILE_STATUS) == GL_FALSE) {
+                int len = glGetShaderi(shader.id(), GL_INFO_LOG_LENGTH);
+                log.error("ERROR: {} \n\t Shader compile failed", shader.getShaderFile());
+                log.error(glGetShaderInfoLog(shader.id(), len));
+                throw new RuntimeException("Unable to compile shader");
+            }
         }
     }
 
@@ -93,7 +81,7 @@ public class ShaderProgram {
         int success = glGetProgrami(programId, GL_LINK_STATUS);
         if (success == GL_FALSE) {
             int len = glGetShaderi(programId, GL_INFO_LOG_LENGTH);
-            log.error("ERROR: defaultShader.glsl \n\t Shader link failed");
+            log.error("ERROR: Shader link failed");
             log.error(glGetShaderInfoLog(programId, len));
         }
     }
@@ -105,66 +93,19 @@ public class ShaderProgram {
         }
     }
 
-    private void setupUniformData(Uniform... uniforms) {
-        uniformData.addAll(List.of(uniforms));
+    private void setupUniformData() {
         for (var uniform : uniformData) {
             uniform.getUniformLocation(programId);
         }
     }
 
+    protected void addUniform(Uniform... uniforms) {
+        uniformData.addAll(List.of(uniforms));
+    }
+
     public void uploadFloat(String varName, float value) {
         int varLocation = glGetUniformLocation(programId, varName);
         glUniform1f(varLocation, value);
-    }
-
-    public void uploadTexture(String varName, int slot) {
-        int varLocation = glGetUniformLocation(programId, varName);
-        glUniform1i(varLocation, slot);
-    }
-
-    public void uploadVec3f(String varName, Vector3f value) {
-        int varLocation = glGetUniformLocation(programId, varName);
-        glUniform3f(varLocation, value.x, value.y, value.z);
-    }
-
-    public void uploadMat4f(String varName, Matrix4f matrix) {
-        int varLocation = glGetUniformLocation(programId, varName);
-        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
-        matrix.get(matBuffer);
-        glUniformMatrix4fv(varLocation, false, matBuffer);
-    }
-
-    public void loadCamera(Camera camera) {
-        if (!initialised || camera == null) {
-            return;
-        }
-        projection.load(camera.getProjectionMatrix());
-        view.load(camera.getViewMatrix());
-    }
-
-    public void loadCameraWithoutTranslation(Camera camera) {
-        if (!initialised || camera == null) {
-            return;
-        }
-        projection.load(camera.getProjectionMatrix());
-        view.load(new Matrix4f(new Matrix3f(camera.getViewMatrix())));
-    }
-
-    public void loadModelTransformation(Matrix4f transformationMatrix) {
-        if (!initialised) {
-            return;
-        }
-        modelTransformation.load(transformationMatrix);
-    }
-
-    public void loadGlobalLight(Vector3f direction, Vector3f colour) {
-        globalLightDirection.load(direction);
-        globalLightColour.load(colour);
-    }
-
-    public void loadPositionalLight(Vector3f position, Vector3f colour) {
-        lightPosition.load(position);
-        lightColour.load(colour);
     }
 
 }

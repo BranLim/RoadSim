@@ -24,7 +24,6 @@ import java.util.Random;
 
 @Slf4j
 public class GameScene extends Scene {
-    private Skybox skybox;
     private List<Renderable> gameObjects = new ArrayList<>();
     private ResourceManager resourceManager = new ResourceManager();
     private RenderingManager renderingManager;

@@ -3,10 +3,10 @@
 
 in vec3 fSurfaceNormal;
 in vec3 fLightDirection;
-in vec2 fTextCoord;
+in vec2 fTexCoord;
 in vec3 fToCameraCentre;
 
-uniform sampler2D fTexture;
+uniform sampler2D uTexture;
 uniform vec3 uLightColour;
 uniform vec3 uGlobalLightDirection;
 uniform vec3 uGlobalLightColour;
@@ -47,5 +47,5 @@ void main()
     vec3 diffuse = (globalBrightness * uGlobalLightColour) + (brightness * attenuation * uLightColour);
     vec3 specular = calculateSpecularReflection(unitGlobalLightDirection, unitSurfaceNormal, unitToCamera);
 
-    color = vec4(diffuse, 1.0) * texture(fTexture, fTextCoord) + vec4(specular, 1.0);
+    color = vec4(diffuse, 1.0) * texture(uTexture, fTexCoord) + vec4(specular, 1.0);
 }
