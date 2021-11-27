@@ -29,6 +29,9 @@ public class GLRenderer implements Renderer {
     private GLSkyRenderer skyRenderer;
     private Vector3f sunDirection = new Vector3f(-40.f, 50.f, -30.f);
     private Vector3f sunColour = new Vector3f(1.f, 1.f, 1.f);
+    private static final float SKY_RED = 0.05f;
+    private static final float SKY_GREEN = 0.05f;
+    private static final float SKY_BLUE = 0.05f;
 
     public GLRenderer() {
         skyRenderer = new GLSkyRenderer();
@@ -39,7 +42,7 @@ public class GLRenderer implements Renderer {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
 
-        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+        glClearColor(SKY_RED, SKY_GREEN, SKY_BLUE, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -98,6 +101,8 @@ public class GLRenderer implements Renderer {
                 terrainShaderProgram.loadSun(sunDirection, sunColour);
                 terrainShaderProgram.loadCamera(camera);
                 terrainShaderProgram.loadTexture(0);
+                terrainShaderProgram.loadSkyColour(new Vector3f(0.2f, 0.2f, 0.2f));
+                terrainShaderProgram.enableFog();
             }
 
             glActiveTexture(GL_TEXTURE0);

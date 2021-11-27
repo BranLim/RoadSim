@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformBoolean;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
@@ -13,13 +14,17 @@ public class TerrainShaderProgram extends ShaderProgram {
     private UniformMatrix4f view = new UniformMatrix4f("uView");
     private UniformMatrix4f transformation = new UniformMatrix4f("uTransformation");
 
-    private UniformVector3f globalLightDirection = new UniformVector3f("sunDirection");
-    private UniformVector3f globalLightColour = new UniformVector3f("sunColour");
+    private UniformVector3f globalLightDirection = new UniformVector3f("uSunDirection");
+    private UniformVector3f globalLightColour = new UniformVector3f("uSunColour");
+    private UniformVector3f skyColour = new UniformVector3f("uSkyColour");
 
     private UniformInteger texture = new UniformInteger("uTexture");
+    private UniformBoolean enableFog = new UniformBoolean("uEnableFog");
+
 
     public TerrainShaderProgram() {
-        super.addUniform(projection, view,transformation ,globalLightDirection, globalLightColour, texture);
+        super.addUniform(projection, view, transformation, globalLightDirection, globalLightColour,
+                skyColour, texture, enableFog);
     }
 
     public void loadCamera(Camera camera) {
@@ -35,12 +40,24 @@ public class TerrainShaderProgram extends ShaderProgram {
         globalLightColour.load(lightColour);
     }
 
-    public void loadModelTransformation(Matrix4f transformationMatrix){
+    public void loadModelTransformation(Matrix4f transformationMatrix) {
         transformation.load(transformationMatrix);
     }
 
     public void loadTexture(int textureUnit) {
         texture.load(textureUnit);
+    }
+
+    public void loadSkyColour(Vector3f skyColour) {
+        this.skyColour.load(skyColour);
+    }
+
+    public void enableFog() {
+        enableFog.load(true);
+    }
+
+    public void disableFog() {
+        enableFog.load(false);
     }
 
 }

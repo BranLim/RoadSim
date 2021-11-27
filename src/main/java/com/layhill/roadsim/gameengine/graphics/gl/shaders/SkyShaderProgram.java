@@ -16,7 +16,6 @@ public class SkyShaderProgram extends ShaderProgram{
         super.addUniform(projection, view, texture);
     }
 
-
     public void loadCamera(Camera camera) {
         projection.load(camera.getProjectionMatrix());
         view.load(new Matrix4f(new Matrix3f(camera.getViewMatrix())));
