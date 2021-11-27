@@ -36,7 +36,6 @@ public class GameScene extends Scene {
     @Override
     public void init() {
 
-        renderingManager.loadSkybox(null);
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
 
         List<Terrain> terrains = TerrainGenerator.generateTerrains(resourceManager);

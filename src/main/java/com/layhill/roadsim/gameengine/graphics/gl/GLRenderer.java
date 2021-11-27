@@ -23,12 +23,14 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
-public class GlRenderer implements Renderer {
+public class GLRenderer implements Renderer {
 
+    private GLSkyRenderer skyRenderer;
     private Vector3f sunDirection = new Vector3f(-40.f, 100.f, -30.f);
     private Vector3f sunColour = new Vector3f(1.f, 1.f, 1.f);
 
-    public GlRenderer() {
+    public GLRenderer() {
+        skyRenderer = new GLSkyRenderer();
     }
 
     public void prepare() {
@@ -41,36 +43,7 @@ public class GlRenderer implements Renderer {
     }
 
     @Override
-    public void renderSkybox(Skybox skybox, Camera camera) {
-        glDepthFunc(GL_LEQUAL);
-        glDisable(GL_CULL_FACE);
-
-        int vaoId = skybox.getVaoId();
-        glBindVertexArray(vaoId);
-        glEnableVertexAttribArray(0);
-
-        ShaderProgram skyboxShader = skybox.getShaderProgram();
-        skyboxShader.start();
-        skyboxShader.loadCameraWithoutTranslation(camera);
-        skyboxShader.uploadTexture("skybox", 0);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.getTextureId());
-        render(GL_TRIANGLES, skybox.getVertexCount());
-
-        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-        skyboxShader.stop();
-        glDisableVertexAttribArray(0);
-
-        glBindVertexArray(0);
-
-        glDepthFunc(GL_LESS);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-    }
-
-    @Override
-    public void processEntities(long window, Camera camera, List<Light> lights, Map<TexturedModel, List<Renderable>> entities) {
+    public void render(long window, Camera camera, List<Light> lights, Map<TexturedModel, List<Renderable>> entities) {
         for (TexturedModel model : entities.keySet()) {
             prepareForRendering(camera, lights, model);
             for (Renderable gameObject : entities.get(model)) {
@@ -79,6 +52,8 @@ public class GlRenderer implements Renderer {
             }
             unbindTexturedModel(model);
         }
+        skyRenderer.setCamera(camera);
+        skyRenderer.render();
     }
 
     private void prepareEntity(Renderable renderableEntity) {
@@ -137,17 +112,12 @@ public class GlRenderer implements Renderer {
     }
 
     @Override
-    public void dispose(Skybox skybox, Map<TexturedModel, List<Renderable>> entities) {
-        if (skybox != null) {
-            skybox.getShaderProgram().dispose();
-            glDeleteTextures(skybox.getTextureId());
-            glDeleteVertexArrays(skybox.getVaoId());
-        }
+    public void dispose(Map<TexturedModel, List<Renderable>> entities) {
         for (TexturedModel model : entities.keySet()) {
             ShaderProgram shaderProgram = model.getMaterial().getShaderProgram();
             shaderProgram.stop();
             shaderProgram.dispose();
-
         }
+        skyRenderer.dispose();
     }
 }

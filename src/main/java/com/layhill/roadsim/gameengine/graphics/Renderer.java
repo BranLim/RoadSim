@@ -12,11 +12,9 @@ public interface Renderer {
 
     void prepare();
 
-    void renderSkybox(Skybox skybox, Camera camera);
-
-    void processEntities(long window, Camera camera, List<Light> lights, Map<TexturedModel, List<Renderable>> gameObjects);
+    void render(long window, Camera camera, List<Light> lights, Map<TexturedModel, List<Renderable>> gameObjects);
 
     void show(long window);
 
-    void dispose(Skybox skybox,Map<TexturedModel, List<Renderable>> entities);
+    void dispose(Map<TexturedModel, List<Renderable>> entities);
 }

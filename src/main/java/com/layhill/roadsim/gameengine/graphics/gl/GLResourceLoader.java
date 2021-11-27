@@ -4,6 +4,8 @@ import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.models.Mesh;
+import com.layhill.roadsim.gameengine.io.MeshLoader;
+import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 
 import java.nio.FloatBuffer;
@@ -11,6 +13,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL15.*;
@@ -98,10 +101,16 @@ public final class GLResourceLoader {
         return new GLTexture(textureId, target);
     }
 
-    public Skybox loadCubeMapAsSkybox(Mesh mesh, RawTexture[] textures) {
-        GLModel model = loadToVao(mesh);
+    public Skybox loadSkybox(String meshFile, String[] texturesFiles) {
+
+        Optional<Mesh> mesh = MeshLoader.loadObjAsMesh(meshFile);
+        if (mesh.isEmpty()) {
+            throw new IllegalArgumentException(String.format("Mesh: %s not found", meshFile));
+        }
+        GLModel model = loadToVao(mesh.get());
 
         glBindVertexArray(model.getVaoId());
+
         int textureId = glGenTextures();
         textureIds.add(textureId);
         glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
@@ -110,10 +119,15 @@ public final class GLResourceLoader {
         skybox.setVertexCount(model.getVertexCount());
 
         int index = 0;
-        for (RawTexture texture : textures) {
-            int internalFormat = imageChannelToGLFormat(texture.getChannel());
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, internalFormat, texture.getWidth(), texture.getHeight(), 0, internalFormat, GL_UNSIGNED_BYTE, texture.getImage());
-            index++;
+        for (String textureFile : texturesFiles) {
+            Optional<RawTexture> textureData = TextureLoader.loadAsTextureFromFile(textureFile);
+            if (textureData.isPresent()) {
+                int internalFormat = imageChannelToGLFormat(textureData.get().getChannel());
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, internalFormat,
+                        textureData.get().getWidth(), textureData.get().getHeight(), 0, internalFormat,
+                        GL_UNSIGNED_BYTE, textureData.get().getImage());
+                index++;
+            }
         }
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -143,6 +157,7 @@ public final class GLResourceLoader {
 
     private int imageChannelToGLFormat(int channel) {
         return switch (channel) {
+            case 1 -> GL_R;
             case 3 -> GL_RGB;
             case 4 -> GL_RGBA;
             default -> throw new IllegalArgumentException("unknown channel");
