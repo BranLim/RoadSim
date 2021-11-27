@@ -16,10 +16,10 @@ public class TerrainShaderProgram extends ShaderProgram {
     private UniformVector3f globalLightDirection = new UniformVector3f("sunDirection");
     private UniformVector3f globalLightColour = new UniformVector3f("sunColour");
 
-    private UniformInteger texture = new UniformInteger("terrainTexture");
+    private UniformInteger texture = new UniformInteger("uTexture");
 
     public TerrainShaderProgram() {
-        super.addUniform(projection, view, globalLightDirection, globalLightColour, texture);
+        super.addUniform(projection, view,transformation ,globalLightDirection, globalLightColour, texture);
     }
 
     public void loadCamera(Camera camera) {
@@ -35,7 +35,7 @@ public class TerrainShaderProgram extends ShaderProgram {
         globalLightColour.load(lightColour);
     }
 
-    public void loadTransformation(Matrix4f transformationMatrix){
+    public void loadModelTransformation(Matrix4f transformationMatrix){
         transformation.load(transformationMatrix);
     }
 

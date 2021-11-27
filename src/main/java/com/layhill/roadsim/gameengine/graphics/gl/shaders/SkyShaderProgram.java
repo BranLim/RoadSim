@@ -12,6 +12,10 @@ public class SkyShaderProgram extends ShaderProgram{
     private UniformMatrix4f view = new UniformMatrix4f("uView");
     private UniformInteger texture = new UniformInteger("skybox");
 
+    public SkyShaderProgram(){
+        super.addUniform(projection, view, texture);
+    }
+
 
     public void loadCamera(Camera camera) {
         projection.load(camera.getProjectionMatrix());

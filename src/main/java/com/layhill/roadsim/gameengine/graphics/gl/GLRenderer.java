@@ -27,7 +27,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class GLRenderer implements Renderer {
 
     private GLSkyRenderer skyRenderer;
-    private Vector3f sunDirection = new Vector3f(-40.f, 100.f, -30.f);
+    private Vector3f sunDirection = new Vector3f(-40.f, 50.f, -30.f);
     private Vector3f sunColour = new Vector3f(1.f, 1.f, 1.f);
 
     public GLRenderer() {
@@ -66,7 +66,7 @@ public class GLRenderer implements Renderer {
         if (shaderProgram.getClass() == EntityShaderProgram.class) {
             ((EntityShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
         } else if (shaderProgram.getClass() == TerrainShaderProgram.class) {
-            ((TerrainShaderProgram) shaderProgram).loadTransformation(transformationMatrix);
+            ((TerrainShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
         }
 
     }
@@ -84,21 +84,22 @@ public class GLRenderer implements Renderer {
                 EntityShaderProgram entityShaderProgram = (EntityShaderProgram) shaderProgram;
                 entityShaderProgram.loadCamera(camera);
 
-                Light[] lights = new Light[lightsToProcess.size()];
-                lightsToProcess.toArray(lights);
-                entityShaderProgram.loadLights(lights);
+                if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
+                    Light[] lights = new Light[lightsToProcess.size()];
+                    lightsToProcess.toArray(lights);
+                    entityShaderProgram.loadLights(lights);
+                }
                 entityShaderProgram.loadSun(sunDirection, sunColour);
                 entityShaderProgram.loadTexture(0);
-
+                shaderProgram.uploadFloat("uReflectivity", material.getReflectivity());
+                shaderProgram.uploadFloat("uShineDampen", material.getShineDampener());
             } else if (shaderProgram.getClass() == TerrainShaderProgram.class) {
                 TerrainShaderProgram terrainShaderProgram = (TerrainShaderProgram) shaderProgram;
                 terrainShaderProgram.loadSun(sunDirection, sunColour);
                 terrainShaderProgram.loadCamera(camera);
-
                 terrainShaderProgram.loadTexture(0);
             }
-            shaderProgram.uploadFloat("uReflectivity", material.getReflectivity());
-            shaderProgram.uploadFloat("uShineDampen", material.getShineDampener());
+
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
         }

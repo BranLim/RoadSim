@@ -9,6 +9,6 @@ out vec4 color;
 
 void main()
 {
-    color= texture(skybox, fTexCoord);
+    color = texture(skybox, fTexCoord);
 
 }
