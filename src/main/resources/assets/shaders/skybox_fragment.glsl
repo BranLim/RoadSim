@@ -11,7 +11,7 @@ uniform bool uEnableFog;
 out vec4 color;
 
 const float lowerLimit = 0.0f;
-const float upperLimit = 20.0f;
+const float upperLimit = 0.5f;
 
 void main()
 {
