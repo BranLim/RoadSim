@@ -1,19 +1,25 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformBoolean;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class SkyShaderProgram extends ShaderProgram{
 
     private UniformMatrix4f projection = new UniformMatrix4f("uProjection");
     private UniformMatrix4f view = new UniformMatrix4f("uView");
-    private UniformInteger texture = new UniformInteger("skybox");
+
+    private UniformInteger texture = new UniformInteger("uSkybox");
+    private UniformBoolean enableFog = new UniformBoolean("uEnableFog");
+    private UniformVector3f fogColour = new UniformVector3f("uFogColour");
 
     public SkyShaderProgram(){
-        super.addUniform(projection, view, texture);
+        super.addUniform(projection, view, texture,enableFog, fogColour);
     }
 
     public void loadCamera(Camera camera) {
@@ -23,5 +29,17 @@ public class SkyShaderProgram extends ShaderProgram{
 
     public void loadTexture(int textureUnit) {
         texture.load(textureUnit);
+    }
+
+    public void loadFogColour(Vector3f fogColour) {
+        this.fogColour.load(fogColour);
+    }
+
+    public void enableFog() {
+        enableFog.load(true);
+    }
+
+    public void disableFog() {
+        enableFog.load(false);
     }
 }

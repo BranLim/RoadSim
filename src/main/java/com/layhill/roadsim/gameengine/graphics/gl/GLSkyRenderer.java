@@ -4,6 +4,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.SkyShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
+import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
@@ -49,6 +50,8 @@ public class GLSkyRenderer {
         skyboxShader.start();
         skyboxShader.loadCamera(camera);
         skyboxShader.loadTexture(0);
+        skyboxShader.loadFogColour(new Vector3f(0.2f, 0.2f, 0.2f));
+        skyboxShader.enableFog();
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.getTextureId());
