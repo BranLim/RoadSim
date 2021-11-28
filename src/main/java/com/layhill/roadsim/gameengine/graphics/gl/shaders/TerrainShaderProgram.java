@@ -16,7 +16,7 @@ public class TerrainShaderProgram extends ShaderProgram {
 
     private UniformVector3f globalLightDirection = new UniformVector3f("uSunDirection");
     private UniformVector3f globalLightColour = new UniformVector3f("uSunColour");
-    private UniformVector3f skyColour = new UniformVector3f("uSkyColour");
+    private UniformVector3f fogColour = new UniformVector3f("uFogColour");
 
     private UniformInteger texture = new UniformInteger("uTexture");
     private UniformBoolean enableFog = new UniformBoolean("uEnableFog");
@@ -24,7 +24,7 @@ public class TerrainShaderProgram extends ShaderProgram {
 
     public TerrainShaderProgram() {
         super.addUniform(projection, view, transformation, globalLightDirection, globalLightColour,
-                skyColour, texture, enableFog);
+                fogColour, texture, enableFog);
     }
 
     public void loadCamera(Camera camera) {
@@ -48,8 +48,8 @@ public class TerrainShaderProgram extends ShaderProgram {
         texture.load(textureUnit);
     }
 
-    public void loadSkyColour(Vector3f skyColour) {
-        this.skyColour.load(skyColour);
+    public void loadFogColour(Vector3f fogColour) {
+        this.fogColour.load(fogColour);
     }
 
     public void enableFog() {

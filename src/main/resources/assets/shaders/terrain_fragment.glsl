@@ -10,7 +10,7 @@ uniform sampler2D uTexture;
 uniform vec3 uSunDirection;
 uniform vec3 uSunColour;
 uniform bool uEnableFog;
-uniform vec3 uSkyColour;
+uniform vec3 uFogColour;
 
 out vec4 outputColor;
 
@@ -25,6 +25,6 @@ void main(){
 
     outputColor = vec4 (ambient, 1.0) * texture(uTexture, fTexCoord);
     if (uEnableFog){
-        outputColor = mix(vec4(uSkyColour, 1.0), outputColor, fVisibility);
+        outputColor = mix(vec4(uFogColour, 1.0), outputColor, fVisibility);
     }
 }

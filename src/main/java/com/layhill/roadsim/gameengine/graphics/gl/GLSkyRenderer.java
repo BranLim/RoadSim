@@ -28,6 +28,7 @@ public class GLSkyRenderer {
 
     private Skybox skybox;
     private Camera camera;
+    private Vector3f fogColour;
 
     public GLSkyRenderer() {
         GLResourceLoader glResourceLoader = GLResourceLoader.getInstance();
@@ -36,6 +37,10 @@ public class GLSkyRenderer {
 
     public void setCamera(Camera camera) {
         this.camera = camera;
+    }
+
+    public void setFogColour(Vector3f fogColour){
+        this.fogColour = fogColour;
     }
 
     public void render() {
@@ -50,7 +55,7 @@ public class GLSkyRenderer {
         skyboxShader.start();
         skyboxShader.loadCamera(camera);
         skyboxShader.loadTexture(0);
-        skyboxShader.loadFogColour(new Vector3f(0.2f, 0.2f, 0.2f));
+        skyboxShader.loadFogColour(fogColour);
         skyboxShader.enableFog();
 
         glActiveTexture(GL_TEXTURE0);

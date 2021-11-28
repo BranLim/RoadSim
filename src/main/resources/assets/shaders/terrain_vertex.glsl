@@ -15,7 +15,7 @@ out vec3 fToCameraCentre;
 out float fVisibility;
 
 const float density = 0.0035;
-const float gradient = 5;
+const float gradient = 3;
 
 void main()
 {

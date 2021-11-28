@@ -32,6 +32,7 @@ public class GLRenderer implements Renderer {
     private static final float SKY_RED = 0.05f;
     private static final float SKY_GREEN = 0.05f;
     private static final float SKY_BLUE = 0.05f;
+    private final Vector3f fogColour = new Vector3f(0.3f,0.3f, 0.3f);
 
     public GLRenderer() {
         skyRenderer = new GLSkyRenderer();
@@ -56,6 +57,7 @@ public class GLRenderer implements Renderer {
             }
             unbindTexturedModel(model);
         }
+        skyRenderer.setFogColour(fogColour);
         skyRenderer.setCamera(camera);
         skyRenderer.render();
     }
@@ -101,7 +103,7 @@ public class GLRenderer implements Renderer {
                 terrainShaderProgram.loadSun(sunDirection, sunColour);
                 terrainShaderProgram.loadCamera(camera);
                 terrainShaderProgram.loadTexture(0);
-                terrainShaderProgram.loadSkyColour(new Vector3f(0.2f, 0.2f, 0.2f));
+                terrainShaderProgram.loadFogColour(fogColour);
                 terrainShaderProgram.enableFog();
             }
 

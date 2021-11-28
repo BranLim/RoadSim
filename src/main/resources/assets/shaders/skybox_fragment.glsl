@@ -2,7 +2,6 @@
 #version 330 core
 
 in vec3 fTexCoord;
-in float fVisibility;
 
 uniform samplerCube uSkybox;
 uniform vec3 uFogColour;
@@ -11,7 +10,7 @@ uniform bool uEnableFog;
 out vec4 color;
 
 const float lowerLimit = 0.0f;
-const float upperLimit = 0.5f;
+const float upperLimit = 0.2f;
 
 void main()
 {
@@ -20,8 +19,7 @@ void main()
         float factor = (fTexCoord.y - lowerLimit) / (upperLimit-lowerLimit);
         factor = clamp(factor, 0.0, 1.0);
 
-        vec4 outputColor = mix(vec4(uFogColour, 1.0), finalColour, fVisibility);
-        color = mix(vec4(uFogColour, 1.0), outputColor, factor);
+        color = mix(vec4(uFogColour, 1.0), finalColour, factor);
     } else {
         color = finalColour;
     }
