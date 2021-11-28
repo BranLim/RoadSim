@@ -22,12 +22,12 @@ void main(){
     vec3 unitSunDirection = normalize(-uSunDirection);
 
     float ambientLightIntensity = dot(unitSurfaceNormal, unitSunDirection);
-    float ambientBrightness = max(ambientLightIntensity, 0.2);
+    float ambientBrightness = max(ambientLightIntensity, 0.0);
 
     vec3 ambient = ambientBrightness * uSunColour;
 
     vec3 totalDiffuse = vec3(0.0f);
-    for (int i = 0; i< MAX_LIGHTS;i++){
+    for (int i = 0; i < MAX_LIGHTS;i++){
         vec3 unitLightVector = normalize(toLightSource[i]);
 
         float diffuseLightIntensity = dot(unitSurfaceNormal, unitLightVector);
@@ -40,7 +40,7 @@ void main(){
         totalDiffuse = totalDiffuse + diffuseLight;
     }
 
-    vec3 finalDiffuse = max((ambient + totalDiffuse), 0.2);
+    vec3 finalDiffuse = max((ambient + totalDiffuse), 0.0);
     outputColor = vec4 (finalDiffuse, 1.0) * texture(uTexture, fTexCoord);
 
     if (uEnableFog){

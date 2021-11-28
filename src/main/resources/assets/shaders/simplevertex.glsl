@@ -23,7 +23,7 @@ void main()
 
     fToCameraCentre = (inverse(uView) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
     fTexCoord = aTextCoord;
-    fSurfaceNormal = (worldPosition * vec4(aSurfaceNormal, 0.0)).xyz;
+    fSurfaceNormal = (uTransformation * vec4(aSurfaceNormal, 0.0)).xyz;
 
     for (int i=0; i< MAX_LIGHTS;i++){
         toLightSource[i] = uLightPosition[i] - worldPosition.xyz;

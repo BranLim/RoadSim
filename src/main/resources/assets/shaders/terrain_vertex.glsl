@@ -1,7 +1,7 @@
 #type vertex
 #version 330 core
 layout(location=0) in vec3 aPos;
-layout(location=1) in vec2 aTextCoord;
+layout(location=1) in vec2 aTexCoord;
 layout(location=2) in vec3 aSurfaceNormal;
 
 const int MAX_LIGHTS = 5;
@@ -30,10 +30,10 @@ void main()
 
     gl_Position = uProjection * positionRelativeToCamera;
 
-    fTexCoord = aTextCoord * 40.0f;
-    fSurfaceNormal = (worldPosition * vec4(aSurfaceNormal, 0.0)).xyz;
+    fTexCoord = aTexCoord * 40.0;
+    fSurfaceNormal = (uTransformation * vec4(aSurfaceNormal, 0.0)).xyz;
 
-    for (int i=0; i< 5;i++){
+    for (int i = 0; i< MAX_LIGHTS; i++){
         toLightSource[i] = uLightPosition[i] - worldPosition.xyz;
     }
 

@@ -25,6 +25,7 @@ import java.util.Random;
 @Slf4j
 public class GameScene extends Scene {
     private List<Renderable> gameObjects = new ArrayList<>();
+    private List<Light> lights = new ArrayList<>();
     private ResourceManager resourceManager = new ResourceManager();
     private RenderingManager renderingManager;
 
@@ -38,9 +39,11 @@ public class GameScene extends Scene {
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
-            float xPos = random.nextFloat(-100.0f, 100.0f);
-            float zPos = random.nextFloat(-100.0f, 100.0f);
-            renderingManager.addToQueue(new Light(new Vector3f(xPos + 5.f, 1.f, zPos - 5.f), new Vector3f(random.nextFloat(0.f, 1.0f), random.nextFloat(0.f, 1.0f), random.nextFloat(0.f, 1.0f))));
+            float xPos = random.nextFloat(-150.f, 150.f);
+            float yPos = random.nextFloat(0.0f, 100.0f);
+            float zPos = random.nextFloat(-150.0f, 100.0f);
+            Light light =  new Light(new Vector3f(xPos, yPos, zPos), new Vector3f(1.0f, 1.0f, 1.0f));
+            lights.add(light);
         }
 
         List<Terrain> terrains = TerrainGenerator.generateTerrains(resourceManager);
@@ -60,6 +63,7 @@ public class GameScene extends Scene {
                 gameObjects.add(stoneObject);
             }
         }
+
     }
 
     @Override
@@ -69,8 +73,11 @@ public class GameScene extends Scene {
             camera.rotate(deltaTime);
             MouseListener.endFrame();
         }
-
+        Light[] lightsToRender = new Light[5];
+        lights.toArray(lightsToRender);
+        renderingManager.addToQueue(lightsToRender);
         camera.move(deltaTime);
+
 
         for (Renderable gameObject : gameObjects) {
             renderingManager.addToQueue(gameObject);

@@ -27,8 +27,8 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class GLRenderer implements Renderer {
 
     private GLSkyRenderer skyRenderer;
-    private Vector3f sunDirection = new Vector3f(-40.f, 50.f, -30.f);
-    private Vector3f sunColour = new Vector3f(1.f, 1.f, 1.f);
+    private Vector3f sunDirection = new Vector3f(-40.f, 1000.f, -30.f);
+    private Vector3f sunColour = new Vector3f(0.0f, 0.0f, 0.0f);
     private static final float SKY_RED = 0.05f;
     private static final float SKY_GREEN = 0.05f;
     private static final float SKY_BLUE = 0.05f;
@@ -65,12 +65,16 @@ public class GLRenderer implements Renderer {
     private void prepareEntity(Renderable renderableEntity) {
         Objects.requireNonNull(renderableEntity);
         ShaderProgram shaderProgram = renderableEntity.getTexturedModel().getMaterial().getShaderProgram();
-        Matrix4f transformationMatrix = Transformation.createTransformationMatrix(renderableEntity.getPosition(),
-                renderableEntity.getRotateX(), renderableEntity.getRotateY(), renderableEntity.getRotateZ(),
-                renderableEntity.getScale());
+
         if (shaderProgram.getClass() == EntityShaderProgram.class) {
+            Matrix4f transformationMatrix = Transformation.createTransformationMatrix(renderableEntity.getPosition(),
+                    renderableEntity.getRotateX(), renderableEntity.getRotateY(), renderableEntity.getRotateZ(),
+                    renderableEntity.getScale());
             ((EntityShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
         } else if (shaderProgram.getClass() == TerrainShaderProgram.class) {
+            Matrix4f transformationMatrix = Transformation.createTransformationMatrix(renderableEntity.getPosition(),
+                    0,0, 0,
+                    renderableEntity.getScale());
             ((TerrainShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
         }
 
