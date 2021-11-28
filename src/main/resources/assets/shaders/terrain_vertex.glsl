@@ -8,11 +8,14 @@ uniform mat4 uProjection;
 uniform mat4 uView;
 uniform mat4 uTransformation;
 uniform bool uEnableFog;
+uniform vec3 uLightPosition[5];
 
 out vec2 fTexCoord;
 out vec3 fSurfaceNormal;
 out vec3 fToCameraCentre;
 out float fVisibility;
+
+out vec3 toLightSource[5];
 
 const float density = 0.0035;
 const float gradient = 3;
@@ -27,6 +30,10 @@ void main()
     fToCameraCentre = (inverse(uView) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
     fTexCoord = aTextCoord * 40.0f;
     fSurfaceNormal = (worldPosition * vec4(aSurfaceNormal, 0.0)).xyz;
+
+    for (int i=0; i< 5;i++){
+        toLightSource[i] = uLightPosition[i] - worldPosition.xyz;
+    }
 
     if (uEnableFog){
         float distance = length(positionRelativeToCamera);

@@ -102,6 +102,11 @@ public class GLRenderer implements Renderer {
                 TerrainShaderProgram terrainShaderProgram = (TerrainShaderProgram) shaderProgram;
                 terrainShaderProgram.loadSun(sunDirection, sunColour);
                 terrainShaderProgram.loadCamera(camera);
+                if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
+                    Light[] lights = new Light[lightsToProcess.size()];
+                    lightsToProcess.toArray(lights);
+                    terrainShaderProgram.loadLights(lights);
+                }
                 terrainShaderProgram.loadTexture(0);
                 terrainShaderProgram.loadFogColour(fogColour);
                 terrainShaderProgram.enableFog();
