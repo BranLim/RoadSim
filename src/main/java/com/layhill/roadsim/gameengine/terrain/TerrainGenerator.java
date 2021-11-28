@@ -22,7 +22,7 @@ public class TerrainGenerator {
     private static final float MAX_HEIGHT = 40;
     private static final float MAX_PIXEL_COLOUR = 256 * 256 * 256;
 
-    public static List<Terrain> generateTerrains(ResourceManager resourceManager, String heightMapFile) {
+    public static Terrain generateTerrain(ResourceManager resourceManager, int worldX, int worldZ, String heightMapFile) {
 
         int VERTEX_COUNT = Terrain.VERTEX_COUNT_PER_SIDE;
         BufferedImage heightMap = loadHeightMap(heightMapFile);
@@ -36,10 +36,7 @@ public class TerrainGenerator {
         TexturedModel terrainModel = resourceManager.loadTexturedModel(mesh, "assets/textures/grass_texture.jpg", "Terrain");
         terrainModel.getMaterial().attachShaderProgram(ShaderFactory.createTerrainShaderProgram());
 
-        return List.of(new Terrain(0, 0, terrainModel,terrainHeight),
-                new Terrain(0, 1, terrainModel,terrainHeight),
-                new Terrain(1, 0, terrainModel,terrainHeight),
-                new Terrain(1, 1, terrainModel,terrainHeight));
+        return new Terrain(worldX, worldZ, terrainModel, terrainHeight);
     }
 
     private static BufferedImage loadHeightMap(String heightMapFile) {
@@ -66,7 +63,7 @@ public class TerrainGenerator {
         int vertexPointer = 0;
         for (int x = 0; x < vertexCount; x++) {
             for (int z = 0; z < vertexCount; z++) {
-                float height = heightMap == null ? 1 : getHeight(x, z, heightMap);
+                float height = heightMap == null ? 1 : getHeight(z, x, heightMap);
 
                 vertices[vertexPointer * 3] = -(float) z / ((float) vertexCount - 1) * Terrain.SIZE;
                 vertices[vertexPointer * 3 + 1] = height;
@@ -74,7 +71,7 @@ public class TerrainGenerator {
 
                 terrainHeight[x][z] = height;
 
-                Vector3f normal = heightMap == null ? new Vector3f(0.f, 1.f, 0.f) : calculateNormal(x, z, heightMap);
+                Vector3f normal = heightMap == null ? new Vector3f(0.f, 1.f, 0.f) : calculateNormal(z, x, heightMap);
                 normals[vertexPointer * 3] = normal.x;
                 normals[vertexPointer * 3 + 1] = normal.y;
                 normals[vertexPointer * 3 + 2] = normal.z;

@@ -45,16 +45,31 @@ public class Terrain implements Renderable {
 
         float answer;
         if (xCoord <= (1 - zCoord)) {
-            answer = Maths.barryCentric(new Vector3f(0, heights[gridX][gridZ], 0),
-                    new Vector3f(1, heights[gridX + 1][gridZ], 0), new Vector3f(0, heights[gridX][gridZ + 1], 1),
+            answer = Maths.barryCentric(
+                    new Vector3f(0, heights[gridX][gridZ], 0),
+                    new Vector3f(1, heights[gridX + 1][gridZ], 0),
+                    new Vector3f(0, heights[gridX][gridZ + 1], 1),
                     new Vector2f(xCoord, zCoord));
         } else {
-            answer = Maths.barryCentric(new Vector3f(1, heights[gridX + 1][gridZ], 0),
-                    new Vector3f(1, heights[gridX + 1][gridZ + 1], 1), new Vector3f(0, heights[gridX][gridZ + 1], 1),
+            answer = Maths.barryCentric(
+                    new Vector3f(1, heights[gridX + 1][gridZ], 0),
+                    new Vector3f(1, heights[gridX + 1][gridZ + 1], 1),
+                    new Vector3f(0, heights[gridX][gridZ + 1], 1),
                     new Vector2f(xCoord, zCoord));
         }
         return answer;
 
+    }
+
+    public boolean isOnThisTerrain(float worldX, float worldZ) {
+
+        if (worldX < x || worldX >= x + SIZE) {
+            return false;
+        }
+        if (worldZ < z || worldZ >= z + SIZE) {
+            return false;
+        }
+        return true;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.layhill.roadsim.gameengine.GameScene;
 import com.layhill.roadsim.gameengine.KeyListener;
 import com.layhill.roadsim.gameengine.MouseListener;
 import com.layhill.roadsim.gameengine.Scene;
+import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -32,7 +33,7 @@ public class Camera {
         projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
     }
 
-    public void setGameScene(GameScene gameScene){
+    public void setGameScene(GameScene gameScene) {
         this.scene = gameScene;
     }
 
@@ -68,8 +69,21 @@ public class Camera {
         if (KeyListener.isKeyPressed(GLFW_KEY_A)) {
             position.sub(orientation.positiveX(new Vector3f()).mul(distance));
         }
-        if (KeyListener.isKeyPressed(GLFW_KEY_D)){
+        if (KeyListener.isKeyPressed(GLFW_KEY_D)) {
             position.add(orientation.positiveX(new Vector3f()).mul(distance));
         }
+
+        for (Terrain terrain : scene.getTerrains()) {
+            if (terrain.isOnThisTerrain(position.x, position.z)) {
+                float terrainHeight = terrain.getHeight(position.x, position.z);
+                if (position.y < terrainHeight) {
+                    position.y = terrainHeight;
+
+                }
+                break;
+            }
+        }
+
+
     }
 }

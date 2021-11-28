@@ -1,18 +1,14 @@
 package com.layhill.roadsim.gameengine;
 
 import com.layhill.roadsim.gameengine.entities.GameObject;
-import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
-import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
-import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
-import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +20,7 @@ import java.util.Random;
 
 @Slf4j
 public class GameScene extends Scene {
+    private List<Terrain> terrains = new ArrayList<>();
     private List<Renderable> gameObjects = new ArrayList<>();
     private List<Light> lights = new ArrayList<>();
     private ResourceManager resourceManager = new ResourceManager();
@@ -33,20 +30,32 @@ public class GameScene extends Scene {
         this.renderingManager = renderingManager;
     }
 
+    public List<Terrain> getTerrains() {
+        return terrains;
+    }
+
     @Override
     public void init() {
 
-        camera = new Camera(new Vector3f(0.0f, 10.0f, 50.f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
+        camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
+        camera.setGameScene(this);
+
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
             float xPos = random.nextFloat(-150.f, 150.f);
             float yPos = random.nextFloat(0.0f, 100.0f);
             float zPos = random.nextFloat(-150.0f, 100.0f);
-            Light light =  new Light(new Vector3f(xPos, yPos, zPos), new Vector3f(1.0f, 1.0f, 1.0f));
+            Light light = new Light(new Vector3f(xPos, yPos, zPos), new Vector3f(1.0f, 1.0f, 1.0f));
             lights.add(light);
         }
 
-        List<Terrain> terrains = TerrainGenerator.generateTerrains(resourceManager,"assets/textures/heightmap.png");
+        for (int x = -2; x < 2; x++) {
+            for (int z = -2; z < 2; z++) {
+                Terrain terrain = TerrainGenerator.generateTerrain(resourceManager, x, z, "assets/textures/heightmap.png");
+                terrains.add(terrain);
+            }
+        }
+
         gameObjects.addAll(terrains);
 
         TexturedModel stoneModel = resourceManager.loadTexturedModel("assets/models/stone.obj", "assets/textures/stone_texture.jpg", "Rock");
