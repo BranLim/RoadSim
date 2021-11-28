@@ -46,7 +46,7 @@ public class GameScene extends Scene {
             lights.add(light);
         }
 
-        List<Terrain> terrains = TerrainGenerator.generateTerrains(resourceManager);
+        List<Terrain> terrains = TerrainGenerator.generateTerrains(resourceManager,"assets/textures/heightmap.png");
         gameObjects.addAll(terrains);
 
         TexturedModel stoneModel = resourceManager.loadTexturedModel("assets/models/stone.obj", "assets/textures/stone_texture.jpg", "Rock");

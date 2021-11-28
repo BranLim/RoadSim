@@ -40,7 +40,7 @@ void main(){
         totalDiffuse = totalDiffuse + diffuseLight;
     }
 
-    vec3 finalDiffuse = max((ambient + totalDiffuse), 0.0);
+    vec3 finalDiffuse = max((ambient + totalDiffuse), 0.1);
     outputColor = vec4 (finalDiffuse, 1.0) * texture(uTexture, fTexCoord);
 
     if (uEnableFog){

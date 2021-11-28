@@ -30,7 +30,7 @@ void main()
 
     gl_Position = uProjection * positionRelativeToCamera;
 
-    fTexCoord = aTexCoord * 40.0;
+    fTexCoord = aTexCoord * 10.0;
     fSurfaceNormal = (uTransformation * vec4(aSurfaceNormal, 0.0)).xyz;
 
     for (int i = 0; i< MAX_LIGHTS; i++){

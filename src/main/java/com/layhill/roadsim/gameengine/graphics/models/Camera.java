@@ -1,7 +1,9 @@
 package com.layhill.roadsim.gameengine.graphics.models;
 
+import com.layhill.roadsim.gameengine.GameScene;
 import com.layhill.roadsim.gameengine.KeyListener;
 import com.layhill.roadsim.gameengine.MouseListener;
+import com.layhill.roadsim.gameengine.Scene;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -20,6 +22,7 @@ public class Camera {
     private Quaternionf orientation;
     private float currentSpeed = 0.f;
     private float mouseSensitivity = TURNSPEED;
+    private GameScene scene;
 
     public Camera(Vector3f position, Vector3f upDirection, Vector3f front) {
         this.position = position;
@@ -27,6 +30,10 @@ public class Camera {
         this.front = front;
         orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
         projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
+    }
+
+    public void setGameScene(GameScene gameScene){
+        this.scene = gameScene;
     }
 
     public Matrix4f getProjectionMatrix() {
