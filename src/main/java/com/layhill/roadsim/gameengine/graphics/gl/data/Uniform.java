@@ -13,10 +13,9 @@ public abstract class Uniform {
     }
 
     public void getUniformLocation(int programId) {
-        location = glGetUniformLocation(programId, name);
-    }
-
-    public void dispose() {
+        if (location == -1) {
+            location = glGetUniformLocation(programId, name);
+        }
     }
 
     protected int getLocation() {

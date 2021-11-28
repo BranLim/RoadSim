@@ -93,7 +93,7 @@ public abstract class ShaderProgram {
         }
     }
 
-    private void setupUniformData() {
+    protected void setupUniformData() {
         for (var uniform : uniformData) {
             uniform.getUniformLocation(programId);
         }

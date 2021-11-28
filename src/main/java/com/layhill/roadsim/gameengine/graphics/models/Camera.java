@@ -11,7 +11,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Camera {
 
-    private static final float SPEED = 10.f;
+    private static final float SPEED = 20.f;
     private static final float TURNSPEED = .01f;
     private Vector3f position;
     private Vector3f upDirection;

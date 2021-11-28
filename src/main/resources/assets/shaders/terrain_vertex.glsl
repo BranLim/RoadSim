@@ -4,18 +4,21 @@ layout(location=0) in vec3 aPos;
 layout(location=1) in vec2 aTextCoord;
 layout(location=2) in vec3 aSurfaceNormal;
 
+const int MAX_LIGHTS = 5;
+
 uniform mat4 uProjection;
 uniform mat4 uView;
 uniform mat4 uTransformation;
 uniform bool uEnableFog;
-uniform vec3 uLightPosition[5];
+uniform vec3 uSunDirection;
+uniform vec3 uLightPosition[MAX_LIGHTS];
 
 out vec2 fTexCoord;
 out vec3 fSurfaceNormal;
 out vec3 fToCameraCentre;
 out float fVisibility;
-
-out vec3 toLightSource[5];
+out vec3 toSun;
+out vec3 toLightSource[MAX_LIGHTS];
 
 const float density = 0.0035;
 const float gradient = 3;
@@ -27,7 +30,6 @@ void main()
 
     gl_Position = uProjection * positionRelativeToCamera;
 
-    fToCameraCentre = (inverse(uView) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
     fTexCoord = aTextCoord * 40.0f;
     fSurfaceNormal = (worldPosition * vec4(aSurfaceNormal, 0.0)).xyz;
 
