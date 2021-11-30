@@ -63,15 +63,15 @@ public class TerrainGenerator {
         int vertexPointer = 0;
         for (int x = 0; x < vertexCount; x++) {
             for (int z = 0; z < vertexCount; z++) {
-                float height = heightMap == null ? 1 : getHeight(z, x, heightMap);
+                float height = heightMap == null ? 1 : getHeight(x, z, heightMap);
 
-                vertices[vertexPointer * 3] = -(float) z / ((float) vertexCount - 1) * Terrain.SIZE;
+                vertices[vertexPointer * 3] = (float) z / ((float) vertexCount - 1) * Terrain.SIZE;
                 vertices[vertexPointer * 3 + 1] = height;
-                vertices[vertexPointer * 3 + 2] = -(float) x / ((float) vertexCount - 1) * Terrain.SIZE;
+                vertices[vertexPointer * 3 + 2] = (float) x / ((float) vertexCount - 1) * Terrain.SIZE;
 
                 terrainHeight[x][z] = height;
 
-                Vector3f normal = heightMap == null ? new Vector3f(0.f, 1.f, 0.f) : calculateNormal(z, x, heightMap);
+                Vector3f normal = heightMap == null ? new Vector3f(0.f, 1.f, 0.f) : calculateNormal(x,z, heightMap);
                 normals[vertexPointer * 3] = normal.x;
                 normals[vertexPointer * 3 + 1] = normal.y;
                 normals[vertexPointer * 3 + 2] = normal.z;
