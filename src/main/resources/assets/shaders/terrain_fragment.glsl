@@ -1,8 +1,16 @@
 #type fragment
 #version 330 core
 
+struct Spotlight{
+    vec3 position;
+    vec3 direction;
+    vec3 colour;
+    float cutOff;
+};
+
 const int MAX_LIGHTS = 5;
 
+in vec3 fragPosition;
 in vec3 fSurfaceNormal;
 in vec2 fTexCoord;
 in float fVisibility;
@@ -14,8 +22,12 @@ uniform vec3 uSunColour;
 uniform bool uEnableFog;
 uniform vec3 uFogColour;
 uniform vec3 uLightColour[MAX_LIGHTS];
+uniform bool enableSpotlight;
+uniform Spotlight spotlight;
 
 out vec4 outputColor;
+
+vec3 calculateSpotlight(Spotlight spotlight, vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection);
 
 void main(){
     vec3 unitSurfaceNormal = normalize(fSurfaceNormal);
@@ -41,9 +53,28 @@ void main(){
     }
 
     vec3 finalDiffuse = max((ambient + totalDiffuse), 0.1);
+
+    if (enableSpotlight){
+        finalDiffuse += calculateSpotlight(spotlight, fragPosition, unitSurfaceNormal, vec3(0));
+    }
     outputColor = vec4 (finalDiffuse, 1.0) * texture(uTexture, fTexCoord);
 
     if (uEnableFog){
         outputColor = mix(vec4(uFogColour, 1.0), outputColor, fVisibility);
     }
+
+}
+
+vec3 calculateSpotlight(Spotlight spotlight, vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection){
+    vec3 finalColour = vec3(0);
+    vec3 unitLightVector = normalize(spotlight.position - fragPosition);
+    float theta = dot(unitLightVector, normalize(-spotlight.direction));
+
+    if (theta > spotlight.cutOff){
+        float diffuseSpotLightIntensity = dot(surfaceNormal, unitLightVector);
+        float diffuseSpotLightBrightness = max(diffuseSpotLightIntensity, 0.0);
+        finalColour = diffuseSpotLightBrightness * spotlight.colour;
+    }
+
+    return finalColour;
 }

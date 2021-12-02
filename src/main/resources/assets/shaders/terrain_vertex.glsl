@@ -13,6 +13,7 @@ uniform bool uEnableFog;
 uniform vec3 uSunDirection;
 uniform vec3 uLightPosition[MAX_LIGHTS];
 
+out vec3 fragPosition;
 out vec2 fTexCoord;
 out vec3 fSurfaceNormal;
 out vec3 fToCameraCentre;
@@ -26,6 +27,8 @@ const float gradient = 3;
 void main()
 {
     vec4 worldPosition = uTransformation * vec4(aPos, 1.0);
+    fragPosition = worldPosition.xyz;
+
     vec4 positionRelativeToCamera = uView * worldPosition;
 
     gl_Position = uProjection * positionRelativeToCamera;
