@@ -8,6 +8,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.shaders.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
+import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -32,7 +33,7 @@ public class GLRenderer implements Renderer {
     private static final float SKY_RED = 0.05f;
     private static final float SKY_GREEN = 0.05f;
     private static final float SKY_BLUE = 0.05f;
-    private final Vector3f fogColour = new Vector3f(0.3f,0.3f, 0.3f);
+    private final Vector3f fogColour = new Vector3f(0.3f, 0.3f, 0.3f);
 
     public GLRenderer() {
         skyRenderer = new GLSkyRenderer();
@@ -73,7 +74,7 @@ public class GLRenderer implements Renderer {
             ((EntityShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
         } else if (shaderProgram.getClass() == TerrainShaderProgram.class) {
             Matrix4f transformationMatrix = Transformation.createTransformationMatrix(renderableEntity.getPosition(),
-                    0,0, 0,
+                    0, 0, 0,
                     renderableEntity.getScale());
             ((TerrainShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
         }
@@ -107,9 +108,21 @@ public class GLRenderer implements Renderer {
                 terrainShaderProgram.loadSun(sunDirection, sunColour);
                 terrainShaderProgram.loadCamera(camera);
                 if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
-                    Light[] lights = new Light[lightsToProcess.size()];
-                    lightsToProcess.toArray(lights);
+
+                    List<Light> notSpotlight = lightsToProcess.stream().filter(light -> light.getClass() != Spotlight.class).toList();
+                    Light[] lights = new Light[notSpotlight.size()];
+                    notSpotlight.toArray(lights);
                     terrainShaderProgram.loadLights(lights);
+
+                    List<Spotlight> spotlights = lightsToProcess.stream()
+                            .filter(light -> light.getClass() == Spotlight.class)
+                            .map(light -> (Spotlight) light)
+                            .toList();
+
+                    if (!spotlights.isEmpty()) {
+                        terrainShaderProgram.loadSpotlight(spotlights.get(0));
+                    }
+
                 }
                 terrainShaderProgram.loadTexture(0);
                 terrainShaderProgram.loadFogColour(fogColour);

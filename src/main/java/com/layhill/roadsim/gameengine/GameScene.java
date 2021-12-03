@@ -8,6 +8,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
+import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
@@ -25,6 +26,7 @@ public class GameScene extends Scene {
     private List<Light> lights = new ArrayList<>();
     private ResourceManager resourceManager = new ResourceManager();
     private RenderingManager renderingManager;
+    private Spotlight spotlight;
 
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
@@ -39,6 +41,8 @@ public class GameScene extends Scene {
 
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
         camera.setGameScene(this);
+
+        spotlight = new Spotlight(new Vector3f(camera.getPosition()), new Vector3f(camera.getDirection()), new Vector3f(0.8f, 0.8f, 0.8f), (float) Math.cos(Math.toRadians(12.5f)));
 
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
@@ -72,7 +76,6 @@ public class GameScene extends Scene {
                 gameObjects.add(stoneObject);
             }
         }
-
     }
 
     @Override
@@ -85,8 +88,11 @@ public class GameScene extends Scene {
         Light[] lightsToRender = new Light[5];
         lights.toArray(lightsToRender);
         renderingManager.addToQueue(lightsToRender);
+        renderingManager.addToQueue(spotlight);
         camera.move(deltaTime);
 
+        spotlight.setPosition(camera.getPosition());
+        spotlight.setDirection(camera.getDirection());
 
         for (Renderable gameObject : gameObjects) {
             renderingManager.addToQueue(gameObject);

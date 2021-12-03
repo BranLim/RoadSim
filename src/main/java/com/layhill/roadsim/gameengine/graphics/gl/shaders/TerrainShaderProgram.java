@@ -1,11 +1,9 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformBoolean;
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
+import com.layhill.roadsim.gameengine.graphics.gl.data.*;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
+import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -24,14 +22,16 @@ public class TerrainShaderProgram extends ShaderProgram {
     private UniformVector3f[] lightPositions = new UniformVector3f[MAX_LIGHTS];
     private UniformVector3f[] lightsColour = new UniformVector3f[MAX_LIGHTS];
 
-
     private UniformInteger texture = new UniformInteger("uTexture");
     private UniformBoolean enableFog = new UniformBoolean("uEnableFog");
+
+    private UniformBoolean enableSpotlight = new UniformBoolean("enableSpotlight");
+    private UniformSpotlight spotlight = new UniformSpotlight("spotlight");
 
 
     public TerrainShaderProgram() {
         super.addUniform(projection, view, transformation, sunDirection, sunColour,
-                fogColour, texture, enableFog);
+                fogColour, texture, enableFog,enableSpotlight, spotlight);
     }
 
     public void loadCamera(Camera camera) {
@@ -78,15 +78,22 @@ public class TerrainShaderProgram extends ShaderProgram {
                 lightsColour[i] = new UniformVector3f("uLightColour[" + i + "]");
                 super.addUniform(lightsColour[i]);
             }
+
             super.setupUniformData();
             if (i < lights.length) {
                 lightPositions[i].load(lights[i].getPosition());
                 lightsColour[i].load(lights[i].getColour());
-            }else{
-                lightPositions[i].load(new Vector3f(0,0,0));
-                lightsColour[i].load(new Vector3f(0,0,0));
+            } else {
+                lightPositions[i].load(new Vector3f(0, 0, 0));
+                lightsColour[i].load(new Vector3f(0, 0, 0));
             }
+
         }
+    }
+
+    public void loadSpotlight(Spotlight spotlight) {
+        enableSpotlight.load(true);
+        this.spotlight.loadSpotlight(spotlight);
     }
 
 }

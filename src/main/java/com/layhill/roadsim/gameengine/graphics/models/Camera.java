@@ -33,7 +33,7 @@ public class Camera {
         this.front = front;
         orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
         projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
-        for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++){
+        for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++) {
             frustumPlanes[i] = new Vector4f();
         }
     }
@@ -57,7 +57,7 @@ public class Camera {
     public void updateFrustum() {
         Matrix4f viewSpace = new Matrix4f(projection);
         viewSpace.mul(getViewMatrix());
-        for (int i = 0 ; i < NUM_OF_FRUSTUM_PLANES;i++){
+        for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++) {
             viewSpace.frustumPlane(i, frustumPlanes[i]);
         }
     }
@@ -90,14 +90,21 @@ public class Camera {
         for (Terrain terrain : scene.getTerrains()) {
             if (terrain.isOnThisTerrain(position.x, position.z)) {
                 float terrainHeight = terrain.getHeight(position.x, position.z);
-               // System.out.printf("X: %f, Z: %f => Terrain Height: %f , Position (Y): %f \n", position.x, position.z, terrainHeight, position.y);
+                // System.out.printf("X: %f, Z: %f => Terrain Height: %f , Position (Y): %f \n", position.x, position.z, terrainHeight, position.y);
                 if (position.y < terrainHeight) {
                     position.y = terrainHeight;
                 }
                 break;
             }
         }
+    }
 
+    public Vector3f getPosition() {
+        return position;
+    }
 
+    public Vector3f getDirection() {
+        orientation.transform(front);
+        return front;
     }
 }

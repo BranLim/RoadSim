@@ -27,7 +27,7 @@ uniform Spotlight spotlight;
 
 out vec4 outputColor;
 
-vec3 calculateSpotlight(Spotlight spotlight, vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection);
+vec3 calculateSpotlight(vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection);
 
 void main(){
     vec3 unitSurfaceNormal = normalize(fSurfaceNormal);
@@ -55,7 +55,7 @@ void main(){
     vec3 finalDiffuse = max((ambient + totalDiffuse), 0.1);
 
     if (enableSpotlight){
-        finalDiffuse += calculateSpotlight(spotlight, fragPosition, unitSurfaceNormal, vec3(0));
+        finalDiffuse += calculateSpotlight(fragPosition, unitSurfaceNormal, vec3(0));
     }
     outputColor = vec4 (finalDiffuse, 1.0) * texture(uTexture, fTexCoord);
 
@@ -65,7 +65,7 @@ void main(){
 
 }
 
-vec3 calculateSpotlight(Spotlight spotlight, vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection){
+vec3 calculateSpotlight( vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection){
     vec3 finalColour = vec3(0);
     vec3 unitLightVector = normalize(spotlight.position - fragPosition);
     float theta = dot(unitLightVector, normalize(-spotlight.direction));

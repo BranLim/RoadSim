@@ -21,4 +21,9 @@ public class Spotlight extends Light{
     public float getRadius() {
         return radius;
     }
+
+    public void setDirection(Vector3f direction){
+        this.direction = direction;
+    }
+
 }
