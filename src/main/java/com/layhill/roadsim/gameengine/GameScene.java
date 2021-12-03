@@ -49,7 +49,7 @@ public class GameScene extends Scene {
             float xPos = random.nextFloat(-150.f, 150.f);
             float yPos = random.nextFloat(0.0f, 100.0f);
             float zPos = random.nextFloat(-150.0f, 100.0f);
-            Light light = new Light(new Vector3f(xPos, yPos, zPos), new Vector3f(1.0f, 1.0f, 1.0f));
+            Light light = new Light(new Vector3f(xPos, yPos, zPos), new Vector3f(0.0f, 0.0f, 0.0f));
             lights.add(light);
         }
 
@@ -89,6 +89,7 @@ public class GameScene extends Scene {
         lights.toArray(lightsToRender);
         renderingManager.addToQueue(lightsToRender);
         renderingManager.addToQueue(spotlight);
+
         camera.move(deltaTime);
 
         spotlight.setPosition(camera.getPosition());

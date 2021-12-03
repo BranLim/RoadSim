@@ -104,7 +104,13 @@ public class Camera {
     }
 
     public Vector3f getDirection() {
-        orientation.transform(front);
-        return front;
+
+        Vector3f direction = new Vector3f();
+
+        Matrix4f viewMatrix = new Matrix4f();
+        viewMatrix.set(getViewMatrix());
+
+        viewMatrix.invert().transformDirection(new Vector3f(front),direction);
+        return direction;
     }
 }
