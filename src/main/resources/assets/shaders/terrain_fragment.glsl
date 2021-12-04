@@ -51,18 +51,16 @@ void main(){
         vec3 diffuseLight = diffuseBrightness * attenuation * uLightColour[i];
         totalDiffuse = totalDiffuse + diffuseLight;
     }
+    if (enableSpotlight){
+        totalDiffuse += calculateSpotlight(fragPosition, unitSurfaceNormal, vec3(0));
+    }
 
     vec3 finalDiffuse = max((ambient + totalDiffuse), 0.1);
-
-    if (enableSpotlight){
-        finalDiffuse += calculateSpotlight(fragPosition, unitSurfaceNormal, vec3(0));
-    }
     outputColor = vec4 (finalDiffuse, 1.0) * texture(uTexture, fTexCoord);
 
     if (uEnableFog){
         outputColor = mix(vec4(uFogColour, 1.0), outputColor, fVisibility);
     }
-
 }
 
 vec3 calculateSpotlight( vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection){
@@ -72,7 +70,7 @@ vec3 calculateSpotlight( vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirecti
 
     if (theta > spotlight.cutOff){
         float diffuseSpotLightIntensity = dot(surfaceNormal, unitLightVector);
-        float diffuseSpotLightBrightness = max(diffuseSpotLightIntensity, 0.1);
+        float diffuseSpotLightBrightness = max(diffuseSpotLightIntensity, 0.0);
         finalColour = diffuseSpotLightBrightness * spotlight.colour;
     }
 
