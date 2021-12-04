@@ -1,10 +1,9 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
-import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
+import com.layhill.roadsim.gameengine.graphics.gl.data.*;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
+import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -22,10 +21,15 @@ public class EntityShaderProgram extends ShaderProgram {
     private UniformVector3f[] lightPositions = new UniformVector3f[MAX_LIGHTS];
     private UniformVector3f[] lightsColour = new UniformVector3f[MAX_LIGHTS];
 
+    private UniformBoolean enableSpotlight = new UniformBoolean("enableSpotlight");
+    private UniformSpotlight spotlight = new UniformSpotlight("spotlight");
+
     private UniformInteger texture = new UniformInteger("uTexture");
 
     public EntityShaderProgram() {
-        super.addUniform(projection, view, modelTransformation, globalLightDirection, globalLightColour);
+        super.addUniform(projection, view, modelTransformation, globalLightDirection, globalLightColour,
+                enableSpotlight, spotlight, spotlight.getPosition(), spotlight.getDirection(),
+                this.spotlight.getColour(), this.spotlight.getCutOff());
     }
 
     public void loadCamera(Camera camera) {
@@ -69,5 +73,18 @@ public class EntityShaderProgram extends ShaderProgram {
 
     public void loadTexture(int textureUnit) {
         texture.load(textureUnit);
+    }
+
+
+    public void enableSpotlight() {
+        enableSpotlight.load(true);
+    }
+
+    public void disableSpotlight() {
+        enableSpotlight.load(false);
+    }
+
+    public void loadSpotlight(Spotlight spotlight) {
+        this.spotlight.loadSpotlight(spotlight);
     }
 }

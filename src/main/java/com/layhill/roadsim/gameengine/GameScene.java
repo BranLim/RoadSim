@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+
 @Slf4j
 public class GameScene extends Scene {
     private List<Terrain> terrains = new ArrayList<>();
@@ -27,6 +29,7 @@ public class GameScene extends Scene {
     private ResourceManager resourceManager = new ResourceManager();
     private RenderingManager renderingManager;
     private Spotlight spotlight;
+    private boolean turnOnFlashlight = false;
 
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
@@ -42,14 +45,14 @@ public class GameScene extends Scene {
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
         camera.setGameScene(this);
 
-        spotlight = new Spotlight(new Vector3f(camera.getPosition()), new Vector3f(camera.getDirection()), new Vector3f(0.8f, 0.8f, 0.8f), (float) Math.cos(Math.toRadians(12.5f)));
+        spotlight = new Spotlight(new Vector3f(camera.getPosition()), new Vector3f(camera.getDirection()), new Vector3f(1.f, 1.f, 1.f), (float) Math.cos(Math.toRadians(12.5f)));
 
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
             float xPos = random.nextFloat(-150.f, 150.f);
             float yPos = random.nextFloat(0.0f, 100.0f);
             float zPos = random.nextFloat(-150.0f, 100.0f);
-            Light light = new Light(new Vector3f(xPos, yPos, zPos), new Vector3f(0.0f, 0.0f, 0.0f));
+            Light light = new Light(new Vector3f(xPos, yPos, zPos), new Vector3f(0.5f, 0.5f, 0.5f));
             lights.add(light);
         }
 
@@ -65,7 +68,7 @@ public class GameScene extends Scene {
         TexturedModel stoneModel = resourceManager.loadTexturedModel("assets/models/stone.obj", "assets/textures/stone_texture.jpg", "Rock");
         if (stoneModel != null) {
             Material material = stoneModel.getMaterial();
-            material.setReflectivity(0.1f);
+            material.setReflectivity(0.2f);
             material.setShineDampener(2.0f);
             material.attachShaderProgram(ShaderFactory.createDefaultShaderProgram());
 
@@ -85,10 +88,15 @@ public class GameScene extends Scene {
             camera.rotate(deltaTime);
             MouseListener.endFrame();
         }
+        if (KeyListener.isKeyPressed(GLFW_KEY_F)){
+            turnOnFlashlight = !turnOnFlashlight;
+        }
         Light[] lightsToRender = new Light[5];
         lights.toArray(lightsToRender);
         renderingManager.addToQueue(lightsToRender);
-        renderingManager.addToQueue(spotlight);
+        if (turnOnFlashlight) {
+            renderingManager.addToQueue(spotlight);
+        }
 
         camera.move(deltaTime);
 

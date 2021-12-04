@@ -13,7 +13,6 @@ public class Spotlight extends Light{
         this.radius = radius;
     }
 
-
     public Vector3f getDirection() {
         return direction;
     }

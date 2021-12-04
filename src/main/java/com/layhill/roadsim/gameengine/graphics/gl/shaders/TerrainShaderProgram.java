@@ -93,8 +93,15 @@ public class TerrainShaderProgram extends ShaderProgram {
         }
     }
 
-    public void loadSpotlight(Spotlight spotlight) {
+    public void enableSpotlight() {
         enableSpotlight.load(true);
+    }
+
+    public void disableSpotlight() {
+        enableSpotlight.load(false);
+    }
+
+    public void loadSpotlight(Spotlight spotlight) {
         this.spotlight.loadSpotlight(spotlight);
     }
 

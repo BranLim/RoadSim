@@ -11,6 +11,7 @@ uniform mat4 uView;
 uniform mat4 uTransformation;
 uniform vec3 uLightPosition[MAX_LIGHTS];
 
+out vec3 fragPosition;
 out vec2 fTexCoord;
 out vec3 fSurfaceNormal;
 out vec3 fToCameraCentre;
@@ -19,6 +20,8 @@ out vec3 toLightSource[MAX_LIGHTS];
 void main()
 {
     vec4 worldPosition = uTransformation * vec4(aPos, 1.0);
+    fragPosition = worldPosition.xyz;
+
     gl_Position = uProjection * uView * worldPosition;
 
     fToCameraCentre = (inverse(uView) * vec4(0.0, 0.0, 0.0, 1.0)).xyz;

@@ -95,9 +95,16 @@ public class GLRenderer implements Renderer {
                 entityShaderProgram.loadCamera(camera);
 
                 if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
-                    Light[] lights = new Light[lightsToProcess.size()];
-                    lightsToProcess.toArray(lights);
+                    Light[] lights = getLights(lightsToProcess);
                     entityShaderProgram.loadLights(lights);
+
+                    List<Spotlight> spotlights = getSpotlights(lightsToProcess);
+                    if (spotlights.isEmpty()) {
+                        entityShaderProgram.disableSpotlight();
+                    }else{
+                        entityShaderProgram.enableSpotlight();
+                        entityShaderProgram.loadSpotlight(spotlights.get(0));
+                    }
                 }
                 entityShaderProgram.loadSun(sunDirection, sunColour);
                 entityShaderProgram.loadTexture(0);
@@ -107,22 +114,18 @@ public class GLRenderer implements Renderer {
                 TerrainShaderProgram terrainShaderProgram = (TerrainShaderProgram) shaderProgram;
                 terrainShaderProgram.loadSun(sunDirection, sunColour);
                 terrainShaderProgram.loadCamera(camera);
-                if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
 
-                    List<Light> notSpotlight = lightsToProcess.stream().filter(light -> light.getClass() != Spotlight.class).toList();
-                    Light[] lights = new Light[notSpotlight.size()];
-                    notSpotlight.toArray(lights);
+                if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
+                    Light[] lights = getLights(lightsToProcess);
                     terrainShaderProgram.loadLights(lights);
 
-                    List<Spotlight> spotlights = lightsToProcess.stream()
-                            .filter(light -> light.getClass() == Spotlight.class)
-                            .map(light -> (Spotlight) light)
-                            .toList();
-
-                    if (!spotlights.isEmpty()) {
+                    List<Spotlight> spotlights = getSpotlights(lightsToProcess);
+                    if (spotlights.isEmpty()) {
+                        terrainShaderProgram.disableSpotlight();
+                    }else{
+                        terrainShaderProgram.enableSpotlight();
                         terrainShaderProgram.loadSpotlight(spotlights.get(0));
                     }
-
                 }
                 terrainShaderProgram.loadTexture(0);
                 terrainShaderProgram.loadFogColour(fogColour);
@@ -132,6 +135,22 @@ public class GLRenderer implements Renderer {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
         }
+    }
+
+    private Light[] getLights(List<Light> lightsToProcess) {
+        List<Light> filteredLights = lightsToProcess.stream()
+                .filter(light -> light.getClass() != Spotlight.class)
+                .toList();
+        Light[] lights = new Light[filteredLights.size()];
+        filteredLights.toArray(lights);
+        return lights;
+    }
+
+    private List<Spotlight> getSpotlights(List<Light> lightsToProcess) {
+        return lightsToProcess.stream()
+                .filter(light -> light.getClass() == Spotlight.class)
+                .map(light -> (Spotlight) light)
+                .toList();
     }
 
     private void unbindTexturedModel(TexturedModel texturedModel) {
