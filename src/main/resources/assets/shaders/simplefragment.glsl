@@ -72,11 +72,10 @@ vec3 calculateSpotlight(vec3 fragPosition, vec3 surfaceNormal){
 
     float theta = dot(unitLightVector, normalize(-spotlight.direction));
 
-    if (theta > spotlight.cutOff){
-        float diffuseSpotLightIntensity = dot(surfaceNormal, unitLightVector);
-        float diffuseSpotLightBrightness = max(diffuseSpotLightIntensity, 0.0);
-        finalColour = diffuseSpotLightBrightness * spotlight.colour;
-    }
+    float epsilon = spotlight.cutOff - spotlight.outerCutOff;
+    float intensity = clamp((theta - spotlight.outerCutOff) / epsilon, 0.0, 1.0);
+
+    finalColour = intensity * spotlight.colour;
 
     return finalColour;
 }

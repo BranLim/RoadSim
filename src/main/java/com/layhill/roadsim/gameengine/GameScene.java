@@ -45,7 +45,12 @@ public class GameScene extends Scene {
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
         camera.setGameScene(this);
 
-        spotlight = new Spotlight(new Vector3f(camera.getPosition()), new Vector3f(camera.getDirection()), new Vector3f(1.f, 1.f, 1.f), (float) Math.cos(Math.toRadians(12.5f)), (float)Math.cos(Math.toRadians(15.0f)));
+        spotlight = new Spotlight(
+                new Vector3f(camera.getPosition()),
+                new Vector3f(camera.getDirection()),
+                new Vector3f(1.f, 1.f, 1.f),
+                (float) Math.cos(Math.toRadians(10.5f)),
+                (float)Math.cos(Math.toRadians(15.0f)));
 
         Random random = new Random();
         for (int i = 0; i < 5; i++) {

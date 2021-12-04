@@ -6,6 +6,7 @@ struct Spotlight{
     vec3 direction;
     vec3 colour;
     float cutOff;
+    float outerCutOff;
 };
 
 const int MAX_LIGHTS = 5;
@@ -63,16 +64,15 @@ void main(){
     }
 }
 
-vec3 calculateSpotlight( vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection){
-    vec3 finalColour = vec3(0);
+vec3 calculateSpotlight(vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection){
+    vec3 diffuseLight = vec3(0);
     vec3 unitLightVector = normalize(spotlight.position - fragPosition);
     float theta = dot(unitLightVector, normalize(-spotlight.direction));
 
-    if (theta > spotlight.cutOff){
-        float diffuseSpotLightIntensity = dot(surfaceNormal, unitLightVector);
-        float diffuseSpotLightBrightness = max(diffuseSpotLightIntensity, 0.0);
-        finalColour = diffuseSpotLightBrightness * spotlight.colour;
-    }
+    float epsilon = spotlight.cutOff - spotlight.outerCutOff;
+    float intensity = clamp((theta - spotlight.outerCutOff) / epsilon, 0.0, 1.0);
 
-    return finalColour;
+    diffuseLight = intensity * spotlight.colour;
+
+    return diffuseLight;
 }

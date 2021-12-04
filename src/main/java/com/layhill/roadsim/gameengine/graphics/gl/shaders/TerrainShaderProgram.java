@@ -32,7 +32,8 @@ public class TerrainShaderProgram extends ShaderProgram {
     public TerrainShaderProgram() {
         super.addUniform(projection, view, transformation, sunDirection, sunColour,
                 fogColour, texture, enableFog, enableSpotlight, spotlight, spotlight.getPosition(),
-                spotlight.getDirection(), this.spotlight.getColour(), this.spotlight.getCutOff());
+                spotlight.getDirection(), this.spotlight.getColour(), this.spotlight.getCutOff(),
+                this.spotlight.getOuterCutOff());
 
     }
 
