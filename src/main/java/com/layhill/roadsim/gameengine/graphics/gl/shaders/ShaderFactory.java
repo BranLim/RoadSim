@@ -66,8 +66,8 @@ public class ShaderFactory {
     public static ShaderProgram createDefaultShaderProgram() {
         EntityShaderProgram shaderProgram = new EntityShaderProgram();
         try {
-            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplevertex.glsl").orElse(null);
-            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/simplefragment.glsl").orElse(null);
+            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/entity_vertex.glsl").orElse(null);
+            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/entity_fragment.glsl").orElse(null);
 
             shaderProgram.addShader(vertexShader);
             shaderProgram.addShader(fragmentShader);

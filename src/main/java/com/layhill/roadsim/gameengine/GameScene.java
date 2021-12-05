@@ -73,8 +73,8 @@ public class GameScene extends Scene {
         TexturedModel stoneModel = resourceManager.loadTexturedModel("assets/models/stone.obj", "assets/textures/stone_texture.jpg", "Rock");
         if (stoneModel != null) {
             Material material = stoneModel.getMaterial();
-            material.setReflectivity(0.2f);
-            material.setShineDampener(2.0f);
+            material.setReflectivity(0.3f);
+            material.setShineDampener(1.4f);
             material.attachShaderProgram(ShaderFactory.createDefaultShaderProgram());
 
             for (int i = 0; i < 5; i++) {

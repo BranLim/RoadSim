@@ -32,6 +32,7 @@ out vec4 color;
 vec3 calculateSpecularReflection(vec3 unitToLightDirection, vec3 unitSurfaceNormal, vec3 unitToCamera, vec3 lightColour);
 vec3 calculateSpotlightSpecular(vec3 fragPosition, vec3 surfaceNormal, vec3 unitToCamera);
 vec3 calculateSpotlight(vec3 fragPosition, vec3 surfaceNormal);
+float calculateSpotlightIntensity(vec3 unitLightVector, vec3 lightDirection, float innerRadius, float outerRadius);
 
 vec3 calculateSpecularReflection(vec3 unitToLightDirection, vec3 unitSurfaceNormal, vec3 unitToCamera, vec3 lightColour){
     vec3 reflectedLight = reflect(unitToLightDirection, unitSurfaceNormal);
@@ -42,40 +43,47 @@ vec3 calculateSpecularReflection(vec3 unitToLightDirection, vec3 unitSurfaceNorm
     return finalSpecular;
 }
 
+float calculateSpotlightIntensity(vec3 toLightSource, vec3 lightDirection, float innerRadius, float outerRadius){
+    vec3 unitToLightSource = normalize(toLightSource);
+    float theta = dot(unitToLightSource, normalize(-lightDirection));
+    float epsilon = innerRadius - outerRadius;
+    float intensity = clamp((theta - outerRadius) / epsilon, 0.0, 1.0);
+    return intensity;
+}
+
 vec3 calculateSpotlightSpecular(vec3 fragPosition, vec3 surfaceNormal, vec3 unitToCamera){
     vec3 finalSpecular = vec3(0);
-    vec3 unitLightVector = normalize(spotlight.position - fragPosition);
+    vec3 toLightSource = spotlight.position - fragPosition;
     vec3 unitLightDirection =  normalize(-spotlight.direction);
 
-    float theta = dot(unitLightVector, unitLightDirection);
+    //Attenuation
+    float distance = length(toLightSource);
+    float attenuation = 1.0/(1.0 + 0.01 * distance + 0.0 * (distance * distance));
 
-    if (theta > spotlight.cutOff){
+    //Specular
+    vec3 reflectedLight = reflect(unitLightDirection, surfaceNormal);
+    vec3 unitReflectedLight = normalize(reflectedLight);
+    float specularFactor = max(dot(unitReflectedLight, unitToCamera), 0.0);
 
-        vec3 reflectedLight = reflect(unitLightDirection, surfaceNormal);
-        vec3 unitReflectedLight = normalize(reflectedLight);
+    float intensity = calculateSpotlightIntensity(toLightSource, spotlight.direction, spotlight.cutOff, spotlight.outerCutOff);
 
-        float specularSpotLightIntensity = dot(unitReflectedLight, unitToCamera);
-        float specularFactor = max(specularSpotLightIntensity, 0.0);
-        finalSpecular = uReflectivity * pow(specularFactor, uShineDampen)  * spotlight.colour;
-    }
+    finalSpecular = attenuation * intensity * uReflectivity * pow(specularFactor, uShineDampen)  * spotlight.colour;
 
     return finalSpecular;
 }
 
 vec3 calculateSpotlight(vec3 fragPosition, vec3 surfaceNormal){
-    vec3 finalColour = vec3(0);
+
     vec3 toLightSource = spotlight.position - fragPosition;
     vec3 unitLightVector = normalize(toLightSource);
 
+    //Attenuation
     float distance = length(toLightSource);
     float attenuation = 1.0/(1.0 + 0.01 * distance + 0.0 * (distance * distance));
 
-    float theta = dot(unitLightVector, normalize(-spotlight.direction));
+    float intensity = calculateSpotlightIntensity(toLightSource, spotlight.direction, spotlight.cutOff, spotlight.outerCutOff);
 
-    float epsilon = spotlight.cutOff - spotlight.outerCutOff;
-    float intensity = clamp((theta - spotlight.outerCutOff) / epsilon, 0.0, 1.0);
-
-    finalColour = intensity * spotlight.colour;
+    vec3 finalColour = attenuation * intensity * spotlight.colour;
 
     return finalColour;
 }
