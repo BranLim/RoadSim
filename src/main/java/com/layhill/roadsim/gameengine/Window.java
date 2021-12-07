@@ -1,6 +1,8 @@
 package com.layhill.roadsim.gameengine;
 
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
+import com.layhill.roadsim.gameengine.input.KeyListener;
+import com.layhill.roadsim.gameengine.input.MouseListener;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -10,7 +12,6 @@ import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j

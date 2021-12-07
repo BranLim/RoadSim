@@ -26,7 +26,7 @@ public class Mesh {
         this.textureCoordinates = textureCoordinates;
         this.vertexIndices = vertexIndices;
         if (vertexIndices == null) {
-            vertexCount = vertices.size() * 3;
+            vertexCount = vertices.size() ;
         } else {
             vertexCount = vertexIndices.size();
         }
@@ -50,7 +50,7 @@ public class Mesh {
         }
 
         if (vertexIndices == null || vertexIndices.length == 0) {
-            vertexCount = vertices.length * 3;
+            vertexCount = vertices.length / 3;
         } else {
             this.vertexIndices = Arrays.stream(vertexIndices).boxed().collect(Collectors.toList());
             vertexCount = vertexIndices.length;

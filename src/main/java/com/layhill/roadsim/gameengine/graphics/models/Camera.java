@@ -1,8 +1,8 @@
 package com.layhill.roadsim.gameengine.graphics.models;
 
 import com.layhill.roadsim.gameengine.GameScene;
-import com.layhill.roadsim.gameengine.KeyListener;
-import com.layhill.roadsim.gameengine.MouseListener;
+import com.layhill.roadsim.gameengine.input.KeyListener;
+import com.layhill.roadsim.gameengine.input.MouseListener;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;

@@ -7,6 +7,7 @@ import com.layhill.roadsim.gameengine.graphics.models.Mesh;
 import com.layhill.roadsim.gameengine.io.MeshLoader;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
+import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -46,9 +47,8 @@ public final class GLResourceLoader {
     public GLModel loadToVao(Mesh mesh) {
         Objects.requireNonNull(mesh);
         List<Integer> attributes = new ArrayList<>();
-        int vaoId = glGenVertexArrays();
-        vaos.add(vaoId);
-        glBindVertexArray(vaoId);
+
+        int vaoId = generateAndBindVao();
 
         storeIndicesBuffer(mesh.vertexIndicesToIntBuffer());
 
@@ -63,6 +63,29 @@ public final class GLResourceLoader {
 
         glBindVertexArray(0);
         return new GLModel(vaoId, mesh.getVertexCount(), attributes);
+    }
+
+    public GLModel loadToVao(float[] vertices, int dimension) {
+        int vaoId = generateAndBindVao();
+
+        List<Integer> attributes = new ArrayList<>();
+        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
+        verticesBuffer.put(vertices);
+        verticesBuffer.flip();
+
+        storeDataInAttributeList(TRIANGLE_ATTRIBUTE_POSITION, dimension, verticesBuffer);
+        attributes.add(TRIANGLE_ATTRIBUTE_POSITION);
+
+        glBindVertexArray(0);
+
+        return new GLModel(vaoId, (vertices.length / dimension), attributes);
+    }
+
+    private int generateAndBindVao() {
+        int vaoId = glGenVertexArrays();
+        vaos.add(vaoId);
+        glBindVertexArray(vaoId);
+        return vaoId;
     }
 
     private void storeDataInAttributeList(int attributeIndex, int dataWidth, FloatBuffer data) {
@@ -97,7 +120,7 @@ public final class GLResourceLoader {
             case 4 -> glTexImage2D(target, 0, GL_RGBA, texture.getWidth(), texture.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.getImage());
         }
 
-        if (enableMipmap){
+        if (enableMipmap) {
             glGenerateMipmap(target);
             glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             glTexParameterf(target, GL_TEXTURE_LOD_BIAS, -0.2f);

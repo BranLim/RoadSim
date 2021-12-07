@@ -1,8 +1,7 @@
 package com.layhill.roadsim.gameengine;
 
+import com.layhill.roadsim.gameengine.input.KeyListener;
 import org.lwjgl.glfw.GLFW;
-
-import java.awt.event.KeyEvent;
 
 public class MainMenuScene extends Scene{
 

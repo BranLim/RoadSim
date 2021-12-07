@@ -3,12 +3,17 @@ package com.layhill.roadsim.gameengine;
 import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
+import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
 import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
+import com.layhill.roadsim.gameengine.input.KeyListener;
+import com.layhill.roadsim.gameengine.input.MouseListener;
+import com.layhill.roadsim.gameengine.particles.Particle;
+import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
@@ -20,6 +25,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
 
 @Slf4j
 public class GameScene extends Scene {
@@ -30,6 +36,7 @@ public class GameScene extends Scene {
     private RenderingManager renderingManager;
     private Spotlight spotlight;
     private boolean turnOnFlashlight = false;
+    private ParticleSystem particleSystem;
 
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
@@ -50,7 +57,7 @@ public class GameScene extends Scene {
                 new Vector3f(camera.getDirection()),
                 new Vector3f(1.f, 1.f, 1.f),
                 (float) Math.cos(Math.toRadians(10.5f)),
-                (float)Math.cos(Math.toRadians(15.0f)));
+                (float) Math.cos(Math.toRadians(15.0f)));
 
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
@@ -84,6 +91,8 @@ public class GameScene extends Scene {
                 gameObjects.add(stoneObject);
             }
         }
+
+        particleSystem = new ParticleSystem(GLResourceLoader.getInstance());
     }
 
     @Override
@@ -93,9 +102,12 @@ public class GameScene extends Scene {
             camera.rotate(deltaTime);
             MouseListener.endFrame();
         }
-        if (KeyListener.isKeyPressed(GLFW_KEY_F)){
+        if (KeyListener.isKeyPressed(GLFW_KEY_F)) {
             turnOnFlashlight = !turnOnFlashlight;
         }
+
+        //particleSystem.addParticle(new Particle(new Vector3f(0.f, 15.f, 12.f), new Vector3f(0.f, 20.f, 0.f), 4, -.5f, 0, 1));
+
         Light[] lightsToRender = new Light[5];
         lights.toArray(lightsToRender);
         renderingManager.addToQueue(lightsToRender);
@@ -104,14 +116,15 @@ public class GameScene extends Scene {
         }
 
         camera.move(deltaTime);
-
         spotlight.setPosition(camera.getPosition());
         spotlight.setDirection(camera.getDirection());
+        particleSystem.update();
 
         for (Renderable gameObject : gameObjects) {
             renderingManager.addToQueue(gameObject);
         }
         renderingManager.run(camera);
+        particleSystem.render(camera);
     }
 
     @Override
@@ -119,6 +132,7 @@ public class GameScene extends Scene {
 
         resourceManager.dispose();
         renderingManager.dispose();
+        particleSystem.dispose();
     }
 
 }

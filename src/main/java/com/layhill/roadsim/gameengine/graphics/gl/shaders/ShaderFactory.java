@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
+import com.layhill.roadsim.gameengine.particles.ParticleShaderProgram;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class ShaderFactory {
         switch (shaderType.toLowerCase(Locale.ROOT)) {
             case "vertex" -> {
                 shaderSource.append(splitString[1]);
-                return Optional.of(new Shader(filename,shaderSource.toString(), GL_VERTEX_SHADER));
+                return Optional.of(new Shader(filename, shaderSource.toString(), GL_VERTEX_SHADER));
             }
             case "fragment" -> {
                 shaderSource.append(splitString[1]);
@@ -68,6 +69,21 @@ public class ShaderFactory {
         try {
             Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/entity_vertex.glsl").orElse(null);
             Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/entity_fragment.glsl").orElse(null);
+
+            shaderProgram.addShader(vertexShader);
+            shaderProgram.addShader(fragmentShader);
+            shaderProgram.init();
+        } catch (IOException e) {
+            log.error("Error loading shader from file", e);
+        }
+        return shaderProgram;
+    }
+
+    public static ParticleShaderProgram createParticleShaderProgram() {
+        ParticleShaderProgram shaderProgram = new ParticleShaderProgram();
+        try {
+            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/particle_vertex.glsl").orElse(null);
+            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/particle_fragment.glsl").orElse(null);
 
             shaderProgram.addShader(vertexShader);
             shaderProgram.addShader(fragmentShader);
