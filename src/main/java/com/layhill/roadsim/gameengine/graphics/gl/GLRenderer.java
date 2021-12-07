@@ -9,6 +9,8 @@ import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
 import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
+import com.layhill.roadsim.gameengine.particles.ParticleRenderer;
+import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -28,6 +30,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class GLRenderer implements Renderer {
 
     private GLSkyRenderer skyRenderer;
+    private ParticleSystem particleSystem;
     private Vector3f sunDirection = new Vector3f(-40.f, 1000.f, -30.f);
     private Vector3f sunColour = new Vector3f(0.0f, 0.0f, 0.0f);
     private static final float SKY_RED = 0.05f;
@@ -35,9 +38,11 @@ public class GLRenderer implements Renderer {
     private static final float SKY_BLUE = 0.05f;
     private final Vector3f fogColour = new Vector3f(0.3f, 0.3f, 0.3f);
 
-    public GLRenderer() {
+    public GLRenderer(ParticleSystem particleSystem) {
         skyRenderer = new GLSkyRenderer();
+        this.particleSystem = particleSystem;
     }
+
 
     public void prepare() {
         glEnable(GL_DEPTH_TEST);
@@ -61,6 +66,7 @@ public class GLRenderer implements Renderer {
         skyRenderer.setFogColour(fogColour);
         skyRenderer.setCamera(camera);
         skyRenderer.render();
+        particleSystem.render(camera);
     }
 
     private void prepareEntity(Renderable renderableEntity) {
@@ -101,7 +107,7 @@ public class GLRenderer implements Renderer {
                     List<Spotlight> spotlights = getSpotlights(lightsToProcess);
                     if (spotlights.isEmpty()) {
                         entityShaderProgram.disableSpotlight();
-                    }else{
+                    } else {
                         entityShaderProgram.enableSpotlight();
                         entityShaderProgram.loadSpotlight(spotlights.get(0));
                     }
@@ -122,7 +128,7 @@ public class GLRenderer implements Renderer {
                     List<Spotlight> spotlights = getSpotlights(lightsToProcess);
                     if (spotlights.isEmpty()) {
                         terrainShaderProgram.disableSpotlight();
-                    }else{
+                    } else {
                         terrainShaderProgram.enableSpotlight();
                         terrainShaderProgram.loadSpotlight(spotlights.get(0));
                     }

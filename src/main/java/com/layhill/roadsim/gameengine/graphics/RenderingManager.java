@@ -4,6 +4,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.GLRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
+import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -19,10 +20,12 @@ public class RenderingManager {
 
     private Renderer renderer;
     private long window;
+    private ParticleSystem particleSystem;
 
-    public RenderingManager(long window) {
+    public RenderingManager(long window, ParticleSystem particleSystem) {
         this.window = window;
-        renderer = new GLRenderer();
+        this.particleSystem = particleSystem;
+        renderer = new GLRenderer(particleSystem);
     }
 
     public void addToQueue(Renderable renderableEntity) {
@@ -52,6 +55,10 @@ public class RenderingManager {
         renderer.dispose(entities);
         lights.clear();
         entities.clear();
+        particleSystem.dispose();
     }
 
+    public ParticleSystem getParticleSystem() {
+        return particleSystem;
+    }
 }

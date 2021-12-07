@@ -1,8 +1,11 @@
 package com.layhill.roadsim.gameengine;
 
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
+import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
+import com.layhill.roadsim.gameengine.particles.ParticleRenderer;
+import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -50,7 +53,7 @@ public class Window {
                 currentScene.init();
             }
             case 1 -> {
-                currentScene = new GameScene(new RenderingManager(glfwWindow));
+                currentScene = new GameScene(new RenderingManager(glfwWindow, new ParticleSystem(new ParticleRenderer(GLResourceLoader.getInstance()))));
                 currentScene.init();
             }
         }
@@ -149,5 +152,9 @@ public class Window {
 
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
+    }
+
+    public long getWindow(){
+        return this.glfwWindow;
     }
 }

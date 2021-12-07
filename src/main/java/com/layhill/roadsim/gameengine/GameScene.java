@@ -3,6 +3,7 @@ package com.layhill.roadsim.gameengine;
 import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
+import com.layhill.roadsim.gameengine.graphics.gl.GLRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
@@ -36,7 +37,6 @@ public class GameScene extends Scene {
     private RenderingManager renderingManager;
     private Spotlight spotlight;
     private boolean turnOnFlashlight = false;
-    private ParticleSystem particleSystem;
 
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
@@ -92,7 +92,7 @@ public class GameScene extends Scene {
             }
         }
 
-        particleSystem = new ParticleSystem(GLResourceLoader.getInstance());
+
     }
 
     @Override
@@ -106,7 +106,10 @@ public class GameScene extends Scene {
             turnOnFlashlight = !turnOnFlashlight;
         }
 
-        //particleSystem.addParticle(new Particle(new Vector3f(0.f, 15.f, 12.f), new Vector3f(0.f, 20.f, 0.f), 4, -.5f, 0, 1));
+        if (KeyListener.isKeyPressed(GLFW_KEY_X)) {
+            renderingManager.getParticleSystem().addParticle(new Particle(new Vector3f(0.f, 1.f, -1.f), new Vector3f(0.f, 20.f, 0.f), 4, 1.f, 0, 1));
+        }
+
 
         Light[] lightsToRender = new Light[5];
         lights.toArray(lightsToRender);
@@ -118,13 +121,12 @@ public class GameScene extends Scene {
         camera.move(deltaTime);
         spotlight.setPosition(camera.getPosition());
         spotlight.setDirection(camera.getDirection());
-        particleSystem.update();
+        renderingManager.getParticleSystem().update();
 
         for (Renderable gameObject : gameObjects) {
             renderingManager.addToQueue(gameObject);
         }
         renderingManager.run(camera);
-        particleSystem.render(camera);
     }
 
     @Override
@@ -132,7 +134,7 @@ public class GameScene extends Scene {
 
         resourceManager.dispose();
         renderingManager.dispose();
-        particleSystem.dispose();
+
     }
 
 }

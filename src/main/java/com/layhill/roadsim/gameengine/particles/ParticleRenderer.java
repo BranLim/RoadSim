@@ -7,9 +7,7 @@ import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
 import java.util.List;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.GL_BLEND_SRC_ALPHA;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
@@ -22,6 +20,7 @@ public class ParticleRenderer {
 
     private GLModel model;
     private ParticleShaderProgram shader;
+
 
     public ParticleRenderer(GLResourceLoader loader) {
         model = loader.loadToVao(QUAD, 2);

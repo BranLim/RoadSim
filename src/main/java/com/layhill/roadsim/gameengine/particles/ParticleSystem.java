@@ -12,8 +12,8 @@ public class ParticleSystem {
     private final List<Particle> particles = new ArrayList<>();
     private ParticleRenderer particleRenderer;
 
-    public ParticleSystem(GLResourceLoader resourceLoader) {
-        particleRenderer = new ParticleRenderer(resourceLoader);
+    public ParticleSystem(ParticleRenderer particleRenderer) {
+        this.particleRenderer = particleRenderer;
     }
 
     public void update() {
