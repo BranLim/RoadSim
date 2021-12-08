@@ -1,8 +1,12 @@
 #type fragment
 #version 330 core
 
+in vec2 fTextureCoords;
+
 out vec4 outColour;
 
+uniform sampler2D uTexture;
+
 void main(){
-    outColour = vec4(.7f, .2f, .4f, 1.f);
+    outColour = texture(uTexture, fTextureCoords);
 }

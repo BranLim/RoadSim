@@ -1,11 +1,13 @@
 package com.layhill.roadsim.gameengine;
 
 import com.layhill.roadsim.gameengine.entities.GameObject;
+import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
 import com.layhill.roadsim.gameengine.graphics.gl.GLRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
@@ -13,7 +15,9 @@ import com.layhill.roadsim.gameengine.graphics.models.Material;
 import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
+import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.particles.Particle;
+import com.layhill.roadsim.gameengine.particles.ParticleEmitterConfiguration;
 import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
@@ -23,10 +27,12 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 @Slf4j
 public class GameScene extends Scene {
@@ -37,6 +43,8 @@ public class GameScene extends Scene {
     private RenderingManager renderingManager;
     private Spotlight spotlight;
     private boolean turnOnFlashlight = false;
+    private GLTexture particleTexture;
+    private ParticleEmitterConfiguration configuration;
 
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
@@ -91,7 +99,8 @@ public class GameScene extends Scene {
                 gameObjects.add(stoneObject);
             }
         }
-
+        Optional<RawTexture> texture = TextureLoader.loadAsTextureFromFile("assets/textures/fire.png");
+        texture.ifPresent(rawTexture -> particleTexture = GLResourceLoader.getInstance().load2DTexture(rawTexture, GL_TEXTURE_2D, true));
 
     }
 
@@ -105,10 +114,18 @@ public class GameScene extends Scene {
         if (KeyListener.isKeyPressed(GLFW_KEY_F)) {
             turnOnFlashlight = !turnOnFlashlight;
         }
+        configuration = ParticleEmitterConfiguration.builder()
+                .affectedByGravity(true)
+                .gravityEffect(1.f)
+                .position(new Vector3f(0.f, 1.f, 0.f))
+                .defaultSpeed(1.2f)
+                .initialParticleRotation(0)
+                .initialParticleSize(1)
+                .timeToLive(4)
+                .particlePerSeconds(25)
+                .build();
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_X)) {
-            renderingManager.getParticleSystem().addParticle(new Particle(new Vector3f(0.f, 1.f, -1.f), new Vector3f(0.f, 20.f, 0.f), 4, 1.f, 0, 1));
-        }
+        renderingManager.getParticleSystem().createParticleEmitter(configuration, particleTexture);
 
 
         Light[] lightsToRender = new Light[5];

@@ -9,7 +9,6 @@ import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
 import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
-import com.layhill.roadsim.gameengine.particles.ParticleRenderer;
 import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;

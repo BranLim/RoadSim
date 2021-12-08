@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.particles;
 
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
@@ -9,9 +10,10 @@ public class ParticleShaderProgram extends ShaderProgram {
 
     private UniformMatrix4f projection = new UniformMatrix4f("uProjection");
     private UniformMatrix4f modelTransformation = new UniformMatrix4f("uTransformation");
+    private UniformInteger texture = new UniformInteger("uTexture");
 
     public ParticleShaderProgram() {
-        super.addUniform(projection, modelTransformation);
+        super.addUniform(projection, modelTransformation, texture);
     }
 
     public void loadCamera(Camera camera) {
@@ -21,4 +23,9 @@ public class ParticleShaderProgram extends ShaderProgram {
     public void loadModelTransformation(Matrix4f transformationMatrix) {
         modelTransformation.load(transformationMatrix);
     }
+
+    public void loadTexture(int textureUnit) {
+        texture.load(textureUnit);
+    }
+
 }
