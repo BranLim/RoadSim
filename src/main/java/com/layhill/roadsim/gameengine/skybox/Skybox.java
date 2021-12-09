@@ -1,8 +1,6 @@
 package com.layhill.roadsim.gameengine.skybox;
 
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
-import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
-import com.layhill.roadsim.gameengine.graphics.gl.shaders.SkyShaderProgram;
 
 import java.io.IOException;
 

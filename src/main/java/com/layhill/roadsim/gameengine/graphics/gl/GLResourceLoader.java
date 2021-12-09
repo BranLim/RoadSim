@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 
 public final class GLResourceLoader {
 
@@ -169,6 +170,25 @@ public final class GLResourceLoader {
         glBindVertexArray(0);
 
         return skybox;
+    }
+
+    public void addInstanceAttribute(int vao, int vbo, int attribute, int dataSize, int instanceDataLength, int offset){
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindVertexArray(vao);
+        glVertexAttribPointer(attribute, dataSize, GL_FLOAT, false, instanceDataLength * Float.BYTES, (long) offset * Float.BYTES);
+        glVertexAttribDivisor(attribute, 1);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+    public int createUpdateableVbo(int floatCount){
+        int vbo = glGenBuffers();
+        vbos.add(vbo);
+        glBindBuffer(GL_ARRAY_BUFFER,vbo);
+        glBufferData(GL_ARRAY_BUFFER, (long) floatCount * Float.BYTES, GL_STREAM_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        return vbo;
     }
 
     public void dispose() {

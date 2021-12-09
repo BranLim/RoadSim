@@ -16,6 +16,11 @@ public class ParticleShaderProgram extends ShaderProgram {
         super.addUniform(projection, modelTransformation, texture);
     }
 
+    @Override
+    protected void bindAttributes() {
+
+    }
+
     public void loadCamera(Camera camera) {
         projection.load(camera.getProjectionMatrix());
     }

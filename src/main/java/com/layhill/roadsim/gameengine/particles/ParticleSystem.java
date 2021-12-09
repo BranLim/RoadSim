@@ -1,5 +1,7 @@
 package com.layhill.roadsim.gameengine.particles;
 
+import com.layhill.roadsim.gameengine.environments.FireParticleEmitter;
+import com.layhill.roadsim.gameengine.environments.RainParticleEmitter;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +40,13 @@ public class ParticleSystem {
     }
 
 
-    public void createParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture) {
-        ParticleEmitter emitter = new ParticleEmitter(configuration, particleTexture, particleRenderer);
+    public void createFireParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture) {
+        FireParticleEmitter emitter = new FireParticleEmitter(configuration, particleTexture, particleRenderer);
+        particleEmitters.add(emitter);
+    }
+
+    public void createRainParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture) {
+        RainParticleEmitter emitter = new RainParticleEmitter(configuration, particleTexture, particleRenderer);
         particleEmitters.add(emitter);
     }
 

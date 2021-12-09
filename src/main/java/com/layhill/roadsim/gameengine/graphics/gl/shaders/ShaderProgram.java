@@ -33,6 +33,7 @@ public abstract class ShaderProgram {
         compileShaders();
         attachCompiledShaders();
         detachAndDeleteAllShaders();
+        bindAttributes();
         setupUniformData();
         initialised = true;
     }
@@ -101,6 +102,12 @@ public abstract class ShaderProgram {
 
     protected void addUniform(Uniform... uniforms) {
         uniformData.addAll(List.of(uniforms));
+    }
+
+    protected abstract void bindAttributes();
+
+    protected void bindAttribute(int attribute, String variableName){
+        glBindAttribLocation(programId, attribute, variableName);
     }
 
     public void uploadFloat(String varName, float value) {

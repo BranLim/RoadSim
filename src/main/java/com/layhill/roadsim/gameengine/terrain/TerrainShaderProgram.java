@@ -1,6 +1,7 @@
-package com.layhill.roadsim.gameengine.graphics.gl.shaders;
+package com.layhill.roadsim.gameengine.terrain;
 
 import com.layhill.roadsim.gameengine.graphics.gl.data.*;
+import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
@@ -35,6 +36,13 @@ public class TerrainShaderProgram extends ShaderProgram {
                 spotlight.getDirection(), this.spotlight.getColour(), this.spotlight.getCutOff(),
                 this.spotlight.getOuterCutOff());
 
+    }
+
+    @Override
+    protected void bindAttributes() {
+        super.bindAttribute(0, "aPos");
+        super.bindAttribute(1, "aTexCoord");
+        super.bindAttribute(2, "aSurfaceNormal");
     }
 
     public void loadCamera(Camera camera) {

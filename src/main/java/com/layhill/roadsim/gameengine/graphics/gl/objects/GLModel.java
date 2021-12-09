@@ -1,5 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.gl.objects;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,7 +9,7 @@ public class GLModel {
     private String id;
     private int vaoId;
     private int vertexCount;
-    private List<Integer> attributes ;
+    private List<Integer> attributes;
 
     public GLModel(int vaoId, int vertexCount, List<Integer> attributes) {
         this.id = UUID.randomUUID().toString();
@@ -30,5 +32,12 @@ public class GLModel {
 
     public List<Integer> getAttributes() {
         return attributes;
+    }
+
+    public void addAttributes(int... anAttributes) {
+        if (attributes == null) {
+            attributes = new ArrayList<>();
+        }
+        attributes.addAll(Arrays.stream(anAttributes).boxed().toList());
     }
 }

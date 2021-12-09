@@ -1,6 +1,8 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
+import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.particles.ParticleShaderProgram;
+import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

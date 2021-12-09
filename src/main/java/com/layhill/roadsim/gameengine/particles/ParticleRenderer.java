@@ -21,13 +21,30 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class ParticleRenderer {
 
     private static final float[] QUAD = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
+    private static final int MAX_PARTICLE_INSTANCES = 10000;
+    private static final int INSTANCE_DATA_LENGTH = 21;
 
     private GLModel model;
     private ParticleShaderProgram shader;
-
+    private GLResourceLoader loader;
+    private int vbo;
 
     public ParticleRenderer(GLResourceLoader loader) {
+        this.loader = loader;
+        vbo = loader.createUpdateableVbo(INSTANCE_DATA_LENGTH * MAX_PARTICLE_INSTANCES);
         model = loader.loadToVao(QUAD, 2);
+
+        //
+        loader.addInstanceAttribute(model.getVaoId(), vbo, 1, 4, INSTANCE_DATA_LENGTH, 0);
+        loader.addInstanceAttribute(model.getVaoId(), vbo, 2, 4, INSTANCE_DATA_LENGTH, 4);
+        loader.addInstanceAttribute(model.getVaoId(), vbo, 3, 4, INSTANCE_DATA_LENGTH, 8);
+        loader.addInstanceAttribute(model.getVaoId(), vbo, 4, 4, INSTANCE_DATA_LENGTH, 12);
+
+        //Texture offset
+        loader.addInstanceAttribute(model.getVaoId(), vbo, 5, 4, INSTANCE_DATA_LENGTH, 16);
+        loader.addInstanceAttribute(model.getVaoId(), vbo, 6, 4, INSTANCE_DATA_LENGTH, 20);
+        model.addAttributes(1, 2, 3, 4, 5, 6);
+
         shader = ShaderFactory.createParticleShaderProgram();
     }
 
@@ -69,7 +86,9 @@ public class ParticleRenderer {
         glDepthMask(false);
 
         glBindVertexArray(model.getVaoId());
-        glEnableVertexAttribArray(0);
+        for (int attribute : model.getAttributes()){
+            glEnableVertexAttribArray(attribute);
+        }
         if (particleTexture != null) {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(particleTexture.getTarget(), particleTexture.getTextureId());
@@ -81,7 +100,9 @@ public class ParticleRenderer {
 
     private void end(GLTexture particleTexture) {
 
-        glDisableVertexAttribArray(0);
+        for (int attribute : model.getAttributes()){
+            glDisableVertexAttribArray(attribute);
+        }
         glBindVertexArray(0);
 
         glDepthMask(true);

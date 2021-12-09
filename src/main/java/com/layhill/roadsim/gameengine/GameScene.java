@@ -4,7 +4,6 @@ import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
-import com.layhill.roadsim.gameengine.graphics.gl.GLRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
@@ -16,9 +15,7 @@ import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
-import com.layhill.roadsim.gameengine.particles.Particle;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitterConfiguration;
-import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
@@ -43,8 +40,8 @@ public class GameScene extends Scene {
     private RenderingManager renderingManager;
     private Spotlight spotlight;
     private boolean turnOnFlashlight = false;
-    private GLTexture particleTexture;
-    private ParticleEmitterConfiguration configuration;
+    private GLTexture fireParticleTexture;
+    private GLTexture rainParticleTexture;
 
 
     public GameScene(RenderingManager renderingManager) {
@@ -100,8 +97,11 @@ public class GameScene extends Scene {
                 gameObjects.add(stoneObject);
             }
         }
-        Optional<RawTexture> texture = TextureLoader.loadAsTextureFromFile("assets/textures/fire.png");
-        texture.ifPresent(rawTexture -> particleTexture = GLResourceLoader.getInstance().load2DTexture(rawTexture, GL_TEXTURE_2D, true));
+        Optional<RawTexture> fireTexture = TextureLoader.loadAsTextureFromFile("assets/textures/fire.png");
+        fireTexture.ifPresent(rawTexture -> fireParticleTexture = GLResourceLoader.getInstance().load2DTexture(rawTexture, GL_TEXTURE_2D, true));
+
+        Optional<RawTexture> rainTexture = TextureLoader.loadAsTextureFromFile("assets/textures/raindrop.png");
+        rainTexture.ifPresent(rawTexture -> rainParticleTexture = GLResourceLoader.getInstance().load2DTexture(rawTexture, GL_TEXTURE_2D, true));
 
     }
 
@@ -118,7 +118,7 @@ public class GameScene extends Scene {
         }
 
         if (KeyListener.isKeyPressed(GLFW_KEY_X) && !KeyListener.isKeyHeld(GLFW_KEY_X)){
-            configuration = ParticleEmitterConfiguration.builder()
+            ParticleEmitterConfiguration configuration = ParticleEmitterConfiguration.builder()
                     .affectedByGravity(true)
                     .gravityEffect(.8f)
                     .position(new Vector3f(0.f, 1.f, 0.f))
@@ -129,8 +129,20 @@ public class GameScene extends Scene {
                     .particleTimeToLive(2)
                     .particlePerSeconds(50)
                     .build();
-            renderingManager.getParticleSystem().createParticleEmitter(configuration, particleTexture);
+            renderingManager.getParticleSystem().createFireParticleEmitter(configuration, fireParticleTexture);
         }
+        ParticleEmitterConfiguration rainParticleConfiguration = ParticleEmitterConfiguration.builder()
+                .affectedByGravity(true)
+                .gravityEffect(1.f)
+                .position(new Vector3f(0.f, 100.f, 0.f))
+                .defaultSpeed(9.f)
+                .initialParticleRotation(0)
+                .initialParticleSize(1)
+                .timeToLive(20)
+                .particleTimeToLive(10)
+                .particlePerSeconds(5)
+                .build();
+        renderingManager.getParticleSystem().createRainParticleEmitter(rainParticleConfiguration, rainParticleTexture);
 
         Light[] lightsToRender = new Light[5];
         lights.toArray(lightsToRender);
