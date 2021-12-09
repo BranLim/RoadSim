@@ -3,10 +3,12 @@ package com.layhill.roadsim.gameengine.particles;
 import com.layhill.roadsim.gameengine.Time;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
+import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
 import java.util.*;
 
+@Slf4j
 public class ParticleEmitter {
 
     private String id;
@@ -56,7 +58,6 @@ public class ParticleEmitter {
                 iterator.remove();
             }
         }
-
         elapsedTime += Time.getInstance().getDeltaTime();
         return elapsedTime < timeToLive;
 
@@ -68,7 +69,6 @@ public class ParticleEmitter {
         float particlesToCreate = particlePerSeconds * delta;
         int count = (int) Math.floor(particlesToCreate);
         float partialParticle = particlesToCreate % 1;
-
 
         float particleActualTimeToLive = particleTimeToLive;
         float emitterRemainingTimeToLive = timeToLive - elapsedTime;
@@ -89,7 +89,7 @@ public class ParticleEmitter {
 
         float dirX = (float) Math.random() * 2f - 1f;
         float dirZ = (float) Math.random() * 2f - 1f;
-        float rotation = random.nextFloat(-45, 45);
+        float rotation = random.nextFloat() * 360.f;
         Vector3f velocity = new Vector3f(dirX, 1.0f, dirZ);
         velocity.normalize();
         velocity.mul(defaultSpeed);

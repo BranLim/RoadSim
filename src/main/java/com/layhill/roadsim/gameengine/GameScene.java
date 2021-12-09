@@ -46,6 +46,7 @@ public class GameScene extends Scene {
     private GLTexture particleTexture;
     private ParticleEmitterConfiguration configuration;
 
+
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
     }
@@ -111,22 +112,25 @@ public class GameScene extends Scene {
             camera.rotate(deltaTime);
             MouseListener.endFrame();
         }
-        if (KeyListener.isKeyPressed(GLFW_KEY_F)) {
+        if (KeyListener.isKeyPressed(GLFW_KEY_F) && !KeyListener.isKeyHeld(GLFW_KEY_F)) {
+            log.info("Toggle flashlight on {}", turnOnFlashlight);
             turnOnFlashlight = !turnOnFlashlight;
         }
-        configuration = ParticleEmitterConfiguration.builder()
-                .affectedByGravity(true)
-                .gravityEffect(1.f)
-                .position(new Vector3f(0.f, 1.f, 0.f))
-                .defaultSpeed(1.2f)
-                .initialParticleRotation(0)
-                .initialParticleSize(1)
-                .timeToLive(4)
-                .particlePerSeconds(25)
-                .build();
 
-        renderingManager.getParticleSystem().createParticleEmitter(configuration, particleTexture);
-
+        if (KeyListener.isKeyPressed(GLFW_KEY_X) && !KeyListener.isKeyHeld(GLFW_KEY_X)){
+            configuration = ParticleEmitterConfiguration.builder()
+                    .affectedByGravity(true)
+                    .gravityEffect(.8f)
+                    .position(new Vector3f(0.f, 1.f, 0.f))
+                    .defaultSpeed(2.f)
+                    .initialParticleRotation(0)
+                    .initialParticleSize(1)
+                    .timeToLive(4)
+                    .particleTimeToLive(2)
+                    .particlePerSeconds(50)
+                    .build();
+            renderingManager.getParticleSystem().createParticleEmitter(configuration, particleTexture);
+        }
 
         Light[] lightsToRender = new Light[5];
         lights.toArray(lightsToRender);

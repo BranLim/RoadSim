@@ -1,19 +1,14 @@
 package com.layhill.roadsim.gameengine.particles;
 
-import com.layhill.roadsim.gameengine.graphics.RawTexture;
-import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
-import com.layhill.roadsim.gameengine.io.TextureLoader;
-import com.layhill.roadsim.gameengine.resources.ResourceManager;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-
+@Slf4j
 public class ParticleSystem {
 
     private final List<ParticleEmitter> particleEmitters = new ArrayList<>();
