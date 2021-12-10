@@ -187,8 +187,17 @@ public final class GLResourceLoader {
         glBindBuffer(GL_ARRAY_BUFFER,vbo);
         glBufferData(GL_ARRAY_BUFFER, (long) floatCount * Float.BYTES, GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-
         return vbo;
+    }
+
+    public void updateVbo(int vbo, float[] data, FloatBuffer buffer){
+        buffer.clear();
+        buffer.put(data);
+        buffer.flip();
+        glBindBuffer(GL_ARRAY_BUFFER,vbo);
+        glBufferData(GL_ARRAY_BUFFER, (long) buffer.capacity() * Float.BYTES, GL_STREAM_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
     public void dispose() {
