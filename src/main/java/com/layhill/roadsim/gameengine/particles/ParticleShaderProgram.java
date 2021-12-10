@@ -18,7 +18,8 @@ public class ParticleShaderProgram extends ShaderProgram {
 
     @Override
     protected void bindAttributes() {
-
+        super.bindAttribute(0, "aPos");
+        super.bindAttribute(1, "modelView");
     }
 
     public void loadCamera(Camera camera) {

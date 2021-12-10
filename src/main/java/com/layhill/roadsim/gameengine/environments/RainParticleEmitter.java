@@ -13,7 +13,6 @@ import java.util.Random;
 
 public class RainParticleEmitter extends ParticleEmitter {
 
-
     private Random random = new Random();
 
     public RainParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture, ParticleRenderer renderer) {

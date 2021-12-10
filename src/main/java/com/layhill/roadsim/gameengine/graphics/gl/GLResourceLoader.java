@@ -173,8 +173,8 @@ public final class GLResourceLoader {
     }
 
     public void addInstanceAttribute(int vao, int vbo, int attribute, int dataSize, int instanceDataLength, int offset){
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBindVertexArray(vao);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glVertexAttribPointer(attribute, dataSize, GL_FLOAT, false, instanceDataLength * Float.BYTES, (long) offset * Float.BYTES);
         glVertexAttribDivisor(attribute, 1);
         glBindBuffer(GL_ARRAY_BUFFER, 0);

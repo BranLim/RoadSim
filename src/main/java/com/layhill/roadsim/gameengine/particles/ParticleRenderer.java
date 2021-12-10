@@ -25,7 +25,7 @@ public class ParticleRenderer {
 
     private static final float[] QUAD = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
     private static final int MAX_PARTICLE_INSTANCES = 10000;
-    private static final int INSTANCE_DATA_LENGTH = 18; //4f*41i*2
+    private static final int INSTANCE_DATA_LENGTH = 16; //4f*4
 
     private GLModel model;
     private ParticleShaderProgram shader;
@@ -36,9 +36,8 @@ public class ParticleRenderer {
 
     public ParticleRenderer(GLResourceLoader loader) {
         this.loader = loader;
-        vbo = loader.createUpdateableVbo(INSTANCE_DATA_LENGTH * MAX_PARTICLE_INSTANCES);
         model = loader.loadToVao(QUAD, 2);
-
+        vbo = loader.createUpdateableVbo(INSTANCE_DATA_LENGTH * MAX_PARTICLE_INSTANCES);
         //
         loader.addInstanceAttribute(model.getVaoId(), vbo, 1, 4, INSTANCE_DATA_LENGTH, 0);
         loader.addInstanceAttribute(model.getVaoId(), vbo, 2, 4, INSTANCE_DATA_LENGTH, 4);
@@ -46,9 +45,8 @@ public class ParticleRenderer {
         loader.addInstanceAttribute(model.getVaoId(), vbo, 4, 4, INSTANCE_DATA_LENGTH, 12);
 
         //Texture offset
-        loader.addInstanceAttribute(model.getVaoId(), vbo, 5, 4, INSTANCE_DATA_LENGTH, 16);
-        loader.addInstanceAttribute(model.getVaoId(), vbo, 6, 4, INSTANCE_DATA_LENGTH, 20);
-        model.addAttributes(1, 2, 3, 4, 5, 6);
+        //loader.addInstanceAttribute(model.getVaoId(), vbo, 5, 2, INSTANCE_DATA_LENGTH, 16);
+        model.addAttributes(1, 2, 3, 4);
 
         shader = ShaderFactory.createParticleShaderProgram();
     }
@@ -60,7 +58,7 @@ public class ParticleRenderer {
         for (Particle particle : particles) {
             updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), camera, data);
         }
-        loader.updateVbo(vbo, null, renderData);
+        loader.updateVbo(vbo, data, renderData);
         glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, model.getVertexCount(), particles.size());
         end(particleTexture);
     }
@@ -85,7 +83,7 @@ public class ParticleRenderer {
         storeMatrixData(modelViewMatrix, data);
     }
 
-    private void storeMatrixData(Matrix4f viewModelMatrix, float[] data){
+    private void storeMatrixData(Matrix4f viewModelMatrix, float[] data) {
 
         //column 1
         data[dataPointer++] = viewModelMatrix.m00();
@@ -115,6 +113,8 @@ public class ParticleRenderer {
     private void start(GLTexture particleTexture, Camera camera) {
 
         shader.start();
+        shader.loadCamera(camera);
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
         glDepthMask(false);
@@ -128,8 +128,6 @@ public class ParticleRenderer {
             glBindTexture(particleTexture.getTarget(), particleTexture.getTextureId());
             shader.loadTexture(0);
         }
-        shader.loadCamera(camera);
-
     }
 
     private void end(GLTexture particleTexture) {
