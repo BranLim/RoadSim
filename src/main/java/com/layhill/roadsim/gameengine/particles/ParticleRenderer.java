@@ -34,18 +34,19 @@ public class ParticleRenderer {
     private FloatBuffer renderData = BufferUtils.createFloatBuffer(MAX_PARTICLE_INSTANCES * INSTANCE_DATA_LENGTH);
     private int dataPointer = 0;
 
+    private Matrix4f modelTransformation = new Matrix4f();
+    private Matrix3f transposedViewMatrixWithoutTranslation = new Matrix3f();
+
     public ParticleRenderer(GLResourceLoader loader) {
         this.loader = loader;
         model = loader.loadToVao(QUAD, 2);
         vbo = loader.createUpdateableVbo(INSTANCE_DATA_LENGTH * MAX_PARTICLE_INSTANCES);
-        //
+
         loader.addInstanceAttribute(model.getVaoId(), vbo, 1, 4, INSTANCE_DATA_LENGTH, 0);
         loader.addInstanceAttribute(model.getVaoId(), vbo, 2, 4, INSTANCE_DATA_LENGTH, 4);
         loader.addInstanceAttribute(model.getVaoId(), vbo, 3, 4, INSTANCE_DATA_LENGTH, 8);
         loader.addInstanceAttribute(model.getVaoId(), vbo, 4, 4, INSTANCE_DATA_LENGTH, 12);
 
-        //Texture offset
-        //loader.addInstanceAttribute(model.getVaoId(), vbo, 5, 2, INSTANCE_DATA_LENGTH, 16);
         model.addAttributes(1, 2, 3, 4);
 
         shader = ShaderFactory.createParticleShaderProgram();
@@ -53,26 +54,27 @@ public class ParticleRenderer {
 
     public void render(GLTexture particleTexture, List<Particle> particles, Camera camera) {
         dataPointer = 0;
+
+        Matrix4f viewMatrix = camera.getViewMatrix();
+
+        viewMatrix.get3x3(transposedViewMatrixWithoutTranslation);
+        transposedViewMatrixWithoutTranslation.transpose();
+
         float[] data = new float[particles.size() * INSTANCE_DATA_LENGTH];
         start(particleTexture, camera);
         for (Particle particle : particles) {
-            updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), camera, data);
+            updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), viewMatrix, data);
         }
         loader.updateVbo(vbo, data, renderData);
         glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, model.getVertexCount(), particles.size());
         end(particleTexture);
     }
 
-    private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Camera camera, float[] data) {
-        Matrix4f viewMatrix = camera.getViewMatrix();
+    private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix, float[] data) {
 
-        Matrix3f upperLeft = new Matrix3f();
-        viewMatrix.get3x3(upperLeft);
-
-        Matrix4f modelTransformation = new Matrix4f();
         modelTransformation.identity()
                 .translate(position, modelTransformation)
-                .set3x3(upperLeft.transpose())
+                .set3x3(transposedViewMatrixWithoutTranslation)
                 .rotateZ((float) Math.toRadians(rotation), modelTransformation)
                 .scale(scale, modelTransformation);
 

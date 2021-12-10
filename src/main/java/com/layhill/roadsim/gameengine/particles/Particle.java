@@ -14,6 +14,7 @@ public class Particle {
     private float scale;
 
     private float elapsedTime = 0;
+    private Vector3f distanceChanged = new Vector3f();
 
     public Particle(Vector3f position, Vector3f velocity, float timeToLive, float gravityEffect, float rotation, float scale) {
         this.position = position;
@@ -38,7 +39,7 @@ public class Particle {
 
     public boolean update() {
         velocity.y += Physics.GRAVITY * gravityEffect * Time.getInstance().getDeltaTime();
-        Vector3f distanceChanged = new Vector3f(velocity);
+        distanceChanged.set(velocity);
         distanceChanged.mul((float) Time.getInstance().getDeltaTime());
         position.add(distanceChanged);
         elapsedTime += Time.getInstance().getDeltaTime();
