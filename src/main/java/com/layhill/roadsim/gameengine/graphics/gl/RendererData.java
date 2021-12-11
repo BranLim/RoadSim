@@ -5,6 +5,7 @@ import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ public class RendererData {
     private Skybox skybox;
     private Terrain terrain;
     private List<ParticleEmitter> emitters;
+    private Vector3f fogColour;
 
     public List<Light> getLights() {
         return lights;
@@ -55,5 +57,13 @@ public class RendererData {
 
     public void setEmitters(List<ParticleEmitter> emitters) {
         this.emitters = emitters;
+    }
+
+    public Vector3f getFogColour() {
+        return fogColour;
+    }
+
+    public void setFogColour(Vector3f fogColour) {
+        this.fogColour = fogColour;
     }
 }

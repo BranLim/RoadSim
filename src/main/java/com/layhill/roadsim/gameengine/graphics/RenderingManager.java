@@ -5,7 +5,9 @@ import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
+import com.layhill.roadsim.gameengine.skybox.Skybox;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,13 +19,16 @@ import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 @Slf4j
 public class RenderingManager {
 
+    private long window;
+
     private final List<Light> lights = new ArrayList<>();
     private final Map<TexturedModel, List<Renderable>> entities = new HashMap<>();
     private final List<ParticleEmitter> emitters = new ArrayList<>();
     private final List<Renderer> renderers = new ArrayList<>();
-
-    private long window;
     private RendererData rendererData = new RendererData();
+
+    private Skybox skybox;
+    private Vector3f fogColour;
 
     public RenderingManager(long window) {
         this.window = window;
@@ -73,13 +78,15 @@ public class RenderingManager {
         emitters.clear();
 
         long endTime = System.currentTimeMillis();
-        System.out.println("Total loop time: "+ (endTime - startTime) +" ms");
+        System.out.println("Total loop time: " + (endTime - startTime) + " ms");
     }
 
     private void prepareRenderingData() {
         rendererData.setLights(lights);
         rendererData.setEntities(entities);
         rendererData.setEmitters(emitters);
+        rendererData.setSkybox(skybox);
+        rendererData.setFogColour(fogColour);
     }
 
     public void show(long window) {
@@ -95,5 +102,13 @@ public class RenderingManager {
         lights.clear();
         entities.clear();
         emitters.clear();
+    }
+
+    public void addSkybox(Skybox skybox) {
+        this.skybox = skybox;
+    }
+
+    public void setFogColour(Vector3f fogColour){
+        this.fogColour = fogColour;
     }
 }

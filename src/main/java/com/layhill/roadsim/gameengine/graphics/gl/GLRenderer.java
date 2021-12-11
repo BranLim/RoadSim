@@ -26,8 +26,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class GLRenderer implements Renderer {
 
-    private GLSkyRenderer skyRenderer;
-    private ParticleSystem particleSystem;
     private Vector3f sunDirection = new Vector3f(-40.f, 1000.f, -30.f);
     private Vector3f sunColour = new Vector3f(0.0f, 0.0f, 0.0f);
     private static final float SKY_RED = 0.05f;
@@ -36,9 +34,8 @@ public class GLRenderer implements Renderer {
     private final Vector3f fogColour = new Vector3f(0.3f, 0.3f, 0.3f);
 
     public GLRenderer() {
-        skyRenderer = new GLSkyRenderer();
-    }
 
+    }
 
     public void prepare() {
         glEnable(GL_DEPTH_TEST);
@@ -59,9 +56,6 @@ public class GLRenderer implements Renderer {
             }
             unbindTexturedModel(model);
         }
-        skyRenderer.setFogColour(fogColour);
-        skyRenderer.setCamera(camera);
-        skyRenderer.render();
     }
 
     private void prepareEntity(Renderable renderableEntity) {
@@ -178,6 +172,5 @@ public class GLRenderer implements Renderer {
             shaderProgram.stop();
             shaderProgram.dispose();
         }
-        skyRenderer.dispose();
     }
 }

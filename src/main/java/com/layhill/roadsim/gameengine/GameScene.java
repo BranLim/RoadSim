@@ -20,6 +20,7 @@ import com.layhill.roadsim.gameengine.particles.ParticleEmitterConfiguration;
 import com.layhill.roadsim.gameengine.particles.ParticleRenderer;
 import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
+import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,18 @@ public class GameScene extends Scene {
     private GLTexture fireParticleTexture;
     private GLTexture rainParticleTexture;
     private ParticleSystem particleSystem;
+    private final Vector3f fogColour = new Vector3f(0.3f, 0.3f, 0.3f);
+
+    private static final String skyboxMesh = "assets/models/skybox.obj";
+    private final static String[] skyboxTextures = {
+            "assets/textures/Daylight_Box_Right.jpg",
+            "assets/textures/Daylight_Box_Left.jpg",
+            "assets/textures/Daylight_Box_Top.jpg",
+            "assets/textures/Daylight_Box_Bottom.jpg",
+            "assets/textures/Daylight_Box_Front.jpg",
+            "assets/textures/Daylight_Box_Back.jpg"
+    };
+    private Skybox skybox;
 
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
@@ -109,6 +122,9 @@ public class GameScene extends Scene {
         Optional<RawTexture> rainTexture = TextureLoader.loadAsTextureFromFile("assets/textures/raindrop.png");
         rainTexture.ifPresent(rawTexture -> rainParticleTexture = GLResourceLoader.getInstance().load2DTexture(rawTexture, GL_TEXTURE_2D, true));
 
+        GLResourceLoader glResourceLoader = GLResourceLoader.getInstance();
+        skybox = glResourceLoader.loadSkybox(skyboxMesh, skyboxTextures);
+
     }
 
     @Override
@@ -123,7 +139,7 @@ public class GameScene extends Scene {
             log.info("Toggle flashlight on {}", turnOnFlashlight);
             turnOnFlashlight = !turnOnFlashlight;
         }
-
+        renderingManager.setFogColour(fogColour);
         if (KeyListener.isKeyPressed(GLFW_KEY_X) && !KeyListener.isKeyHeld(GLFW_KEY_X)) {
             ParticleEmitterConfiguration configuration = ParticleEmitterConfiguration.builder()
                     .affectedByGravity(true)
@@ -169,6 +185,7 @@ public class GameScene extends Scene {
         particleSystem.getEmitters()
                 .forEach(emitter -> renderingManager.addParticleEmitter(emitter));
 
+        renderingManager.addSkybox(skybox);
         renderingManager.run(camera);
 
     }
