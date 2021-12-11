@@ -2,7 +2,6 @@ package com.layhill.roadsim.gameengine.particles;
 
 import com.layhill.roadsim.gameengine.Time;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 

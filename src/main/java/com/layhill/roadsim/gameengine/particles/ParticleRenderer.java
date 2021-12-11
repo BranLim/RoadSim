@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 public class ParticleRenderer implements Renderer {
 
     private static final float[] QUAD = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
-    private static final int MAX_PARTICLE_INSTANCES = 10000;
+    private static final int MAX_PARTICLE_INSTANCES = 500; //More means more memory bandwidth requirement
     private static final int INSTANCE_DATA_LENGTH = 16; //4f*4
 
     private GLModel model;
@@ -61,6 +61,7 @@ public class ParticleRenderer implements Renderer {
 
     @Override
     public void render(long window, Camera camera, RendererData rendererData) {
+        long startTime = System.currentTimeMillis();
         Matrix4f viewMatrix = camera.getViewMatrix();
         viewMatrix.get3x3(transposedViewMatrixWithoutTranslation);
         transposedViewMatrixWithoutTranslation.transpose();
@@ -77,6 +78,8 @@ public class ParticleRenderer implements Renderer {
             glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, model.getVertexCount(), particles.size());
             endRendering(emitter.getParticleTexture());
         }
+        long endTime = System.currentTimeMillis();
+        System.out.println("Particle rendering time: "+ (endTime - startTime) +" ms");
     }
 
     private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix, float[] data) {

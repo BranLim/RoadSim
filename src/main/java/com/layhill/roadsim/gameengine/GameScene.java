@@ -114,6 +114,7 @@ public class GameScene extends Scene {
     @Override
     public void update(float deltaTime) {
 
+
         if (MouseListener.isActiveInWindow()) {
             camera.rotate(deltaTime);
             MouseListener.endFrame();
@@ -169,6 +170,7 @@ public class GameScene extends Scene {
                 .forEach(emitter -> renderingManager.addParticleEmitter(emitter));
 
         renderingManager.run(camera);
+
     }
 
     @Override

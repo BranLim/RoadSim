@@ -5,7 +5,6 @@ import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
-import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -61,18 +60,20 @@ public class RenderingManager {
 
     public void run(Camera camera) {
 
+        long startTime = System.currentTimeMillis();
         prepareRenderingData();
-
         for (Renderer renderer : renderers) {
             renderer.prepare();
             renderer.render(window, camera, rendererData);
         }
-
         show(window);
 
         lights.clear();
         entities.clear();
         emitters.clear();
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("Total loop time: "+ (endTime - startTime) +" ms");
     }
 
     private void prepareRenderingData() {
