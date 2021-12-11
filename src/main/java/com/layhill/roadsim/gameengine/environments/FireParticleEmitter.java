@@ -1,6 +1,5 @@
 package com.layhill.roadsim.gameengine.environments;
 
-import com.layhill.roadsim.gameengine.Time;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.particles.Particle;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
@@ -19,29 +18,7 @@ public class FireParticleEmitter extends ParticleEmitter {
     }
 
     @Override
-    public void generateNewParticles() {
-
-        float delta = (float) Time.getInstance().getDeltaTime();
-        float particlesToCreate = particlePerSeconds * delta;
-        int count = (int) Math.floor(particlesToCreate);
-        float partialParticle = particlesToCreate % 1;
-
-        float particleActualTimeToLive = particleTimeToLive;
-        float emitterRemainingTimeToLive = timeToLive - elapsedTime;
-        if (emitterRemainingTimeToLive < particleTimeToLive) {
-            particleActualTimeToLive = emitterRemainingTimeToLive;
-        }
-        float actualGravityEffect = affectedByGravity ? gravityEffect : 0.f;
-        for (int i = 0; i < count; i++) {
-            emitParticle(particleActualTimeToLive, actualGravityEffect);
-        }
-        if (Math.random() < partialParticle) {
-            emitParticle(particleActualTimeToLive, actualGravityEffect);
-        }
-
-    }
-
-    private void emitParticle(float particleActualTimeToLive, float actualGravityEffect) {
+    protected void emitParticle(float particleActualTimeToLive, float actualGravityEffect) {
 
         float dirX = (float) Math.random() * 2f - 1f;
         float dirZ = (float) Math.random() * 2f - 1f;
