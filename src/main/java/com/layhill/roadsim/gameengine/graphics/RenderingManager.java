@@ -1,9 +1,10 @@
 package com.layhill.roadsim.gameengine.graphics;
 
-import com.layhill.roadsim.gameengine.graphics.gl.GLRenderer;
+import com.layhill.roadsim.gameengine.graphics.gl.RendererData;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
+import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,20 +13,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+
 @Slf4j
 public class RenderingManager {
 
     private final List<Light> lights = new ArrayList<>();
     private final Map<TexturedModel, List<Renderable>> entities = new HashMap<>();
+    private final List<ParticleEmitter> emitters = new ArrayList<>();
+    private final List<Renderer> renderers = new ArrayList<>();
 
-    private Renderer renderer;
     private long window;
-    private ParticleSystem particleSystem;
+    private RendererData rendererData = new RendererData();
 
-    public RenderingManager(long window, ParticleSystem particleSystem) {
+    public RenderingManager(long window) {
         this.window = window;
-        this.particleSystem = particleSystem;
-        renderer = new GLRenderer(particleSystem);
+    }
+
+    public void addRenderer(Renderer renderer) {
+        if (renderer == null) {
+            return;
+        }
+        renderers.add(renderer);
     }
 
     public void addToQueue(Renderable renderableEntity) {
@@ -39,26 +48,51 @@ public class RenderingManager {
         renderableEntities.add(renderableEntity);
     }
 
+    public void addParticleEmitter(ParticleEmitter particleEmitter) {
+        if (particleEmitter == null) {
+            return;
+        }
+        emitters.add(particleEmitter);
+    }
+
     public void addToQueue(Light... light) {
         lights.addAll(List.of(light));
     }
 
     public void run(Camera camera) {
-        renderer.prepare();
-        renderer.render(window, camera, lights, entities);
-        renderer.show(window);
+
+        prepareRenderingData();
+
+        for (Renderer renderer : renderers) {
+            renderer.prepare();
+            renderer.render(window, camera, rendererData);
+        }
+
+        show(window);
+
         lights.clear();
         entities.clear();
+        emitters.clear();
     }
+
+    private void prepareRenderingData() {
+        rendererData.setLights(lights);
+        rendererData.setEntities(entities);
+        rendererData.setEmitters(emitters);
+    }
+
+    public void show(long window) {
+        glfwSwapBuffers(window);
+    }
+
 
     public void dispose() {
-        renderer.dispose(entities);
+        for (Renderer renderer : renderers) {
+            renderer.dispose(rendererData);
+        }
+
         lights.clear();
         entities.clear();
-        particleSystem.dispose();
-    }
-
-    public ParticleSystem getParticleSystem() {
-        return particleSystem;
+        emitters.clear();
     }
 }

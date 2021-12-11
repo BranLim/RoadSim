@@ -14,10 +14,9 @@ import java.util.List;
 public class ParticleSystem {
 
     private final List<ParticleEmitter> particleEmitters = new ArrayList<>();
-    private ParticleRenderer particleRenderer;
 
-    public ParticleSystem(ParticleRenderer particleRenderer) {
-        this.particleRenderer = particleRenderer;
+
+    public ParticleSystem() {
     }
 
     public void update() {
@@ -33,25 +32,21 @@ public class ParticleSystem {
         }
     }
 
-    public void render(Camera camera) {
-        for (ParticleEmitter emitter : particleEmitters) {
-            emitter.render(camera);
-        }
-    }
-
-
     public void createFireParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture) {
-        FireParticleEmitter emitter = new FireParticleEmitter(configuration, particleTexture, particleRenderer);
+        FireParticleEmitter emitter = new FireParticleEmitter(configuration, particleTexture);
         particleEmitters.add(emitter);
     }
 
     public void createRainParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture) {
-        RainParticleEmitter emitter = new RainParticleEmitter(configuration, particleTexture, particleRenderer);
+        RainParticleEmitter emitter = new RainParticleEmitter(configuration, particleTexture);
         particleEmitters.add(emitter);
     }
 
     public void dispose() {
-        particleRenderer.dispose();
         particleEmitters.clear();
+    }
+
+    public List<ParticleEmitter> getEmitters() {
+        return particleEmitters;
     }
 }

@@ -23,7 +23,6 @@ public class Skybox {
         } catch (IOException e) {
             throw new RuntimeException("Cannot load shader");
         }
-
     }
 
     public int getVaoId(){

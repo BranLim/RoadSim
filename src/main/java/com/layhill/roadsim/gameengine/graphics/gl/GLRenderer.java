@@ -1,24 +1,22 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
+import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.Renderer;
-import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
-import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
 import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import com.layhill.roadsim.gameengine.particles.ParticleSystem;
+import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
@@ -37,9 +35,8 @@ public class GLRenderer implements Renderer {
     private static final float SKY_BLUE = 0.05f;
     private final Vector3f fogColour = new Vector3f(0.3f, 0.3f, 0.3f);
 
-    public GLRenderer(ParticleSystem particleSystem) {
+    public GLRenderer() {
         skyRenderer = new GLSkyRenderer();
-        this.particleSystem = particleSystem;
     }
 
 
@@ -53,10 +50,10 @@ public class GLRenderer implements Renderer {
     }
 
     @Override
-    public void render(long window, Camera camera, List<Light> lights, Map<TexturedModel, List<Renderable>> entities) {
-        for (TexturedModel model : entities.keySet()) {
-            prepareForRendering(camera, lights, model);
-            for (Renderable gameObject : entities.get(model)) {
+    public void render(long window, Camera camera, RendererData rendererData) {
+        for (TexturedModel model :rendererData.getEntities().keySet()) {
+            prepareForRendering(camera, rendererData.getLights(), model);
+            for (Renderable gameObject : rendererData.getEntities().get(model)) {
                 prepareEntity(gameObject);
                 render(GL_TRIANGLES, model.getRawModel().getVertexCount());
             }
@@ -65,7 +62,6 @@ public class GLRenderer implements Renderer {
         skyRenderer.setFogColour(fogColour);
         skyRenderer.setCamera(camera);
         skyRenderer.render();
-        particleSystem.render(camera);
     }
 
     private void prepareEntity(Renderable renderableEntity) {
@@ -176,13 +172,8 @@ public class GLRenderer implements Renderer {
     }
 
     @Override
-    public void show(long window) {
-        glfwSwapBuffers(window);
-    }
-
-    @Override
-    public void dispose(Map<TexturedModel, List<Renderable>> entities) {
-        for (TexturedModel model : entities.keySet()) {
+    public void dispose(RendererData rendererData) {
+        for (TexturedModel model : rendererData.getEntities().keySet()) {
             ShaderProgram shaderProgram = model.getMaterial().getShaderProgram();
             shaderProgram.stop();
             shaderProgram.dispose();

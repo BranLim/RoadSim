@@ -26,10 +26,7 @@ public abstract class ParticleEmitter {
 
     protected float elapsedTime = 0;
 
-    private ParticleRenderer renderer;
-
-
-    protected ParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture, ParticleRenderer renderer) {
+    protected ParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture) {
         id = UUID.randomUUID().toString();
         position = configuration.getPosition();
         defaultSpeed = configuration.getDefaultSpeed();
@@ -42,7 +39,6 @@ public abstract class ParticleEmitter {
         particlePerSeconds = configuration.getParticlePerSeconds();
 
         this.particleTexture = particleTexture;
-        this.renderer = renderer;
     }
 
     public GLTexture getParticleTexture() {
@@ -85,11 +81,6 @@ public abstract class ParticleEmitter {
         }
     }
 
-
-    public void render(Camera camera) {
-        renderer.render(particleTexture, particles, camera);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -105,5 +96,9 @@ public abstract class ParticleEmitter {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public List<Particle> getParticles(){
+        return particles;
     }
 }

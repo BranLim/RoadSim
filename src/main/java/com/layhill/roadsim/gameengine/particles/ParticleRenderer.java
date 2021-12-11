@@ -1,6 +1,8 @@
 package com.layhill.roadsim.gameengine.particles;
 
+import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
+import com.layhill.roadsim.gameengine.graphics.gl.RendererData;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
@@ -21,7 +23,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 
-public class ParticleRenderer {
+public class ParticleRenderer implements Renderer {
 
     private static final float[] QUAD = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
     private static final int MAX_PARTICLE_INSTANCES = 10000;
@@ -52,22 +54,29 @@ public class ParticleRenderer {
         shader = ShaderFactory.createParticleShaderProgram();
     }
 
-    public void render(GLTexture particleTexture, List<Particle> particles, Camera camera) {
-        dataPointer = 0;
+    @Override
+    public void prepare() {
 
+    }
+
+    @Override
+    public void render(long window, Camera camera, RendererData rendererData) {
         Matrix4f viewMatrix = camera.getViewMatrix();
-
         viewMatrix.get3x3(transposedViewMatrixWithoutTranslation);
         transposedViewMatrixWithoutTranslation.transpose();
 
-        float[] data = new float[particles.size() * INSTANCE_DATA_LENGTH];
-        start(particleTexture, camera);
-        for (Particle particle : particles) {
-            updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), viewMatrix, data);
+        for(ParticleEmitter emitter: rendererData.getEmitters()){
+            dataPointer = 0;
+            List<Particle> particles = emitter.getParticles();
+            float[] data = new float[particles.size() * INSTANCE_DATA_LENGTH];
+            startRendering(emitter.getParticleTexture(), camera);
+            for (Particle particle : particles) {
+                updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), viewMatrix, data);
+            }
+            loader.updateVbo(vbo, data, renderData);
+            glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, model.getVertexCount(), particles.size());
+            endRendering(emitter.getParticleTexture());
         }
-        loader.updateVbo(vbo, data, renderData);
-        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, model.getVertexCount(), particles.size());
-        end(particleTexture);
     }
 
     private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix, float[] data) {
@@ -112,7 +121,7 @@ public class ParticleRenderer {
         data[dataPointer++] = viewModelMatrix.m33();
     }
 
-    private void start(GLTexture particleTexture, Camera camera) {
+    private void startRendering(GLTexture particleTexture, Camera camera) {
 
         shader.start();
         shader.loadCamera(camera);
@@ -132,7 +141,7 @@ public class ParticleRenderer {
         }
     }
 
-    private void end(GLTexture particleTexture) {
+    private void endRendering(GLTexture particleTexture) {
 
         for (int attribute : model.getAttributes()) {
             glDisableVertexAttribArray(attribute);
@@ -147,8 +156,9 @@ public class ParticleRenderer {
         shader.stop();
     }
 
-    public void dispose() {
+
+    @Override
+    public void dispose(RendererData rendererData) {
         shader.dispose();
     }
-
 }

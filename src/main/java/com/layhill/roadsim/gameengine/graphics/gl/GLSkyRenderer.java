@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
+import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.skybox.SkyShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
@@ -13,7 +14,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
-public class GLSkyRenderer {
+public class GLSkyRenderer implements Renderer {
 
     private static final String skyboxMesh = "assets/models/skybox.obj";
     private final static String[] skyboxTextures = {
@@ -78,5 +79,20 @@ public class GLSkyRenderer {
             glDeleteTextures(skybox.getTextureId());
             glDeleteVertexArrays(skybox.getVaoId());
         }
+    }
+
+    @Override
+    public void prepare() {
+
+    }
+
+    @Override
+    public void render(long window, Camera camera, RendererData rendererData) {
+
+    }
+
+    @Override
+    public void dispose(RendererData rendererData) {
+
     }
 }

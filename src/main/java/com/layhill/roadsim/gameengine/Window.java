@@ -1,6 +1,7 @@
 package com.layhill.roadsim.gameengine;
 
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
+import com.layhill.roadsim.gameengine.graphics.gl.GLRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
@@ -53,7 +54,10 @@ public class Window {
                 currentScene.init();
             }
             case 1 -> {
-                currentScene = new GameScene(new RenderingManager(glfwWindow, new ParticleSystem(new ParticleRenderer(GLResourceLoader.getInstance()))));
+                RenderingManager renderingManager = new RenderingManager(glfwWindow );
+                renderingManager.addRenderer(new GLRenderer());
+                renderingManager.addRenderer(new ParticleRenderer(GLResourceLoader.getInstance()));
+                currentScene = new GameScene(renderingManager);
                 currentScene.init();
             }
         }

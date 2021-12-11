@@ -15,7 +15,10 @@ import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
+import com.layhill.roadsim.gameengine.particles.Particle;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitterConfiguration;
+import com.layhill.roadsim.gameengine.particles.ParticleRenderer;
+import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
@@ -42,7 +45,7 @@ public class GameScene extends Scene {
     private boolean turnOnFlashlight = false;
     private GLTexture fireParticleTexture;
     private GLTexture rainParticleTexture;
-
+    private ParticleSystem particleSystem;
 
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
@@ -97,6 +100,9 @@ public class GameScene extends Scene {
                 gameObjects.add(stoneObject);
             }
         }
+
+        particleSystem = new ParticleSystem();
+
         Optional<RawTexture> fireTexture = TextureLoader.loadAsTextureFromFile("assets/textures/fire.png");
         fireTexture.ifPresent(rawTexture -> fireParticleTexture = GLResourceLoader.getInstance().load2DTexture(rawTexture, GL_TEXTURE_2D, true));
 
@@ -117,7 +123,7 @@ public class GameScene extends Scene {
             turnOnFlashlight = !turnOnFlashlight;
         }
 
-        if (KeyListener.isKeyPressed(GLFW_KEY_X) && !KeyListener.isKeyHeld(GLFW_KEY_X)){
+        if (KeyListener.isKeyPressed(GLFW_KEY_X) && !KeyListener.isKeyHeld(GLFW_KEY_X)) {
             ParticleEmitterConfiguration configuration = ParticleEmitterConfiguration.builder()
                     .affectedByGravity(true)
                     .gravityEffect(.8f)
@@ -129,7 +135,7 @@ public class GameScene extends Scene {
                     .particleTimeToLive(2)
                     .particlePerSeconds(50)
                     .build();
-            renderingManager.getParticleSystem().createFireParticleEmitter(configuration, fireParticleTexture);
+            particleSystem.createFireParticleEmitter(configuration, fireParticleTexture);
         }
         ParticleEmitterConfiguration rainParticleConfiguration = ParticleEmitterConfiguration.builder()
                 .affectedByGravity(true)
@@ -142,7 +148,7 @@ public class GameScene extends Scene {
                 .particleTimeToLive(10)
                 .particlePerSeconds(5)
                 .build();
-        renderingManager.getParticleSystem().createRainParticleEmitter(rainParticleConfiguration, rainParticleTexture);
+        particleSystem.createRainParticleEmitter(rainParticleConfiguration, rainParticleTexture);
 
         Light[] lightsToRender = new Light[5];
         lights.toArray(lightsToRender);
@@ -154,20 +160,22 @@ public class GameScene extends Scene {
         camera.move(deltaTime);
         spotlight.setPosition(camera.getPosition());
         spotlight.setDirection(camera.getDirection());
-        renderingManager.getParticleSystem().update();
+        particleSystem.update();
 
         for (Renderable gameObject : gameObjects) {
             renderingManager.addToQueue(gameObject);
         }
+        particleSystem.getEmitters()
+                .forEach(emitter -> renderingManager.addParticleEmitter(emitter));
+
         renderingManager.run(camera);
     }
 
     @Override
     public void cleanUp() {
-
         resourceManager.dispose();
         renderingManager.dispose();
-
+        particleSystem.dispose();
     }
 
 }

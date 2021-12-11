@@ -4,7 +4,6 @@ import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.particles.Particle;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitterConfiguration;
-import com.layhill.roadsim.gameengine.particles.ParticleRenderer;
 import org.joml.Vector3f;
 
 import java.util.Random;
@@ -13,8 +12,8 @@ public class RainParticleEmitter extends ParticleEmitter {
 
     private Random random = new Random();
 
-    public RainParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture, ParticleRenderer renderer) {
-        super(configuration, particleTexture, renderer);
+    public RainParticleEmitter(ParticleEmitterConfiguration configuration, GLTexture particleTexture) {
+        super(configuration, particleTexture);
     }
 
     @Override
