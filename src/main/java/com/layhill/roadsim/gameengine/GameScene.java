@@ -8,16 +8,11 @@ import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
-import com.layhill.roadsim.gameengine.graphics.models.Light;
-import com.layhill.roadsim.gameengine.graphics.models.Material;
-import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
+import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
-import com.layhill.roadsim.gameengine.particles.Particle;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitterConfiguration;
-import com.layhill.roadsim.gameengine.particles.ParticleRenderer;
 import com.layhill.roadsim.gameengine.particles.ParticleSystem;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
@@ -60,6 +55,8 @@ public class GameScene extends Scene {
     };
     private Skybox skybox;
 
+    private Sun sun;
+
     public GameScene(RenderingManager renderingManager) {
         this.renderingManager = renderingManager;
     }
@@ -71,6 +68,7 @@ public class GameScene extends Scene {
     @Override
     public void init() {
 
+        sun = new Sun(new Vector3f(-40000.f, 10000.f, -30000.f), new Vector3f(0.0f, 0.0f, 0.0f));
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
         camera.setGameScene(this);
 
@@ -139,6 +137,7 @@ public class GameScene extends Scene {
             log.info("Toggle flashlight on {}", turnOnFlashlight);
             turnOnFlashlight = !turnOnFlashlight;
         }
+        renderingManager.setSun(sun);
         renderingManager.setFogColour(fogColour);
         if (KeyListener.isKeyPressed(GLFW_KEY_X) && !KeyListener.isKeyHeld(GLFW_KEY_X)) {
             ParticleEmitterConfiguration configuration = ParticleEmitterConfiguration.builder()

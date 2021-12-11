@@ -1,6 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.Renderer;
+import com.layhill.roadsim.gameengine.graphics.RendererData;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.skybox.SkyShaderProgram;
 import com.layhill.roadsim.gameengine.skybox.Skybox;

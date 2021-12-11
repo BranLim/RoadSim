@@ -1,7 +1,8 @@
-package com.layhill.roadsim.gameengine.graphics.gl;
+package com.layhill.roadsim.gameengine.graphics;
 
-import com.layhill.roadsim.gameengine.graphics.Renderable;
+import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
+import com.layhill.roadsim.gameengine.graphics.models.Sun;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
@@ -12,12 +13,16 @@ import java.util.Map;
 
 public class RendererData {
 
+    private Sun sun;
     private List<Light> lights;
     private Map<TexturedModel, List<Renderable>> entities;
     private Skybox skybox;
     private Terrain terrain;
     private List<ParticleEmitter> emitters;
     private Vector3f fogColour;
+
+    public RendererData() {
+    }
 
     public List<Light> getLights() {
         return lights;
@@ -65,5 +70,13 @@ public class RendererData {
 
     public void setFogColour(Vector3f fogColour) {
         this.fogColour = fogColour;
+    }
+
+    public Sun getSun() {
+        return sun;
+    }
+
+    public void setSun(Sun sun) {
+        this.sun = sun;
     }
 }

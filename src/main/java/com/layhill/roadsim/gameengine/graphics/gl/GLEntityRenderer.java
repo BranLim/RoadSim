@@ -3,16 +3,11 @@ package com.layhill.roadsim.gameengine.graphics.gl;
 import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.Renderer;
+import com.layhill.roadsim.gameengine.graphics.RendererData;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
-import com.layhill.roadsim.gameengine.graphics.models.Light;
-import com.layhill.roadsim.gameengine.graphics.models.Material;
-import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
-import com.layhill.roadsim.gameengine.particles.ParticleSystem;
-import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,16 +19,9 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class GLRenderer implements Renderer {
+public class GLEntityRenderer implements Renderer {
 
-    private Vector3f sunDirection = new Vector3f(-40.f, 1000.f, -30.f);
-    private Vector3f sunColour = new Vector3f(0.0f, 0.0f, 0.0f);
-    private static final float SKY_RED = 0.05f;
-    private static final float SKY_GREEN = 0.05f;
-    private static final float SKY_BLUE = 0.05f;
-    private final Vector3f fogColour = new Vector3f(0.3f, 0.3f, 0.3f);
-
-    public GLRenderer() {
+    public GLEntityRenderer() {
 
     }
 
@@ -41,15 +29,12 @@ public class GLRenderer implements Renderer {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-
-        glClearColor(SKY_RED, SKY_GREEN, SKY_BLUE, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     @Override
     public void render(long window, Camera camera, RendererData rendererData) {
         for (TexturedModel model :rendererData.getEntities().keySet()) {
-            prepareForRendering(camera, rendererData.getLights(), model);
+            prepareForRendering(camera, rendererData.getSun() , rendererData.getLights(), model);
             for (Renderable gameObject : rendererData.getEntities().get(model)) {
                 prepareEntity(gameObject);
                 render(GL_TRIANGLES, model.getRawModel().getVertexCount());
@@ -67,16 +52,10 @@ public class GLRenderer implements Renderer {
                     renderableEntity.getRotateX(), renderableEntity.getRotateY(), renderableEntity.getRotateZ(),
                     renderableEntity.getScale());
             ((EntityShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
-        } else if (shaderProgram.getClass() == TerrainShaderProgram.class) {
-            Matrix4f transformationMatrix = Transformation.createTransformationMatrix(renderableEntity.getPosition(),
-                    0, 0, 0,
-                    renderableEntity.getScale());
-            ((TerrainShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
         }
-
     }
 
-    private void prepareForRendering(Camera camera, List<Light> lightsToProcess, TexturedModel texturedModel) {
+    private void prepareForRendering(Camera camera, Sun sun, List<Light> lightsToProcess, TexturedModel texturedModel) {
         glBindVertexArray(texturedModel.getRawModel().getVaoId());
         for (int attribute : texturedModel.getRawModel().getAttributes()) {
             glEnableVertexAttribArray(attribute);
@@ -84,8 +63,8 @@ public class GLRenderer implements Renderer {
         Material material = texturedModel.getMaterial();
         if (material != null) {
             ShaderProgram shaderProgram = material.getShaderProgram();
-            shaderProgram.start();
             if (shaderProgram.getClass() == EntityShaderProgram.class) {
+                shaderProgram.start();
                 EntityShaderProgram entityShaderProgram = (EntityShaderProgram) shaderProgram;
                 entityShaderProgram.loadCamera(camera);
 
@@ -101,32 +80,11 @@ public class GLRenderer implements Renderer {
                         entityShaderProgram.loadSpotlight(spotlights.get(0));
                     }
                 }
-                entityShaderProgram.loadSun(sunDirection, sunColour);
+                entityShaderProgram.loadSun(sun.getDirection(), sun.getColour());
                 entityShaderProgram.loadTexture(0);
                 shaderProgram.uploadFloat("uReflectivity", material.getReflectivity());
                 shaderProgram.uploadFloat("uShineDampen", material.getShineDampener());
-            } else if (shaderProgram.getClass() == TerrainShaderProgram.class) {
-                TerrainShaderProgram terrainShaderProgram = (TerrainShaderProgram) shaderProgram;
-                terrainShaderProgram.loadSun(sunDirection, sunColour);
-                terrainShaderProgram.loadCamera(camera);
-
-                if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
-                    Light[] lights = getLights(lightsToProcess);
-                    terrainShaderProgram.loadLights(lights);
-
-                    List<Spotlight> spotlights = getSpotlights(lightsToProcess);
-                    if (spotlights.isEmpty()) {
-                        terrainShaderProgram.disableSpotlight();
-                    } else {
-                        terrainShaderProgram.enableSpotlight();
-                        terrainShaderProgram.loadSpotlight(spotlights.get(0));
-                    }
-                }
-                terrainShaderProgram.loadTexture(0);
-                terrainShaderProgram.loadFogColour(fogColour);
-                terrainShaderProgram.enableFog();
             }
-
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
         }

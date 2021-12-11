@@ -1,9 +1,9 @@
 package com.layhill.roadsim.gameengine.graphics;
 
-import com.layhill.roadsim.gameengine.graphics.gl.RendererData;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
+import com.layhill.roadsim.gameengine.graphics.models.Sun;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +15,16 @@ import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.opengl.GL11.*;
 
 @Slf4j
 public class RenderingManager {
 
     private long window;
+
+    private static final float SKY_RED = 0.05f;
+    private static final float SKY_GREEN = 0.05f;
+    private static final float SKY_BLUE = 0.05f;
 
     private final List<Light> lights = new ArrayList<>();
     private final Map<TexturedModel, List<Renderable>> entities = new HashMap<>();
@@ -29,6 +34,7 @@ public class RenderingManager {
 
     private Skybox skybox;
     private Vector3f fogColour;
+    private Sun sun;
 
     public RenderingManager(long window) {
         this.window = window;
@@ -63,7 +69,13 @@ public class RenderingManager {
         lights.addAll(List.of(light));
     }
 
+    private void startRendering(){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(SKY_RED, SKY_GREEN, SKY_BLUE, 1.0f);
+    }
+
     public void run(Camera camera) {
+        startRendering();
 
         long startTime = System.currentTimeMillis();
         prepareRenderingData();
@@ -86,6 +98,7 @@ public class RenderingManager {
         rendererData.setEntities(entities);
         rendererData.setEmitters(emitters);
         rendererData.setSkybox(skybox);
+        rendererData.setSun(sun);
         rendererData.setFogColour(fogColour);
     }
 
@@ -110,5 +123,9 @@ public class RenderingManager {
 
     public void setFogColour(Vector3f fogColour){
         this.fogColour = fogColour;
+    }
+
+    public void setSun(Sun sun) {
+        this.sun = sun;
     }
 }

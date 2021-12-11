@@ -1,12 +1,15 @@
-package com.layhill.roadsim.gameengine.particles;
+package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
-import com.layhill.roadsim.gameengine.graphics.gl.RendererData;
+import com.layhill.roadsim.gameengine.graphics.RendererData;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
+import com.layhill.roadsim.gameengine.particles.Particle;
+import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
+import com.layhill.roadsim.gameengine.particles.ParticleShaderProgram;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -23,7 +26,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 
-public class ParticleRenderer implements Renderer {
+public class GLParticleRenderer implements Renderer {
 
     private static final float[] QUAD = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
     private static final int MAX_PARTICLE_INSTANCES = 500; //More means more memory bandwidth requirement
@@ -39,7 +42,7 @@ public class ParticleRenderer implements Renderer {
     private Matrix4f modelTransformation = new Matrix4f();
     private Matrix3f transposedViewMatrixWithoutTranslation = new Matrix3f();
 
-    public ParticleRenderer(GLResourceLoader loader) {
+    public GLParticleRenderer(GLResourceLoader loader) {
         this.loader = loader;
         model = loader.loadToVao(QUAD, 2);
         vbo = loader.createUpdateableVbo(INSTANCE_DATA_LENGTH * MAX_PARTICLE_INSTANCES);
@@ -56,7 +59,9 @@ public class ParticleRenderer implements Renderer {
 
     @Override
     public void prepare() {
-
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
     }
 
     @Override
