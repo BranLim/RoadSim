@@ -3,6 +3,7 @@ package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.particles.ParticleShaderProgram;
 import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
+import com.layhill.roadsim.gameengine.water.WaterShaderProgram;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -86,6 +87,22 @@ public class ShaderFactory {
         try {
             Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/particle_vertex.glsl").orElse(null);
             Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/particle_fragment.glsl").orElse(null);
+
+            shaderProgram.addShader(vertexShader);
+            shaderProgram.addShader(fragmentShader);
+            shaderProgram.init();
+        } catch (IOException e) {
+            log.error("Error loading shader from file", e);
+        }
+        return shaderProgram;
+    }
+
+    public static WaterShaderProgram createWaterShaderProgram() {
+
+        WaterShaderProgram shaderProgram = new WaterShaderProgram();
+        try {
+            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/water_vertex.glsl").orElse(null);
+            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/water_fragment.glsl").orElse(null);
 
             shaderProgram.addShader(vertexShader);
             shaderProgram.addShader(fragmentShader);
