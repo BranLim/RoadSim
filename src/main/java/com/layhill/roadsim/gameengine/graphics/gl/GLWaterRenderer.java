@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class GLWaterRenderer implements Renderer {
 
-    private final static float[] QUAD_VERTICES = {-1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1};
+    private final static float[] QUAD_VERTICES = { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
     private GLModel waterQuad;
     private WaterShaderProgram shaderProgram;
 
@@ -30,9 +30,6 @@ public class GLWaterRenderer implements Renderer {
 
     @Override
     public void prepare() {
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
     }
 
     @Override
@@ -40,7 +37,7 @@ public class GLWaterRenderer implements Renderer {
         startRendering(camera);
         for (WaterTile tile : rendererData.getWaterTiles()) {
             Matrix4f modelTransformation = Transformation.createTransformationMatrix(new Vector3f(tile.getX(),
-                    tile.getHeight(), tile.getZ()), 0, 0, 0, tile.getScale());
+                    tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE*10);
             shaderProgram.loadModelTransformation(modelTransformation);
             glDrawArrays(GL_TRIANGLES, 0, waterQuad.getVertexCount());
         }
@@ -48,13 +45,13 @@ public class GLWaterRenderer implements Renderer {
     }
 
     private void startRendering(Camera camera) {
+        shaderProgram.start();
+        shaderProgram.loadCamera(camera);
+
         glBindVertexArray(waterQuad.getVaoId());
         for (int attribute : waterQuad.getAttributes()) {
             glEnableVertexAttribArray(attribute);
         }
-        shaderProgram.start();
-        shaderProgram.loadCamera(camera);
-
     }
 
     private void endRendering() {

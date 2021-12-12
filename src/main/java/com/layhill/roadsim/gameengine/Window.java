@@ -54,8 +54,11 @@ public class Window {
                 RenderingManager renderingManager = new RenderingManager(glfwWindow );
                 renderingManager.addRenderer(new GLEntityRenderer());
                 renderingManager.addRenderer(new GLTerrainRenderer());
+                renderingManager.addRenderer(new GLWaterRenderer(GLResourceLoader.getInstance()));
                 renderingManager.addRenderer(new GLSkyRenderer());
                 renderingManager.addRenderer(new GLParticleRenderer(GLResourceLoader.getInstance()));
+
+
                 currentScene = new GameScene(renderingManager);
                 currentScene.init();
             }

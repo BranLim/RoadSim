@@ -18,6 +18,7 @@ import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
+import com.layhill.roadsim.gameengine.water.WaterTile;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
@@ -43,6 +44,7 @@ public class GameScene extends Scene {
     private GLTexture rainParticleTexture;
     private ParticleSystem particleSystem;
     private final Vector3f fogColour = new Vector3f(0.3f, 0.3f, 0.3f);
+    private List<WaterTile> waterTiles = new ArrayList<>();
 
     private static final String skyboxMesh = "assets/models/skybox.obj";
     private final static String[] skyboxTextures = {
@@ -123,6 +125,8 @@ public class GameScene extends Scene {
         GLResourceLoader glResourceLoader = GLResourceLoader.getInstance();
         skybox = glResourceLoader.loadSkybox(skyboxMesh, skyboxTextures);
 
+        waterTiles.add(new WaterTile(-0.5f,-.5f,-0.8f));
+
     }
 
     @Override
@@ -185,6 +189,7 @@ public class GameScene extends Scene {
                 .forEach(emitter -> renderingManager.addParticleEmitter(emitter));
 
         renderingManager.addSkybox(skybox);
+        renderingManager.addWater(waterTiles);
         renderingManager.run(camera);
 
     }

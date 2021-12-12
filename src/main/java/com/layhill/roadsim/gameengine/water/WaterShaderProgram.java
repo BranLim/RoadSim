@@ -9,7 +9,7 @@ public class WaterShaderProgram extends ShaderProgram {
 
     private UniformMatrix4f projection = new UniformMatrix4f("uProjection");
     private UniformMatrix4f view = new UniformMatrix4f("uView");
-    private UniformMatrix4f transformation = new UniformMatrix4f("uTransform");
+    private UniformMatrix4f transformation = new UniformMatrix4f("uTransformation");
 
     public WaterShaderProgram() {
         super.addUniform(projection, view, transformation);

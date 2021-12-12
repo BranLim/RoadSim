@@ -9,6 +9,7 @@ import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import org.lwjgl.BufferUtils;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -21,21 +22,26 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
+import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 import static org.lwjgl.opengl.GL33.glVertexAttribDivisor;
 
 public final class GLResourceLoader {
 
     private static final class GLResourceLoaderHolder {
+
         private static final GLResourceLoader loader = new GLResourceLoader();
     }
 
     private static final int TRIANGLE_ATTRIBUTE_POSITION = 0;
+
     private static final int TEXTURE_COORDINATE_ATTRIBUTE_POSITION = 1;
     private static final int VERTEX_NORMAL_ATTRIBUTE_POSITION = 2;
-
     private final List<Integer> vaos = new ArrayList<>();
+
     private final List<Integer> vbos = new ArrayList<>();
     private final List<Integer> textureIds = new ArrayList<>();
+    private final List<Integer> frameBuffers = new ArrayList<>();
+    private final List<Integer> renderBuffers = new ArrayList<>();
 
     private GLResourceLoader() {
 
@@ -172,7 +178,7 @@ public final class GLResourceLoader {
         return skybox;
     }
 
-    public void addInstanceAttribute(int vao, int vbo, int attribute, int dataSize, int instanceDataLength, int offset){
+    public void addInstanceAttribute(int vao, int vbo, int attribute, int dataSize, int instanceDataLength, int offset) {
         glBindVertexArray(vao);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glVertexAttribPointer(attribute, dataSize, GL_FLOAT, false, instanceDataLength * Float.BYTES, (long) offset * Float.BYTES);
@@ -181,23 +187,83 @@ public final class GLResourceLoader {
         glBindVertexArray(0);
     }
 
-    public int createUpdateableVbo(int floatCount){
+    public int createUpdateableVbo(int floatCount) {
         int vbo = glGenBuffers();
         vbos.add(vbo);
-        glBindBuffer(GL_ARRAY_BUFFER,vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, (long) floatCount * Float.BYTES, GL_STREAM_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         return vbo;
     }
 
-    public void updateVbo(int vbo, float[] data, FloatBuffer buffer){
+    public void updateVbo(int vbo, float[] data, FloatBuffer buffer) {
         buffer.clear();
         buffer.put(data);
         buffer.flip();
-        glBindBuffer(GL_ARRAY_BUFFER,vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, (long) buffer.capacity() * Float.BYTES, GL_STREAM_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, buffer);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    public int createFrameBuffer() {
+        int frameBuffer = glGenFramebuffers();
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+        frameBuffers.add(frameBuffer);
+        glDrawBuffer(GL_COLOR_ATTACHMENT0);
+        return frameBuffer;
+    }
+
+    public int createTextureAttachemnt(int width, int height) {
+        int textureId = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        textureIds.add(textureId);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textureId, 0);
+
+        return textureId;
+    }
+
+    public int createDepthBufferAttachment(int width, int height) {
+        int depthBuffer = glGenRenderbuffers();
+        glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+        renderBuffers.add(depthBuffer);
+
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        return depthBuffer;
+    }
+
+    public void bindFrameBuffer(int reflectionFrameBuffer, int width, int height) {
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, reflectionFrameBuffer);
+        glViewport(0, 0, width, height);
+    }
+
+    public int createDepthTextureAttachment(int width, int height) {
+        int textureId = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        textureIds.add(textureId);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureId, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        return textureId;
+    }
+
+    public void unbindFrameBuffer() {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    public void unbindFrameBuffer(int width, int height) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(0, 0, width, height);
     }
 
     public void dispose() {
@@ -208,8 +274,14 @@ public final class GLResourceLoader {
         for (Integer vbo : vbos) {
             glDeleteBuffers(vbo);
         }
-        for (int texId : textureIds) {
+        for (Integer texId : textureIds) {
             glDeleteTextures(texId);
+        }
+        for (Integer renderBuffer : renderBuffers) {
+            glDeleteRenderbuffers(renderBuffer);
+        }
+        for (Integer frameBuffer : frameBuffers) {
+            glDeleteFramebuffers(frameBuffer);
         }
     }
 

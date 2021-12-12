@@ -6,6 +6,7 @@ import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Sun;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
+import com.layhill.roadsim.gameengine.water.WaterTile;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 
@@ -35,6 +36,7 @@ public class RenderingManager {
     private Skybox skybox;
     private Vector3f fogColour;
     private Sun sun;
+    private List<WaterTile> waters = new ArrayList<>();
 
     public RenderingManager(long window) {
         this.window = window;
@@ -69,7 +71,7 @@ public class RenderingManager {
         lights.addAll(List.of(light));
     }
 
-    private void startRendering(){
+    private void startRendering() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(SKY_RED, SKY_GREEN, SKY_BLUE, 1.0f);
     }
@@ -88,6 +90,7 @@ public class RenderingManager {
         lights.clear();
         entities.clear();
         emitters.clear();
+        waters.clear();
 
         long endTime = System.currentTimeMillis();
         System.out.println("Total loop time: " + (endTime - startTime) + " ms");
@@ -100,6 +103,7 @@ public class RenderingManager {
         rendererData.setSkybox(skybox);
         rendererData.setSun(sun);
         rendererData.setFogColour(fogColour);
+        rendererData.setWaterTiles(waters);
     }
 
     public void show(long window) {
@@ -121,11 +125,18 @@ public class RenderingManager {
         this.skybox = skybox;
     }
 
-    public void setFogColour(Vector3f fogColour){
+    public void setFogColour(Vector3f fogColour) {
         this.fogColour = fogColour;
     }
 
     public void setSun(Sun sun) {
         this.sun = sun;
+    }
+
+    public void addWater(List<WaterTile> waterTiles) {
+        if (waterTiles == null) {
+            return;
+        }
+        waters.addAll(waterTiles);
     }
 }
