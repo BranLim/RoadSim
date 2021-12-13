@@ -3,12 +3,14 @@ package com.layhill.roadsim.gameengine.graphics;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Sun;
+import com.layhill.roadsim.gameengine.graphics.models.WaterRenderingStage;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.List;
 import java.util.Map;
@@ -18,12 +20,16 @@ public class RendererData {
     private Sun sun;
     private List<Light> lights;
     private Map<TexturedModel, List<Renderable>> entities;
+    private Map<TexturedModel, List<Renderable>> terrains;
     private Skybox skybox;
     private Terrain terrain;
     private List<ParticleEmitter> emitters;
     private Vector3f fogColour;
+    private boolean toRenderWater;
     private List<WaterTile> waterTiles;
     private WaterFrameBuffer waterFrameBuffer;
+    private Vector4f clipPlane;
+    private WaterRenderingStage waterRenderingStage;
 
     public RendererData() {
     }
@@ -52,12 +58,12 @@ public class RendererData {
         this.skybox = skybox;
     }
 
-    public Terrain getTerrain() {
-        return terrain;
+    public Map<TexturedModel, List<Renderable>>  getTerrains() {
+        return terrains;
     }
 
-    public void setTerrain(Terrain terrain) {
-        this.terrain = terrain;
+    public void setTerrains(Map<TexturedModel, List<Renderable>>  terrains) {
+        this.terrains = terrains;
     }
 
     public List<ParticleEmitter> getEmitters() {
@@ -98,5 +104,29 @@ public class RendererData {
 
     public void setWaterFrameBuffer(WaterFrameBuffer waterFrameBuffer) {
         this.waterFrameBuffer = waterFrameBuffer;
+    }
+
+    public boolean isToRenderWater() {
+        return toRenderWater;
+    }
+
+    public void setToRenderWater(boolean toRenderWater) {
+        this.toRenderWater = toRenderWater;
+    }
+
+    public Vector4f getClipPlane() {
+        return clipPlane;
+    }
+
+    public void setClipPlane(Vector4f clipPlane){
+        this.clipPlane = clipPlane;
+    }
+
+    public WaterRenderingStage getWaterRenderingStage() {
+        return waterRenderingStage;
+    }
+
+    public void setWaterRenderingStage(WaterRenderingStage waterRenderingStage) {
+        this.waterRenderingStage = waterRenderingStage;
     }
 }

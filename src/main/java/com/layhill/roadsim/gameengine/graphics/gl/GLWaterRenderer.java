@@ -40,7 +40,6 @@ public class GLWaterRenderer implements Renderer {
             Matrix4f modelTransformation = Transformation.createTransformationMatrix(new Vector3f(tile.getX(),
                     tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE * 10);
             shaderProgram.loadModelTransformation(modelTransformation);
-
             glDrawArrays(GL_TRIANGLES, 0, waterQuad.getVertexCount());
         }
         endRendering();
@@ -58,13 +57,13 @@ public class GLWaterRenderer implements Renderer {
         if (frameBuffer != null) {
 
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, frameBuffer.getRefractionTexture());
-            shaderProgram.loadRefractionTexture(0);
+            glBindTexture(GL_TEXTURE_2D, frameBuffer.getReflectionTexture());
 
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, frameBuffer.getReflectionTexture());
-            shaderProgram.loadReflectionTexture(1);
+            glBindTexture(GL_TEXTURE_2D, frameBuffer.getRefractionTexture());
 
+            shaderProgram.loadReflectionTexture(0);
+            shaderProgram.loadRefractionTexture(1);
         }
     }
 

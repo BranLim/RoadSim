@@ -98,8 +98,6 @@ public class GameScene extends Scene {
             }
         }
 
-        gameObjects.addAll(terrains);
-
         TexturedModel stoneModel = resourceManager.loadTexturedModel("assets/models/stone.obj", "assets/textures/stone_texture.jpg", "Rock");
         if (stoneModel != null) {
             Material material = stoneModel.getMaterial();
@@ -131,6 +129,7 @@ public class GameScene extends Scene {
         waterTiles.add(new WaterTile(-0.5f, -.5f, -0.8f));
 
         renderingManager.addFrameBuffer(WaterFrameBuffer.createWaterFrameBuffer(glResourceLoader, WaterFrameBuffer.REFLECTION_WIDTH, WaterFrameBuffer.REFLECTION_HEIGHT, WaterFrameBuffer.REFRACTION_WIDTH, WaterFrameBuffer.REFRACTION_HEIGHT));
+        renderingManager.setToRenderWater(true);
     }
 
     @Override
@@ -188,6 +187,9 @@ public class GameScene extends Scene {
 
         for (Renderable gameObject : gameObjects) {
             renderingManager.addToQueue(gameObject);
+        }
+        for (Terrain terrain: terrains){
+            renderingManager.addTerrainsToQueue(terrain);
         }
         particleSystem.getEmitters()
                 .forEach(emitter -> renderingManager.addParticleEmitter(emitter));

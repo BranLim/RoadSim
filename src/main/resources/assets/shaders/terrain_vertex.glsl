@@ -12,8 +12,7 @@ uniform mat4 uTransformation;
 uniform bool uEnableFog;
 uniform vec3 uSunDirection;
 uniform vec3 uLightPosition[MAX_LIGHTS];
-uniform vec4 uReflectionClipPlane;
-uniform vec4 uRefractionClipPlane;
+uniform vec4 uClipPlane;
 
 out vec3 fragPosition;
 out vec2 fTexCoord;
@@ -31,7 +30,7 @@ void main()
     vec4 worldPosition = uTransformation * vec4(aPos, 1.0);
     fragPosition = worldPosition.xyz;
 
-    gl_ClipDistance[0] = dot(worldPosition, uReflectionClipPlane);
+    gl_ClipDistance[0] = dot(worldPosition, uClipPlane);
 
     vec4 positionRelativeToCamera = uView * worldPosition;
 

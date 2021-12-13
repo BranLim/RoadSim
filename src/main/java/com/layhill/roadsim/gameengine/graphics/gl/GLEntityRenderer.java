@@ -33,8 +33,8 @@ public class GLEntityRenderer implements Renderer {
 
     @Override
     public void render(long window, Camera camera, RendererData rendererData) {
-        for (TexturedModel model :rendererData.getEntities().keySet()) {
-            prepareForRendering(camera, rendererData.getSun() , rendererData.getLights(), model);
+        for (TexturedModel model : rendererData.getEntities().keySet()) {
+            prepareForRendering(camera, rendererData.getSun(), rendererData.getLights(), model);
             for (Renderable gameObject : rendererData.getEntities().get(model)) {
                 prepareEntity(gameObject);
                 render(GL_TRIANGLES, model.getRawModel().getVertexCount());

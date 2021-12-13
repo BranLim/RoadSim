@@ -1,15 +1,21 @@
 package com.layhill.roadsim.gameengine.graphics;
 
+import com.layhill.roadsim.gameengine.graphics.gl.GLParticleRenderer;
+import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
+import com.layhill.roadsim.gameengine.graphics.gl.GLWaterRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Sun;
+import com.layhill.roadsim.gameengine.graphics.models.WaterRenderingStage;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
+import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +24,7 @@ import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE0;
 
 @Slf4j
 public class RenderingManager {
@@ -30,6 +37,7 @@ public class RenderingManager {
 
     private final List<Light> lights = new ArrayList<>();
     private final Map<TexturedModel, List<Renderable>> entities = new HashMap<>();
+    private final Map<TexturedModel, List<Renderable>> terrains = new HashMap<>();
     private final List<ParticleEmitter> emitters = new ArrayList<>();
     private final List<Renderer> renderers = new ArrayList<>();
     private RendererData rendererData = new RendererData();
@@ -39,7 +47,8 @@ public class RenderingManager {
     private Sun sun;
     private List<WaterTile> waters = new ArrayList<>();
     private WaterFrameBuffer waterFrameBuffer;
-
+    private boolean toRenderWater;
+    private GLWaterRenderer waterRenderer = new GLWaterRenderer(GLResourceLoader.getInstance());
 
     public RenderingManager(long window) {
         this.window = window;
@@ -49,7 +58,9 @@ public class RenderingManager {
         if (renderer == null) {
             return;
         }
-        renderers.add(renderer);
+        if (!renderers.contains(renderer)) {
+            renderers.add(renderer);
+        }
     }
 
     public void addToQueue(Renderable renderableEntity) {
@@ -61,6 +72,17 @@ public class RenderingManager {
             return;
         }
         renderableEntities.add(renderableEntity);
+    }
+
+    public void addTerrainsToQueue(Terrain terrain) {
+        List<Renderable> renderableTerrains = terrains.get(terrain.getTexturedModel());
+        if (renderableTerrains == null) {
+            renderableTerrains = new ArrayList<>();
+            renderableTerrains.add(terrain);
+            terrains.put(terrain.getTexturedModel(), renderableTerrains);
+            return;
+        }
+        renderableTerrains.add(terrain);
     }
 
     public void addParticleEmitter(ParticleEmitter particleEmitter) {
@@ -80,18 +102,49 @@ public class RenderingManager {
     }
 
     public void run(Camera camera) {
-        startRendering();
+
 
         long startTime = System.currentTimeMillis();
         prepareRenderingData();
-        for (Renderer renderer : renderers) {
-            renderer.prepare();
-            renderer.render(window, camera, rendererData);
+        if (toRenderWater) {
+            removeRenderer(waterRenderer);
+            float waterHeight = 0.0f;
+            List<WaterTile> waterTiles = rendererData.getWaterTiles();
+            if (waterTiles != null && !waterTiles.isEmpty()) {
+                waterHeight = waterTiles.get(0).getHeight();
+            }
+            glEnable(GL_CLIP_DISTANCE0);
+            rendererData.setWaterRenderingStage(WaterRenderingStage.REFLECTION);
+            waterFrameBuffer.bindReflectionFrameBuffer(GLResourceLoader.getInstance());
+
+
+            rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight));
+            float distance = 2 * (camera.getPosition().y - waterHeight);
+            camera.getPosition().y -= distance;
+            startRendering();
+            invokeRenderers(camera);
+            camera.getPosition().y += distance;
+            waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance());
+
+            rendererData.setWaterRenderingStage(WaterRenderingStage.REFRACTION);
+            waterFrameBuffer.bindRefractionFrameBuffer(GLResourceLoader.getInstance());
+
+            rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight));
+            invokeRenderers(camera);
+            glDisable(GL_CLIP_DISTANCE0);
+            waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), 1920, 1080);
+
+            rendererData.setWaterRenderingStage(WaterRenderingStage.END);
+            addRenderer(waterRenderer);
         }
+        startRendering();
+        rendererData.setClipPlane(new Vector4f(0, 1, 0, 10000));
+        invokeRenderers(camera);
         show(window);
 
         lights.clear();
         entities.clear();
+        terrains.clear();
         emitters.clear();
         waters.clear();
 
@@ -99,18 +152,33 @@ public class RenderingManager {
         System.out.println("Total loop time: " + (endTime - startTime) + " ms");
     }
 
+    private void removeRenderer(Renderer renderer) {
+        renderers.remove(renderer);
+    }
+
+    private void invokeRenderers(Camera camera) {
+        for (Renderer renderer : renderers) {
+            if (renderer.getClass() == GLParticleRenderer.class && toRenderWater && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
+                continue;
+            }
+            renderer.prepare();
+            renderer.render(window, camera, rendererData);
+        }
+    }
+
     private void prepareRenderingData() {
         rendererData.setLights(lights);
         rendererData.setEntities(entities);
+        rendererData.setTerrains(terrains);
         rendererData.setEmitters(emitters);
         rendererData.setSkybox(skybox);
         rendererData.setSun(sun);
         rendererData.setFogColour(fogColour);
         rendererData.setWaterTiles(waters);
+        rendererData.setToRenderWater(toRenderWater);
         if (waterFrameBuffer != null) {
             rendererData.setWaterFrameBuffer(waterFrameBuffer);
         }
-
     }
 
     public void show(long window) {
@@ -149,5 +217,9 @@ public class RenderingManager {
 
     public void addFrameBuffer(WaterFrameBuffer frameBuffer) {
         this.waterFrameBuffer = frameBuffer;
+    }
+
+    public void setToRenderWater(boolean renderWater) {
+        this.toRenderWater = renderWater;
     }
 }

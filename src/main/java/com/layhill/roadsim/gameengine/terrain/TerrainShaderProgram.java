@@ -30,14 +30,13 @@ public class TerrainShaderProgram extends ShaderProgram {
     private UniformBoolean enableSpotlight = new UniformBoolean("enableSpotlight");
     private UniformSpotlight spotlight = new UniformSpotlight("spotlight");
 
-    private UniformVector4f reflectionClipPlane = new UniformVector4f("uReflectionClipPlane");
-    private UniformVector4f refractionClipPlane = new UniformVector4f("uRefractionClipPlane");
+    private UniformVector4f clipPlane = new UniformVector4f("uClipPlane");
 
     public TerrainShaderProgram() {
         super.addUniform(projection, view, transformation, sunDirection, sunColour,
                 fogColour, texture, enableFog, enableSpotlight, spotlight, spotlight.getPosition(),
                 spotlight.getDirection(), this.spotlight.getColour(), this.spotlight.getCutOff(),
-                this.spotlight.getOuterCutOff());
+                this.spotlight.getOuterCutOff(), clipPlane);
 
     }
 
@@ -117,12 +116,7 @@ public class TerrainShaderProgram extends ShaderProgram {
         this.spotlight.loadSpotlight(spotlight);
     }
 
-    public void loadReflectionClipPlane(Vector4f plane) {
-        reflectionClipPlane.load(plane);
+    public void loadClipPlane(Vector4f plane) {
+        clipPlane.load(plane);
     }
-
-    public void loadRefractionClipPlane(Vector4f plane) {
-        refractionClipPlane.load(plane);
-    }
-
 }

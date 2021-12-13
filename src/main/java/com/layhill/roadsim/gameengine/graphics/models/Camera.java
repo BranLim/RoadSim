@@ -26,6 +26,7 @@ public class Camera {
     private float mouseSensitivity = TURNSPEED;
     private Vector4f[] frustumPlanes = new Vector4f[NUM_OF_FRUSTUM_PLANES];
     private GameScene scene;
+    private float pitchAmount;
 
     public Camera(Vector3f position, Vector3f upDirection, Vector3f front) {
         this.position = position;
@@ -63,7 +64,7 @@ public class Camera {
     }
 
     public void rotate(float deltaTime) {
-        float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
+        pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
         orientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
@@ -110,7 +111,7 @@ public class Camera {
         Matrix4f viewMatrix = new Matrix4f();
         viewMatrix.set(getViewMatrix());
 
-        viewMatrix.invert().transformDirection(new Vector3f(front),direction);
+        viewMatrix.invert().transformDirection(new Vector3f(front), direction);
         return direction;
     }
 }

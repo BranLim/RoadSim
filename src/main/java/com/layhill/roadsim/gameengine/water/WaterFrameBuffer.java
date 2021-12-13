@@ -24,14 +24,17 @@ public class WaterFrameBuffer {
     private int refractionHeight;
 
     private WaterFrameBuffer(int reflectionFrameBuffer, int reflectionTexture, int reflectionDepthBuffer,
-                             int refractionFrameBuffer, int refractionDepthTexture, int refractionTexture,
+                             int refractionFrameBuffer,  int refractionTexture, int refractionDepthTexture,
                              int reflectionWidth, int reflectionHeight, int refractionWidth, int refractionHeight) {
-        this.refractionFrameBuffer = refractionFrameBuffer;
-        this.refractionDepthTexture = refractionDepthTexture;
-        this.refractionTexture = refractionTexture;
+
         this.reflectionFrameBuffer = reflectionFrameBuffer;
         this.reflectionTexture = reflectionTexture;
         this.reflectionDepthBuffer = reflectionDepthBuffer;
+
+        this.refractionFrameBuffer = refractionFrameBuffer;
+        this.refractionTexture = refractionTexture;
+        this.refractionDepthTexture = refractionDepthTexture;
+
         this.reflectionWidth = reflectionWidth;
         this.reflectionHeight = reflectionHeight;
         this.refractionWidth = refractionWidth;
@@ -40,12 +43,12 @@ public class WaterFrameBuffer {
 
     public static WaterFrameBuffer createWaterFrameBuffer(GLResourceLoader loader, int reflectionWidth, int reflectionHeight, int refractionWidth, int refractionHeight) {
         int reflectionFrameBuffer = loader.createFrameBuffer();
-        int reflectionTextureId = loader.createTextureAttachemnt(reflectionWidth, reflectionHeight);
+        int reflectionTextureId = loader.createTextureAttachment(reflectionWidth, reflectionHeight);
         int reflectionDepthBuffer = loader.createDepthBufferAttachment(reflectionWidth, reflectionHeight);
         loader.unbindFrameBuffer();
 
         int refractionFrameBuffer = loader.createFrameBuffer();
-        int refractionTextureId = loader.createTextureAttachemnt(refractionWidth, refractionHeight);
+        int refractionTextureId = loader.createTextureAttachment(refractionWidth, refractionHeight);
         int refractionDepthTexture = loader.createDepthTextureAttachment(refractionWidth, refractionHeight);
         loader.unbindFrameBuffer();
         return new WaterFrameBuffer(reflectionFrameBuffer, reflectionTextureId, reflectionDepthBuffer, refractionFrameBuffer, refractionTextureId, refractionDepthTexture, reflectionWidth, reflectionHeight, refractionWidth, refractionHeight);
@@ -63,6 +66,11 @@ public class WaterFrameBuffer {
     public void unbindFrameBuffer(GLResourceLoader loader, int width, int height) {
         loader.unbindFrameBuffer(width, height);
     }
+
+    public void unbindFrameBuffer(GLResourceLoader loader) {
+        loader.unbindFrameBuffer();
+    }
+
 
     public int getReflectionTexture() {//get the resulting texture
         return reflectionTexture;

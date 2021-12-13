@@ -214,7 +214,7 @@ public final class GLResourceLoader {
         return frameBuffer;
     }
 
-    public int createTextureAttachemnt(int width, int height) {
+    public int createTextureAttachment(int width, int height) {
         int textureId = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureId);
         textureIds.add(textureId);
@@ -238,9 +238,9 @@ public final class GLResourceLoader {
         return depthBuffer;
     }
 
-    public void bindFrameBuffer(int reflectionFrameBuffer, int width, int height) {
+    public void bindFrameBuffer(int frameBuffer, int width, int height) {
         glBindTexture(GL_TEXTURE_2D, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, reflectionFrameBuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
         glViewport(0, 0, width, height);
     }
 

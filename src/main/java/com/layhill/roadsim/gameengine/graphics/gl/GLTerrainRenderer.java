@@ -9,6 +9,7 @@ import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.utils.Transformation;
 import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
+import com.layhill.roadsim.gameengine.water.WaterTile;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -37,9 +38,9 @@ public class GLTerrainRenderer implements Renderer {
 
     @Override
     public void render(long window, Camera camera, RendererData rendererData) {
-        for (TexturedModel model : rendererData.getEntities().keySet()) {
-            prepareForRendering(camera, rendererData.getSun(), rendererData.getFogColour(), rendererData.getLights(), model, rendererData.getWaterFrameBuffer());
-            for (Renderable gameObject : rendererData.getEntities().get(model)) {
+        for (TexturedModel model : rendererData.getTerrains().keySet()) {
+            prepareForRendering(camera, model, rendererData);
+            for (Renderable gameObject : rendererData.getTerrains().get(model)) {
                 prepareEntity(gameObject);
                 render(GL_TRIANGLES, model.getRawModel().getVertexCount());
             }
@@ -56,10 +57,12 @@ public class GLTerrainRenderer implements Renderer {
                     0, 0, 0,
                     renderableEntity.getScale());
             ((TerrainShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
+
+
         }
     }
 
-    private void prepareForRendering(Camera camera, Sun sun, Vector3f fogColour, List<Light> lightsToProcess, TexturedModel texturedModel, WaterFrameBuffer frameBuffer) {
+    private void prepareForRendering(Camera camera, TexturedModel texturedModel, RendererData rendererData) {
         glBindVertexArray(texturedModel.getRawModel().getVaoId());
         for (int attribute : texturedModel.getRawModel().getAttributes()) {
             glEnableVertexAttribArray(attribute);
@@ -71,14 +74,15 @@ public class GLTerrainRenderer implements Renderer {
                 shaderProgram.start();
 
                 TerrainShaderProgram terrainShaderProgram = (TerrainShaderProgram) shaderProgram;
+                Sun sun = rendererData.getSun();
                 terrainShaderProgram.loadSun(sun.getDirection(), sun.getColour());
                 terrainShaderProgram.loadCamera(camera);
 
-                if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
-                    Light[] lights = getLights(lightsToProcess);
+                if (rendererData.getLights() != null && !rendererData.getLights().isEmpty()) {
+                    Light[] lights = getLights(rendererData.getLights());
                     terrainShaderProgram.loadLights(lights);
 
-                    List<Spotlight> spotlights = getSpotlights(lightsToProcess);
+                    List<Spotlight> spotlights = getSpotlights(rendererData.getLights());
                     if (spotlights.isEmpty()) {
                         terrainShaderProgram.disableSpotlight();
                     } else {
@@ -87,11 +91,13 @@ public class GLTerrainRenderer implements Renderer {
                     }
                 }
                 terrainShaderProgram.loadTexture(0);
-                terrainShaderProgram.loadFogColour(fogColour);
+                terrainShaderProgram.loadFogColour(rendererData.getFogColour());
                 terrainShaderProgram.enableFog();
+                if (rendererData.isToRenderWater() && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
+                    terrainShaderProgram.loadClipPlane(rendererData.getClipPlane());
+                }
 
             }
-
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
         }
@@ -134,7 +140,7 @@ public class GLTerrainRenderer implements Renderer {
 
     @Override
     public void dispose(RendererData rendererData) {
-        for (TexturedModel model : rendererData.getEntities().keySet()) {
+        for (TexturedModel model : rendererData.getTerrains().keySet()) {
             ShaderProgram shaderProgram = model.getMaterial().getShaderProgram();
             shaderProgram.stop();
             shaderProgram.dispose();
