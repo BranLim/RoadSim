@@ -7,6 +7,7 @@ import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class TerrainShaderProgram extends ShaderProgram {
 
@@ -29,6 +30,8 @@ public class TerrainShaderProgram extends ShaderProgram {
     private UniformBoolean enableSpotlight = new UniformBoolean("enableSpotlight");
     private UniformSpotlight spotlight = new UniformSpotlight("spotlight");
 
+    private UniformVector4f reflectionClipPlane = new UniformVector4f("uReflectionClipPlane");
+    private UniformVector4f refractionClipPlane = new UniformVector4f("uRefractionClipPlane");
 
     public TerrainShaderProgram() {
         super.addUniform(projection, view, transformation, sunDirection, sunColour,
@@ -112,6 +115,14 @@ public class TerrainShaderProgram extends ShaderProgram {
 
     public void loadSpotlight(Spotlight spotlight) {
         this.spotlight.loadSpotlight(spotlight);
+    }
+
+    public void loadReflectionClipPlane(Vector4f plane) {
+        reflectionClipPlane.load(plane);
+    }
+
+    public void loadRefractionClipPlane(Vector4f plane) {
+        refractionClipPlane.load(plane);
     }
 
 }

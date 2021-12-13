@@ -6,6 +6,7 @@ import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Sun;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
+import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -37,6 +38,8 @@ public class RenderingManager {
     private Vector3f fogColour;
     private Sun sun;
     private List<WaterTile> waters = new ArrayList<>();
+    private WaterFrameBuffer waterFrameBuffer;
+
 
     public RenderingManager(long window) {
         this.window = window;
@@ -104,6 +107,10 @@ public class RenderingManager {
         rendererData.setSun(sun);
         rendererData.setFogColour(fogColour);
         rendererData.setWaterTiles(waters);
+        if (waterFrameBuffer != null) {
+            rendererData.setWaterFrameBuffer(waterFrameBuffer);
+        }
+
     }
 
     public void show(long window) {
@@ -138,5 +145,9 @@ public class RenderingManager {
             return;
         }
         waters.addAll(waterTiles);
+    }
+
+    public void addFrameBuffer(WaterFrameBuffer frameBuffer) {
+        this.waterFrameBuffer = frameBuffer;
     }
 }

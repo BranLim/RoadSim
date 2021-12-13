@@ -4,11 +4,11 @@ import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 
 public class WaterFrameBuffer {
 
-    protected static final int REFLECTION_WIDTH = 320;
-    private static final int REFLECTION_HEIGHT = 180;
+    public static final int REFLECTION_WIDTH = 320;
+    public static final int REFLECTION_HEIGHT = 180;
 
-    protected static final int REFRACTION_WIDTH = 1280;
-    private static final int REFRACTION_HEIGHT = 720;
+    public static final int REFRACTION_WIDTH = 1280;
+    public static final int REFRACTION_HEIGHT = 720;
 
     private int refractionFrameBuffer;
     private int refractionDepthTexture;
@@ -48,21 +48,22 @@ public class WaterFrameBuffer {
         int refractionTextureId = loader.createTextureAttachemnt(refractionWidth, refractionHeight);
         int refractionDepthTexture = loader.createDepthTextureAttachment(refractionWidth, refractionHeight);
         loader.unbindFrameBuffer();
-        return new WaterFrameBuffer(reflectionFrameBuffer,reflectionTextureId,reflectionDepthBuffer, refractionFrameBuffer, refractionTextureId,refractionDepthTexture, reflectionWidth, reflectionHeight, refractionWidth, refractionHeight);
+        return new WaterFrameBuffer(reflectionFrameBuffer, reflectionTextureId, reflectionDepthBuffer, refractionFrameBuffer, refractionTextureId, refractionDepthTexture, reflectionWidth, reflectionHeight, refractionWidth, refractionHeight);
     }
 
 
-    public void bindReflectionFrameBuffer(GLResourceLoader loader){
+    public void bindReflectionFrameBuffer(GLResourceLoader loader) {
         loader.bindFrameBuffer(reflectionFrameBuffer, reflectionWidth, reflectionHeight);
     }
 
-    public void bindRefractionFrameBuffer(GLResourceLoader loader){
+    public void bindRefractionFrameBuffer(GLResourceLoader loader) {
         loader.bindFrameBuffer(refractionFrameBuffer, refractionWidth, refractionHeight);
     }
 
-    public void unbindFrameBuffer(GLResourceLoader loader, int width, int height){
+    public void unbindFrameBuffer(GLResourceLoader loader, int width, int height) {
         loader.unbindFrameBuffer(width, height);
     }
+
     public int getReflectionTexture() {//get the resulting texture
         return reflectionTexture;
     }
@@ -71,7 +72,7 @@ public class WaterFrameBuffer {
         return refractionTexture;
     }
 
-    public int getRefractionDepthTexture(){//get the resulting depth texture
+    public int getRefractionDepthTexture() {//get the resulting depth texture
         return refractionDepthTexture;
     }
 }

@@ -18,6 +18,7 @@ import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.terrain.TerrainGenerator;
+import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -116,17 +117,20 @@ public class GameScene extends Scene {
 
         particleSystem = new ParticleSystem();
 
+        GLResourceLoader glResourceLoader = GLResourceLoader.getInstance();
+
         Optional<RawTexture> fireTexture = TextureLoader.loadAsTextureFromFile("assets/textures/fire.png");
-        fireTexture.ifPresent(rawTexture -> fireParticleTexture = GLResourceLoader.getInstance().load2DTexture(rawTexture, GL_TEXTURE_2D, true));
+        fireTexture.ifPresent(rawTexture -> fireParticleTexture = glResourceLoader.load2DTexture(rawTexture, GL_TEXTURE_2D, true));
 
         Optional<RawTexture> rainTexture = TextureLoader.loadAsTextureFromFile("assets/textures/raindrop.png");
-        rainTexture.ifPresent(rawTexture -> rainParticleTexture = GLResourceLoader.getInstance().load2DTexture(rawTexture, GL_TEXTURE_2D, true));
+        rainTexture.ifPresent(rawTexture -> rainParticleTexture = glResourceLoader.load2DTexture(rawTexture, GL_TEXTURE_2D, true));
 
-        GLResourceLoader glResourceLoader = GLResourceLoader.getInstance();
+
         skybox = glResourceLoader.loadSkybox(skyboxMesh, skyboxTextures);
 
-        waterTiles.add(new WaterTile(-0.5f,-.5f,-0.8f));
+        waterTiles.add(new WaterTile(-0.5f, -.5f, -0.8f));
 
+        renderingManager.addFrameBuffer(WaterFrameBuffer.createWaterFrameBuffer(glResourceLoader, WaterFrameBuffer.REFLECTION_WIDTH, WaterFrameBuffer.REFLECTION_HEIGHT, WaterFrameBuffer.REFRACTION_WIDTH, WaterFrameBuffer.REFRACTION_HEIGHT));
     }
 
     @Override

@@ -1,15 +1,22 @@
 package com.layhill.roadsim.gameengine.water;
 
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector4f;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 public class WaterShaderProgram extends ShaderProgram {
 
     private UniformMatrix4f projection = new UniformMatrix4f("uProjection");
     private UniformMatrix4f view = new UniformMatrix4f("uView");
     private UniformMatrix4f transformation = new UniformMatrix4f("uTransformation");
+
+    private UniformInteger refractionTexture = new UniformInteger("uRefractionTexture");
+    private UniformInteger reflectionTexture = new UniformInteger("uReflectionTexture");
 
     public WaterShaderProgram() {
         super.addUniform(projection, view, transformation);
@@ -30,5 +37,15 @@ public class WaterShaderProgram extends ShaderProgram {
             return;
         }
         transformation.load(modelTransformation);
+    }
+
+
+
+    public void loadReflectionTexture(int textureUnit){
+        reflectionTexture.load(textureUnit);
+    }
+
+    public void loadRefractionTexture(int textureUnit){
+        refractionTexture.load(textureUnit);
     }
 }

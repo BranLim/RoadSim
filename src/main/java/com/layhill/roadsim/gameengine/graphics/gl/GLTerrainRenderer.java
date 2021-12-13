@@ -8,6 +8,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.utils.Transformation;
+import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -37,7 +38,7 @@ public class GLTerrainRenderer implements Renderer {
     @Override
     public void render(long window, Camera camera, RendererData rendererData) {
         for (TexturedModel model : rendererData.getEntities().keySet()) {
-            prepareForRendering(camera, rendererData.getSun(), rendererData.getFogColour(), rendererData.getLights(), model);
+            prepareForRendering(camera, rendererData.getSun(), rendererData.getFogColour(), rendererData.getLights(), model, rendererData.getWaterFrameBuffer());
             for (Renderable gameObject : rendererData.getEntities().get(model)) {
                 prepareEntity(gameObject);
                 render(GL_TRIANGLES, model.getRawModel().getVertexCount());
@@ -58,7 +59,7 @@ public class GLTerrainRenderer implements Renderer {
         }
     }
 
-    private void prepareForRendering(Camera camera, Sun sun, Vector3f fogColour, List<Light> lightsToProcess, TexturedModel texturedModel) {
+    private void prepareForRendering(Camera camera, Sun sun, Vector3f fogColour, List<Light> lightsToProcess, TexturedModel texturedModel, WaterFrameBuffer frameBuffer) {
         glBindVertexArray(texturedModel.getRawModel().getVaoId());
         for (int attribute : texturedModel.getRawModel().getAttributes()) {
             glEnableVertexAttribArray(attribute);
@@ -88,6 +89,7 @@ public class GLTerrainRenderer implements Renderer {
                 terrainShaderProgram.loadTexture(0);
                 terrainShaderProgram.loadFogColour(fogColour);
                 terrainShaderProgram.enableFog();
+
             }
 
             glActiveTexture(GL_TEXTURE0);

@@ -6,6 +6,7 @@ import com.layhill.roadsim.gameengine.graphics.models.Sun;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
+import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import org.joml.Vector3f;
 
@@ -22,6 +23,7 @@ public class RendererData {
     private List<ParticleEmitter> emitters;
     private Vector3f fogColour;
     private List<WaterTile> waterTiles;
+    private WaterFrameBuffer waterFrameBuffer;
 
     public RendererData() {
     }
@@ -88,5 +90,13 @@ public class RendererData {
 
     public void setWaterTiles(List<WaterTile> waterTiles) {
         this.waterTiles = waterTiles;
+    }
+
+    public WaterFrameBuffer getWaterFrameBuffer() {
+        return waterFrameBuffer;
+    }
+
+    public void setWaterFrameBuffer(WaterFrameBuffer waterFrameBuffer) {
+        this.waterFrameBuffer = waterFrameBuffer;
     }
 }
