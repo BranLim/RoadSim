@@ -97,6 +97,7 @@ public class RenderingManager {
     }
 
     private void startRendering() {
+        glEnable(GL_DEPTH_TEST);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(SKY_RED, SKY_GREEN, SKY_BLUE, 1.0f);
     }
@@ -116,7 +117,7 @@ public class RenderingManager {
             glEnable(GL_CLIP_DISTANCE0);
             rendererData.setWaterRenderingStage(WaterRenderingStage.REFLECTION);
             waterFrameBuffer.bindReflectionFrameBuffer(GLResourceLoader.getInstance());
-
+            startRendering();
 
             rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight));
             float distance = 2 * (camera.getPosition().y - waterHeight);
@@ -124,11 +125,11 @@ public class RenderingManager {
             startRendering();
             invokeRenderers(camera);
             camera.getPosition().y += distance;
-            waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance());
+
 
             rendererData.setWaterRenderingStage(WaterRenderingStage.REFRACTION);
             waterFrameBuffer.bindRefractionFrameBuffer(GLResourceLoader.getInstance());
-
+            startRendering();
             rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight));
             invokeRenderers(camera);
             glDisable(GL_CLIP_DISTANCE0);
