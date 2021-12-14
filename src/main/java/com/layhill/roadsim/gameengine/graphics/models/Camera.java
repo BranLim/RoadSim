@@ -58,9 +58,11 @@ public class Camera {
         Matrix4f viewMatrix = new Matrix4f();
         if (reflected) {
             float distance = 2 * (getPosition().y - (-1.2f));
+            Vector3f updatedPosition = new Vector3f(position.x, position.y, position.z)
+                    .sub(reflectedtOrientation.positiveY(new Vector3f()).mul(distance)).negate();
             viewMatrix.identity()
                     .rotate(reflectedtOrientation)
-                    .translate(new Vector3f(position.x, position.y - distance, position.z).negate());
+                    .translate(updatedPosition);
             return viewMatrix;
         }
         viewMatrix.identity()
