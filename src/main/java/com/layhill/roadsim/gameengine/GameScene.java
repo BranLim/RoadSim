@@ -128,7 +128,8 @@ public class GameScene extends Scene {
 
         waterTiles.add(new WaterTile(-0.5f, -.5f, -0.8f));
 
-        renderingManager.addFrameBuffer(WaterFrameBuffer.createWaterFrameBuffer(glResourceLoader, WaterFrameBuffer.REFLECTION_WIDTH, WaterFrameBuffer.REFLECTION_HEIGHT, WaterFrameBuffer.REFRACTION_WIDTH, WaterFrameBuffer.REFRACTION_HEIGHT));
+        WaterFrameBuffer frameBuffer = WaterFrameBuffer.createWaterFrameBuffer(glResourceLoader, WaterFrameBuffer.REFLECTION_WIDTH, WaterFrameBuffer.REFLECTION_HEIGHT, WaterFrameBuffer.REFRACTION_WIDTH, WaterFrameBuffer.REFRACTION_HEIGHT);
+        renderingManager.addFrameBuffer(frameBuffer);
         renderingManager.setToRenderWater(true);
     }
 

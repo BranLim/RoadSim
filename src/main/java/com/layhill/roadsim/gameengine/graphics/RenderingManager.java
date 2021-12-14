@@ -104,7 +104,6 @@ public class RenderingManager {
 
     public void run(Camera camera) {
 
-
         long startTime = System.currentTimeMillis();
         prepareRenderingData();
         if (toRenderWater) {
@@ -117,19 +116,16 @@ public class RenderingManager {
             glEnable(GL_CLIP_DISTANCE0);
             rendererData.setWaterRenderingStage(WaterRenderingStage.REFLECTION);
             waterFrameBuffer.bindReflectionFrameBuffer(GLResourceLoader.getInstance());
-            startRendering();
-
-            rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight));
+            rendererData.setClipPlane(new Vector4f(0, 1, 0, waterHeight));
             float distance = 2 * (camera.getPosition().y - waterHeight);
             camera.getPosition().y -= distance;
-            startRendering();
+            camera.invertPitch();
             invokeRenderers(camera);
             camera.getPosition().y += distance;
-
+            camera.invertPitch();
 
             rendererData.setWaterRenderingStage(WaterRenderingStage.REFRACTION);
             waterFrameBuffer.bindRefractionFrameBuffer(GLResourceLoader.getInstance());
-            startRendering();
             rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight));
             invokeRenderers(camera);
             glDisable(GL_CLIP_DISTANCE0);
@@ -138,7 +134,7 @@ public class RenderingManager {
             rendererData.setWaterRenderingStage(WaterRenderingStage.END);
             addRenderer(waterRenderer);
         }
-        startRendering();
+
         rendererData.setClipPlane(new Vector4f(0, 1, 0, 10000));
         invokeRenderers(camera);
         show(window);
@@ -158,6 +154,7 @@ public class RenderingManager {
     }
 
     private void invokeRenderers(Camera camera) {
+        startRendering();
         for (Renderer renderer : renderers) {
             if (renderer.getClass() == GLParticleRenderer.class && toRenderWater && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
                 continue;

@@ -21,6 +21,7 @@ public class Camera {
     private Vector3f upDirection;
     private Vector3f front;
     private Matrix4f projection = new Matrix4f();
+    private Quaternionf invertOrientation;
     private Quaternionf orientation;
     private float currentSpeed = 0.f;
     private float mouseSensitivity = TURNSPEED;
@@ -33,6 +34,8 @@ public class Camera {
         this.upDirection = upDirection;
         this.front = front;
         orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
+        invertOrientation = new Quaternionf(orientation);
+        invertOrientation.invert();
         projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
         for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++) {
             frustumPlanes[i] = new Vector4f();
@@ -68,6 +71,7 @@ public class Camera {
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
         orientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
+        invertOrientation.rotateLocalX(pitchAmount).rotateY(yawAmount);
         updateFrustum();
     }
 
@@ -113,5 +117,11 @@ public class Camera {
 
         viewMatrix.invert().transformDirection(new Vector3f(front), direction);
         return direction;
+    }
+
+    public void invertPitch() {
+        Quaternionf temp = orientation;
+        orientation = invertOrientation;
+        invertOrientation = temp;
     }
 }
