@@ -21,21 +21,23 @@ public class Camera {
     private Vector3f upDirection;
     private Vector3f front;
     private Matrix4f projection = new Matrix4f();
-    private Quaternionf invertOrientation;
+    private Quaternionf reflectedtOrientation;
     private Quaternionf orientation;
     private float currentSpeed = 0.f;
     private float mouseSensitivity = TURNSPEED;
     private Vector4f[] frustumPlanes = new Vector4f[NUM_OF_FRUSTUM_PLANES];
     private GameScene scene;
-    private float pitchAmount;
+    private boolean reflected;
 
     public Camera(Vector3f position, Vector3f upDirection, Vector3f front) {
         this.position = position;
         this.upDirection = upDirection;
         this.front = front;
+        Vector3f pitchedFront = new Vector3f(front);
+        pitchedFront.y *= -1.f;
         orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
-        invertOrientation = new Quaternionf(orientation);
-        invertOrientation.invert();
+        reflectedtOrientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
+
         projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
         for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++) {
             frustumPlanes[i] = new Vector4f();
@@ -52,6 +54,12 @@ public class Camera {
 
     public Matrix4f getViewMatrix() {
         Matrix4f viewMatrix = new Matrix4f();
+        if (reflected) {
+            viewMatrix.identity()
+                    .rotate(reflectedtOrientation)
+                    .translate(new Vector3f(position).negate());
+            return viewMatrix;
+        }
         viewMatrix.identity()
                 .rotate(orientation)
                 .translate(new Vector3f(position).negate());
@@ -67,11 +75,11 @@ public class Camera {
     }
 
     public void rotate(float deltaTime) {
-        pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
+        float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
         orientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
-        invertOrientation.rotateLocalX(pitchAmount).rotateY(yawAmount);
+        reflectedtOrientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
         updateFrustum();
     }
 
@@ -119,9 +127,7 @@ public class Camera {
         return direction;
     }
 
-    public void invertPitch() {
-        Quaternionf temp = orientation;
-        orientation = invertOrientation;
-        invertOrientation = temp;
+    public void setReflected(boolean reflected) {
+        this.reflected = reflected;
     }
 }

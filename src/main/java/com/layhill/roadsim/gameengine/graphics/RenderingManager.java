@@ -117,12 +117,12 @@ public class RenderingManager {
             rendererData.setWaterRenderingStage(WaterRenderingStage.REFLECTION);
             waterFrameBuffer.bindReflectionFrameBuffer(GLResourceLoader.getInstance());
             rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight));
+            camera.setReflected(true);
             float distance = 2 * (camera.getPosition().y - waterHeight);
             camera.getPosition().y -= distance;
-            camera.invertPitch();
             invokeRenderers(camera);
             camera.getPosition().y += distance;
-            camera.invertPitch();
+            camera.setReflected(false);
 
             rendererData.setWaterRenderingStage(WaterRenderingStage.REFRACTION);
             waterFrameBuffer.bindRefractionFrameBuffer(GLResourceLoader.getInstance());
@@ -135,7 +135,6 @@ public class RenderingManager {
             addRenderer(waterRenderer);
         }
 
-        rendererData.setClipPlane(new Vector4f(0, 1, 0, 10000f));
         invokeRenderers(camera);
         show(window);
 
