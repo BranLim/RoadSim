@@ -4,8 +4,8 @@ import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 
 public class WaterFrameBuffer {
 
-    public static final int REFLECTION_WIDTH = 320;
-    public static final int REFLECTION_HEIGHT = 180;
+    public static final int REFLECTION_WIDTH = 640;
+    public static final int REFLECTION_HEIGHT = 360;
 
     public static final int REFRACTION_WIDTH = 1280;
     public static final int REFRACTION_HEIGHT = 720;

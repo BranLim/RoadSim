@@ -126,7 +126,7 @@ public class GameScene extends Scene {
 
         skybox = glResourceLoader.loadSkybox(skyboxMesh, skyboxTextures);
 
-        waterTiles.add(new WaterTile(-0.5f, -.5f, -0.8f));
+        waterTiles.add(new WaterTile(-0.5f, -.5f, -1.2f));
 
         WaterFrameBuffer frameBuffer = WaterFrameBuffer.createWaterFrameBuffer(glResourceLoader, WaterFrameBuffer.REFLECTION_WIDTH, WaterFrameBuffer.REFLECTION_HEIGHT, WaterFrameBuffer.REFRACTION_WIDTH, WaterFrameBuffer.REFRACTION_HEIGHT);
         renderingManager.addFrameBuffer(frameBuffer);

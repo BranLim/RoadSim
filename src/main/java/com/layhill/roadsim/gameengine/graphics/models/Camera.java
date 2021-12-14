@@ -33,10 +33,12 @@ public class Camera {
         this.position = position;
         this.upDirection = upDirection;
         this.front = front;
+        orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
+
         Vector3f pitchedFront = new Vector3f(front);
         pitchedFront.y *= -1.f;
-        orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
-        reflectedtOrientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
+        float distance = 2 * (getPosition().y - (-1.2f));
+        reflectedtOrientation = Transformation.createLookAt(new Vector3f(position.x, position.y - distance, position.z), pitchedFront, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
 
         projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
         for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++) {
@@ -55,9 +57,10 @@ public class Camera {
     public Matrix4f getViewMatrix() {
         Matrix4f viewMatrix = new Matrix4f();
         if (reflected) {
+            float distance = 2 * (getPosition().y - (-1.2f));
             viewMatrix.identity()
                     .rotate(reflectedtOrientation)
-                    .translate(new Vector3f(position).negate());
+                    .translate(new Vector3f(position.x, position.y - distance, position.z).negate());
             return viewMatrix;
         }
         viewMatrix.identity()
@@ -79,7 +82,7 @@ public class Camera {
         float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
         orientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
-        reflectedtOrientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
+        reflectedtOrientation.rotateLocalX(pitchAmount).rotateY(-yawAmount);
         updateFrustum();
     }
 
