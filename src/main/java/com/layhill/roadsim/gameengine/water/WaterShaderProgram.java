@@ -12,11 +12,11 @@ public class WaterShaderProgram extends ShaderProgram {
     private UniformMatrix4f view = new UniformMatrix4f("uView");
     private UniformMatrix4f transformation = new UniformMatrix4f("uTransformation");
 
-    private UniformInteger refractionTexture = new UniformInteger("uRefractionTexture");
     private UniformInteger reflectionTexture = new UniformInteger("uReflectionTexture");
+    private UniformInteger refractionTexture = new UniformInteger("uRefractionTexture");
 
     public WaterShaderProgram() {
-        super.addUniform(projection, view, transformation);
+        super.addUniform(projection, view, transformation, reflectionTexture,refractionTexture );
     }
 
     @Override

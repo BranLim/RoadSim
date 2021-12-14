@@ -96,7 +96,6 @@ public class GLTerrainRenderer implements Renderer {
                 if (rendererData.isToRenderWater() && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
                     terrainShaderProgram.loadClipPlane(rendererData.getClipPlane());
                 }
-
             }
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
