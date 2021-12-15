@@ -1,13 +1,11 @@
 package com.layhill.roadsim.gameengine.graphics;
 
+import com.layhill.roadsim.gameengine.Window;
 import com.layhill.roadsim.gameengine.graphics.gl.GLParticleRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.GLWaterRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
-import com.layhill.roadsim.gameengine.graphics.models.Light;
-import com.layhill.roadsim.gameengine.graphics.models.Sun;
-import com.layhill.roadsim.gameengine.graphics.models.WaterRenderingStage;
+import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
@@ -49,9 +47,11 @@ public class RenderingManager {
     private WaterFrameBuffer waterFrameBuffer;
     private boolean toRenderWater;
     private GLWaterRenderer waterRenderer = new GLWaterRenderer(GLResourceLoader.getInstance());
+    private FrameBufferSize frameBufferSize;
 
     public RenderingManager(long window) {
         this.window = window;
+        frameBufferSize = Window.getInstance().getWindowFrameBufferSize();
     }
 
     public void addRenderer(Renderer renderer) {
@@ -126,7 +126,7 @@ public class RenderingManager {
             rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight));
             invokeRenderers(camera);
             glDisable(GL_CLIP_DISTANCE0);
-            waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), 1920, 1080);
+            waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);
 
             rendererData.setWaterRenderingStage(WaterRenderingStage.END);
             addRenderer(waterRenderer);

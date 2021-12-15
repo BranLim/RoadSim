@@ -2,6 +2,7 @@ package com.layhill.roadsim.gameengine;
 
 import com.layhill.roadsim.gameengine.graphics.RenderingManager;
 import com.layhill.roadsim.gameengine.graphics.gl.*;
+import com.layhill.roadsim.gameengine.graphics.models.FrameBufferSize;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +52,7 @@ public class Window {
                 currentScene.init();
             }
             case 1 -> {
-                RenderingManager renderingManager = new RenderingManager(glfwWindow );
+                RenderingManager renderingManager = new RenderingManager(glfwWindow);
                 renderingManager.addRenderer(new GLEntityRenderer());
                 renderingManager.addRenderer(new GLTerrainRenderer());
 
@@ -159,7 +160,14 @@ public class Window {
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
-    public long getWindow(){
+    public long getWindow() {
         return this.glfwWindow;
+    }
+
+    public FrameBufferSize getWindowFrameBufferSize() {
+        int[] height = new int[1];
+        int[] width = new int[1];
+        glfwGetFramebufferSize(this.glfwWindow, width, height);
+        return new FrameBufferSize(glfwWindow, width, height);
     }
 }

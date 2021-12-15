@@ -155,8 +155,8 @@ public class GameScene extends Scene {
                     .defaultSpeed(2.f)
                     .initialParticleRotation(0)
                     .initialParticleSize(1)
-                    .timeToLive(4)
-                    .particleTimeToLive(2)
+                    .timeToLive(8)
+                    .particleTimeToLive(4)
                     .particlePerSeconds(50)
                     .build();
             particleSystem.createFireParticleEmitter(configuration, fireParticleTexture);
@@ -164,13 +164,13 @@ public class GameScene extends Scene {
         ParticleEmitterConfiguration rainParticleConfiguration = ParticleEmitterConfiguration.builder()
                 .affectedByGravity(true)
                 .gravityEffect(1.f)
-                .position(new Vector3f(0.f, 100.f, 0.f))
+                .position(new Vector3f(0.f, 500.f, 0.f))
                 .defaultSpeed(9.f)
                 .initialParticleRotation(0)
                 .initialParticleSize(1)
-                .timeToLive(20)
-                .particleTimeToLive(10)
-                .particlePerSeconds(5)
+                .timeToLive(30)
+                .particleTimeToLive(15)
+                .particlePerSeconds(15)
                 .build();
         particleSystem.createRainParticleEmitter(rainParticleConfiguration, rainParticleTexture);
 
