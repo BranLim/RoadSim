@@ -1,17 +1,14 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
-import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.RendererData;
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.utils.Transformation;
-import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
-import com.layhill.roadsim.gameengine.water.WaterTile;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,9 +34,9 @@ public class GLTerrainRenderer implements Renderer {
     }
 
     @Override
-    public void render(long window, Camera camera, RendererData rendererData) {
+    public void render(ViewSpecification viewSpecification, RendererData rendererData) {
         for (TexturedModel model : rendererData.getTerrains().keySet()) {
-            prepareForRendering(camera, model, rendererData);
+            prepareForRendering(viewSpecification, model, rendererData);
             for (Renderable gameObject : rendererData.getTerrains().get(model)) {
                 prepareEntity(gameObject);
                 render(GL_TRIANGLES, model.getRawModel().getVertexCount());
@@ -62,7 +59,7 @@ public class GLTerrainRenderer implements Renderer {
         }
     }
 
-    private void prepareForRendering(Camera camera, TexturedModel texturedModel, RendererData rendererData) {
+    private void prepareForRendering(ViewSpecification viewSpecification, TexturedModel texturedModel, RendererData rendererData) {
         glBindVertexArray(texturedModel.getRawModel().getVaoId());
         for (int attribute : texturedModel.getRawModel().getAttributes()) {
             glEnableVertexAttribArray(attribute);
@@ -76,7 +73,7 @@ public class GLTerrainRenderer implements Renderer {
                 TerrainShaderProgram terrainShaderProgram = (TerrainShaderProgram) shaderProgram;
                 Sun sun = rendererData.getSun();
                 terrainShaderProgram.loadSun(sun.getDirection(), sun.getColour());
-                terrainShaderProgram.loadCamera(camera);
+                terrainShaderProgram.loadCamera(viewSpecification);
 
                 if (rendererData.getLights() != null && !rendererData.getLights().isEmpty()) {
                     Light[] lights = getLights(rendererData.getLights());

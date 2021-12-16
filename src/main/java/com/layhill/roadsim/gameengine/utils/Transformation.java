@@ -20,6 +20,14 @@ public class Transformation {
         return matrix;
     }
 
+    public static Matrix4f createViewMatrix(Vector3f position, Quaternionf rotation){
+        Matrix4f matrix = new Matrix4f();
+        matrix.identity()
+                .rotate(rotation)
+                .translate(new Vector3f(position).negate());
+        return matrix;
+    }
+
     public static Quaternionf createLookAt(Vector3f position, Vector3f destination, Vector3f worldForward, Vector3f worldUp){
         Vector3f unitWorldUp = new Vector3f(worldUp).normalize();
         Vector3f unitWorldForward = new Vector3f(worldForward).normalize();

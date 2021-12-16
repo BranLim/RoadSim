@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.skybox;
 
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformBoolean;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
@@ -28,9 +29,9 @@ public class SkyShaderProgram extends ShaderProgram {
         super.bindAttribute(0, "aPos");
     }
 
-    public void loadCamera(Camera camera) {
-        projection.load(camera.getProjectionMatrix());
-        view.load(new Matrix4f(new Matrix3f(camera.getViewMatrix())));
+    public void loadCamera(ViewSpecification viewSpecification) {
+        projection.load(viewSpecification.getProjectionMatrix());
+        view.load(new Matrix4f(new Matrix3f(viewSpecification.getViewMatrix())));
     }
 
     public void loadTexture(int textureUnit) {

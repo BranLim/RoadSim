@@ -2,6 +2,7 @@ package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.RendererData;
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.skybox.SkyShaderProgram;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
@@ -26,7 +27,7 @@ public class GLSkyRenderer implements Renderer {
     }
 
     @Override
-    public void render(long window, Camera camera, RendererData rendererData) {
+    public void render( ViewSpecification viewSpecification, RendererData rendererData) {
         Skybox skybox = rendererData.getSkybox();
         int vaoId = skybox.getVaoId();
         glBindVertexArray(vaoId);
@@ -34,7 +35,7 @@ public class GLSkyRenderer implements Renderer {
 
         SkyShaderProgram skyboxShader = skybox.getShaderProgram();
         skyboxShader.start();
-        skyboxShader.loadCamera(camera);
+        skyboxShader.loadCamera(viewSpecification);
         skyboxShader.loadTexture(0);
         skyboxShader.loadFogColour(rendererData.getFogColour());
         skyboxShader.enableFog();

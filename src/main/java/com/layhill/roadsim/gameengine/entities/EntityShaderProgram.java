@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.entities;
 
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.data.*;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
@@ -39,12 +40,12 @@ public class EntityShaderProgram extends ShaderProgram {
     }
 
 
-    public void loadCamera(Camera camera) {
-        if (camera == null) {
+    public void loadCamera(ViewSpecification viewSpecification) {
+        if (viewSpecification == null) {
             return;
         }
-        projection.load(camera.getProjectionMatrix());
-        view.load(camera.getViewMatrix());
+        projection.load(viewSpecification.getProjectionMatrix());
+        view.load(viewSpecification.getViewMatrix());
     }
 
     public void loadModelTransformation(Matrix4f transformationMatrix) {

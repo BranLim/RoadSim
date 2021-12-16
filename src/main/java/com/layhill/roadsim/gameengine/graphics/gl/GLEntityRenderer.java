@@ -4,6 +4,7 @@ import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.RendererData;
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.utils.Transformation;
@@ -32,9 +33,9 @@ public class GLEntityRenderer implements Renderer {
     }
 
     @Override
-    public void render(long window, Camera camera, RendererData rendererData) {
+    public void render( ViewSpecification viewSpecification, RendererData rendererData) {
         for (TexturedModel model : rendererData.getEntities().keySet()) {
-            prepareForRendering(camera, rendererData.getSun(), rendererData.getLights(), model);
+            prepareForRendering(viewSpecification, rendererData.getSun(), rendererData.getLights(), model);
             for (Renderable gameObject : rendererData.getEntities().get(model)) {
                 prepareEntity(gameObject);
                 render(GL_TRIANGLES, model.getRawModel().getVertexCount());
@@ -55,7 +56,7 @@ public class GLEntityRenderer implements Renderer {
         }
     }
 
-    private void prepareForRendering(Camera camera, Sun sun, List<Light> lightsToProcess, TexturedModel texturedModel) {
+    private void prepareForRendering(ViewSpecification viewSpecification, Sun sun, List<Light> lightsToProcess, TexturedModel texturedModel) {
         glBindVertexArray(texturedModel.getRawModel().getVaoId());
         for (int attribute : texturedModel.getRawModel().getAttributes()) {
             glEnableVertexAttribArray(attribute);
@@ -66,7 +67,7 @@ public class GLEntityRenderer implements Renderer {
             if (shaderProgram.getClass() == EntityShaderProgram.class) {
                 shaderProgram.start();
                 EntityShaderProgram entityShaderProgram = (EntityShaderProgram) shaderProgram;
-                entityShaderProgram.loadCamera(camera);
+                entityShaderProgram.loadCamera(viewSpecification);
 
                 if (lightsToProcess != null && !lightsToProcess.isEmpty()) {
                     Light[] lights = getLights(lightsToProcess);

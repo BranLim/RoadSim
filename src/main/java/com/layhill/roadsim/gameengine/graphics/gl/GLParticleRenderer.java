@@ -1,12 +1,11 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.Renderer;
-import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.RendererData;
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.particles.Particle;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.particles.ParticleShaderProgram;
@@ -65,9 +64,9 @@ public class GLParticleRenderer implements Renderer {
     }
 
     @Override
-    public void render(long window, Camera camera, RendererData rendererData) {
+    public void render(ViewSpecification viewSpecification, RendererData rendererData) {
         long startTime = System.currentTimeMillis();
-        Matrix4f viewMatrix = camera.getViewMatrix();
+        Matrix4f viewMatrix = viewSpecification.getViewMatrix();
         viewMatrix.get3x3(transposedViewMatrixWithoutTranslation);
         transposedViewMatrixWithoutTranslation.transpose();
 
@@ -75,7 +74,7 @@ public class GLParticleRenderer implements Renderer {
             dataPointer = 0;
             List<Particle> particles = emitter.getParticles();
             float[] data = new float[particles.size() * INSTANCE_DATA_LENGTH];
-            startRendering(emitter.getParticleTexture(), camera);
+            startRendering(emitter.getParticleTexture(), viewSpecification);
             for (Particle particle : particles) {
                 updateModelViewMatrix(particle.getPosition(), particle.getRotation(), particle.getScale(), viewMatrix, data);
             }
@@ -129,10 +128,10 @@ public class GLParticleRenderer implements Renderer {
         data[dataPointer++] = viewModelMatrix.m33();
     }
 
-    private void startRendering(GLTexture particleTexture, Camera camera) {
+    private void startRendering(GLTexture particleTexture, ViewSpecification viewSpecification) {
 
         shader.start();
-        shader.loadCamera(camera);
+        shader.loadCamera(viewSpecification);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);

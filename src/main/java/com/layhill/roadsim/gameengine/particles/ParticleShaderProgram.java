@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.particles;
 
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
@@ -22,8 +23,8 @@ public class ParticleShaderProgram extends ShaderProgram {
         super.bindAttribute(1, "modelView");
     }
 
-    public void loadCamera(Camera camera) {
-        projection.load(camera.getProjectionMatrix());
+    public void loadCamera(ViewSpecification viewSpecification) {
+        projection.load(viewSpecification.getProjectionMatrix());
     }
 
     public void loadModelTransformation(Matrix4f transformationMatrix) {

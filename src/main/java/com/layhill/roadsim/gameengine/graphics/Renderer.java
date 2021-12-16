@@ -1,12 +1,10 @@
 package com.layhill.roadsim.gameengine.graphics;
 
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
-
 public interface Renderer {
 
     void prepare();
 
-    void render(long window, Camera camera, RendererData rendererData);
+    void render(ViewSpecification viewSpecification, RendererData rendererData);
 
     void dispose(RendererData rendererData);
 }

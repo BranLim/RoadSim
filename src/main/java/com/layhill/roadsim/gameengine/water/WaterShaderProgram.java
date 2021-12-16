@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.water;
 
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
@@ -24,9 +25,9 @@ public class WaterShaderProgram extends ShaderProgram {
         super.bindAttribute(0, "aPos");
     }
 
-    public void loadCamera(Camera camera) {
-        projection.load(camera.getProjectionMatrix());
-        view.load(camera.getViewMatrix());
+    public void loadCamera(ViewSpecification viewSpecification) {
+        projection.load(viewSpecification.getProjectionMatrix());
+        view.load(viewSpecification.getViewMatrix());
     }
 
     public void loadModelTransformation(Matrix4f modelTransformation) {

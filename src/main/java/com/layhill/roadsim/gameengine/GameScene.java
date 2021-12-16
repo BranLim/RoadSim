@@ -3,7 +3,7 @@ package com.layhill.roadsim.gameengine;
 import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
-import com.layhill.roadsim.gameengine.graphics.RenderingManager;
+import com.layhill.roadsim.gameengine.graphics.RenderEngine;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
@@ -38,7 +38,7 @@ public class GameScene extends Scene {
     private List<Renderable> gameObjects = new ArrayList<>();
     private List<Light> lights = new ArrayList<>();
     private ResourceManager resourceManager = new ResourceManager();
-    private RenderingManager renderingManager;
+    private RenderEngine renderEngine;
     private Spotlight spotlight;
     private boolean turnOnFlashlight = false;
     private GLTexture fireParticleTexture;
@@ -60,8 +60,8 @@ public class GameScene extends Scene {
 
     private Sun sun;
 
-    public GameScene(RenderingManager renderingManager) {
-        this.renderingManager = renderingManager;
+    public GameScene(RenderEngine renderEngine) {
+        this.renderEngine = renderEngine;
     }
 
     public List<Terrain> getTerrains() {
@@ -77,7 +77,7 @@ public class GameScene extends Scene {
 
         spotlight = new Spotlight(
                 new Vector3f(camera.getPosition()),
-                new Vector3f(camera.getDirection()),
+                new Vector3f(camera.getForwardDirection()),
                 new Vector3f(1.f, 1.f, 1.f),
                 (float) Math.cos(Math.toRadians(10.5f)),
                 (float) Math.cos(Math.toRadians(15.0f)));
@@ -129,8 +129,8 @@ public class GameScene extends Scene {
         waterTiles.add(new WaterTile(-0.5f, -.5f, -1.2f));
 
         WaterFrameBuffer frameBuffer = WaterFrameBuffer.createWaterFrameBuffer(glResourceLoader, WaterFrameBuffer.REFLECTION_WIDTH, WaterFrameBuffer.REFLECTION_HEIGHT, WaterFrameBuffer.REFRACTION_WIDTH, WaterFrameBuffer.REFRACTION_HEIGHT);
-        renderingManager.addFrameBuffer(frameBuffer);
-        renderingManager.setToRenderWater(true);
+        renderEngine.addFrameBuffer(frameBuffer);
+        renderEngine.setToRenderWater(true);
     }
 
     @Override
@@ -145,8 +145,8 @@ public class GameScene extends Scene {
             log.info("Toggle flashlight on {}", turnOnFlashlight);
             turnOnFlashlight = !turnOnFlashlight;
         }
-        renderingManager.setSun(sun);
-        renderingManager.setFogColour(fogColour);
+        renderEngine.setSun(sun);
+        renderEngine.setFogColour(fogColour);
         if (KeyListener.isKeyPressed(GLFW_KEY_X) && !KeyListener.isKeyHeld(GLFW_KEY_X)) {
             ParticleEmitterConfiguration configuration = ParticleEmitterConfiguration.builder()
                     .affectedByGravity(true)
@@ -170,41 +170,41 @@ public class GameScene extends Scene {
                 .initialParticleSize(1)
                 .timeToLive(30)
                 .particleTimeToLive(15)
-                .particlePerSeconds(15)
+                .particlePerSeconds(5)
                 .build();
         particleSystem.createRainParticleEmitter(rainParticleConfiguration, rainParticleTexture);
 
         Light[] lightsToRender = new Light[5];
         lights.toArray(lightsToRender);
-        renderingManager.addToQueue(lightsToRender);
+        renderEngine.addToQueue(lightsToRender);
         if (turnOnFlashlight) {
-            renderingManager.addToQueue(spotlight);
+            renderEngine.addToQueue(spotlight);
         }
 
         camera.move(deltaTime);
         spotlight.setPosition(camera.getPosition());
-        spotlight.setDirection(camera.getDirection());
+        spotlight.setDirection(camera.getForwardDirection());
         particleSystem.update();
 
         for (Renderable gameObject : gameObjects) {
-            renderingManager.addToQueue(gameObject);
+            renderEngine.addToQueue(gameObject);
         }
         for (Terrain terrain: terrains){
-            renderingManager.addTerrainsToQueue(terrain);
+            renderEngine.addTerrainsToQueue(terrain);
         }
         particleSystem.getEmitters()
-                .forEach(emitter -> renderingManager.addParticleEmitter(emitter));
+                .forEach(emitter -> renderEngine.addParticleEmitter(emitter));
 
-        renderingManager.addSkybox(skybox);
-        renderingManager.addWater(waterTiles);
-        renderingManager.run(camera);
+        renderEngine.addSkybox(skybox);
+        renderEngine.addWater(waterTiles);
+        renderEngine.run(camera);
 
     }
 
     @Override
     public void cleanUp() {
         resourceManager.dispose();
-        renderingManager.dispose();
+        renderEngine.dispose();
         particleSystem.dispose();
     }
 

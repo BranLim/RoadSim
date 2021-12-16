@@ -2,6 +2,7 @@ package com.layhill.roadsim.gameengine.graphics.gl;
 
 import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.RendererData;
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
@@ -34,8 +35,8 @@ public class GLWaterRenderer implements Renderer {
     }
 
     @Override
-    public void render(long window, Camera camera, RendererData rendererData) {
-        startRendering(camera, rendererData);
+    public void render(ViewSpecification viewSpecification, RendererData rendererData) {
+        startRendering(viewSpecification, rendererData);
         for (WaterTile tile : rendererData.getWaterTiles()) {
             Matrix4f modelTransformation = Transformation.createTransformationMatrix(new Vector3f(tile.getX(),
                     tile.getHeight(), tile.getZ()), 0, 0, 0, WaterTile.TILE_SIZE * 10);
@@ -45,9 +46,9 @@ public class GLWaterRenderer implements Renderer {
         endRendering();
     }
 
-    private void startRendering(Camera camera, RendererData rendererData) {
+    private void startRendering(ViewSpecification viewSpecification, RendererData rendererData) {
         shaderProgram.start();
-        shaderProgram.loadCamera(camera);
+        shaderProgram.loadCamera(viewSpecification);
 
         glBindVertexArray(waterQuad.getVaoId());
         for (int attribute : waterQuad.getAttributes()) {

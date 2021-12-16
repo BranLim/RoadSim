@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.terrain;
 
+import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.data.*;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.Camera;
@@ -47,7 +48,7 @@ public class TerrainShaderProgram extends ShaderProgram {
         super.bindAttribute(2, "aSurfaceNormal");
     }
 
-    public void loadCamera(Camera camera) {
+    public void loadCamera(ViewSpecification camera) {
         if (camera == null) {
             return;
         }

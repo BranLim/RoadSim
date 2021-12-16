@@ -9,9 +9,13 @@ import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
+import com.layhill.roadsim.gameengine.utils.Maths;
+import com.layhill.roadsim.gameengine.utils.Transformation;
 import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import lombok.extern.slf4j.Slf4j;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -25,13 +29,15 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.GL_CLIP_DISTANCE0;
 
 @Slf4j
-public class RenderingManager {
+public class RenderEngine {
 
     private long window;
 
     private static final float SKY_RED = 0.05f;
     private static final float SKY_GREEN = 0.05f;
     private static final float SKY_BLUE = 0.05f;
+    private final Vector3f worldUp = new Vector3f(0, 1, 0);
+    private final Vector3f worldForward = new Vector3f(0, 0, -1);
 
     private final List<Light> lights = new ArrayList<>();
     private final Map<TexturedModel, List<Renderable>> entities = new HashMap<>();
@@ -49,7 +55,7 @@ public class RenderingManager {
     private GLWaterRenderer waterRenderer = new GLWaterRenderer(GLResourceLoader.getInstance());
     private FrameBufferSize frameBufferSize;
 
-    public RenderingManager(long window) {
+    public RenderEngine(long window) {
         this.window = window;
         frameBufferSize = Window.getInstance().getWindowFrameBufferSize();
     }
@@ -106,33 +112,14 @@ public class RenderingManager {
 
         long startTime = System.currentTimeMillis();
         prepareRenderingData();
+        ViewSpecification viewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
         if (toRenderWater) {
             removeRenderer(waterRenderer);
-            float waterHeight = 0.0f;
-            List<WaterTile> waterTiles = rendererData.getWaterTiles();
-            if (waterTiles != null && !waterTiles.isEmpty()) {
-                waterHeight = waterTiles.get(0).getHeight();
-            }
-            glEnable(GL_CLIP_DISTANCE0);
-            rendererData.setWaterRenderingStage(WaterRenderingStage.REFLECTION);
-            waterFrameBuffer.bindReflectionFrameBuffer(GLResourceLoader.getInstance());
-            rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight));
-            camera.setReflected(true);
-            invokeRenderers(camera);
-            camera.setReflected(false);
-
-            rendererData.setWaterRenderingStage(WaterRenderingStage.REFRACTION);
-            waterFrameBuffer.bindRefractionFrameBuffer(GLResourceLoader.getInstance());
-            rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight));
-            invokeRenderers(camera);
-            glDisable(GL_CLIP_DISTANCE0);
-            waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);
-
-            rendererData.setWaterRenderingStage(WaterRenderingStage.END);
+            renderWater(camera);
             addRenderer(waterRenderer);
         }
 
-        invokeRenderers(camera);
+        invokeRenderers(viewSpecification);
         show(window);
 
         lights.clear();
@@ -149,15 +136,52 @@ public class RenderingManager {
         renderers.remove(renderer);
     }
 
-    private void invokeRenderers(Camera camera) {
+    private void invokeRenderers(ViewSpecification viewSpecification) {
         startRendering();
         for (Renderer renderer : renderers) {
             if (renderer.getClass() == GLParticleRenderer.class && toRenderWater && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
                 continue;
             }
             renderer.prepare();
-            renderer.render(window, camera, rendererData);
+            renderer.render(viewSpecification, rendererData);
         }
+    }
+
+    private void renderWater(Camera camera) {
+        float waterHeight = 0.0f;
+        List<WaterTile> waterTiles = rendererData.getWaterTiles();
+        if (waterTiles != null && !waterTiles.isEmpty()) {
+            waterHeight = waterTiles.get(0).getHeight();
+        }
+        float moveDistance = 2 * (camera.getPosition().y - waterHeight);
+        Vector3f newCamPosition = new Vector3f(camera.getPosition())
+                .sub(0, moveDistance, 0);
+
+        Quaternionf camOrientation = camera.getOrientation();
+        float pitchAmount = Maths.getPitchInRadian(camOrientation);
+        float yawAmount = Maths.getYawInRadian(camOrientation);
+        Quaternionf newCamOrientation = new Quaternionf();
+        newCamOrientation.rotateLocalX(pitchAmount).rotateY(-yawAmount);
+
+        Matrix4f viewMatrix = Transformation.createViewMatrix(newCamPosition, newCamOrientation);
+        ViewSpecification reflectionViewSpecification = new ViewSpecification(camera.getProjectionMatrix(), viewMatrix);
+
+        glEnable(GL_CLIP_DISTANCE0);
+        rendererData.setWaterRenderingStage(WaterRenderingStage.REFLECTION);
+        waterFrameBuffer.bindReflectionFrameBuffer(GLResourceLoader.getInstance());
+        rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight));
+
+        invokeRenderers(reflectionViewSpecification);
+
+        ViewSpecification refractionViewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
+        rendererData.setWaterRenderingStage(WaterRenderingStage.REFRACTION);
+        waterFrameBuffer.bindRefractionFrameBuffer(GLResourceLoader.getInstance());
+        rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight));
+        invokeRenderers(refractionViewSpecification);
+        glDisable(GL_CLIP_DISTANCE0);
+        waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);
+
+        rendererData.setWaterRenderingStage(WaterRenderingStage.END);
     }
 
     private void prepareRenderingData() {

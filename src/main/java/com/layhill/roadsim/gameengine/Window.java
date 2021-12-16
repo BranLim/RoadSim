@@ -1,6 +1,6 @@
 package com.layhill.roadsim.gameengine;
 
-import com.layhill.roadsim.gameengine.graphics.RenderingManager;
+import com.layhill.roadsim.gameengine.graphics.RenderEngine;
 import com.layhill.roadsim.gameengine.graphics.gl.*;
 import com.layhill.roadsim.gameengine.graphics.models.FrameBufferSize;
 import com.layhill.roadsim.gameengine.input.KeyListener;
@@ -52,14 +52,14 @@ public class Window {
                 currentScene.init();
             }
             case 1 -> {
-                RenderingManager renderingManager = new RenderingManager(glfwWindow);
-                renderingManager.addRenderer(new GLEntityRenderer());
-                renderingManager.addRenderer(new GLTerrainRenderer());
+                RenderEngine renderEngine = new RenderEngine(glfwWindow);
+                renderEngine.addRenderer(new GLEntityRenderer());
+                renderEngine.addRenderer(new GLTerrainRenderer());
 
-                renderingManager.addRenderer(new GLSkyRenderer());
-                renderingManager.addRenderer(new GLParticleRenderer(GLResourceLoader.getInstance()));
+                renderEngine.addRenderer(new GLSkyRenderer());
+                renderEngine.addRenderer(new GLParticleRenderer(GLResourceLoader.getInstance()));
 
-                currentScene = new GameScene(renderingManager);
+                currentScene = new GameScene(renderEngine);
                 currentScene.init();
             }
         }

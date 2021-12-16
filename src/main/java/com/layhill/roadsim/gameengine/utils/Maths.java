@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.utils;
 
+import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -13,5 +14,18 @@ public class Maths {
         float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
         float l3 = 1.0f - l1 - l2;
         return l1 * p1.y + l2 * p2.y + l3 * p3.y;
+    }
+
+    public static float getPitchInRadian(Quaternionf quaternion) {
+        Vector3f eulerAngles = new Vector3f();
+        quaternion.getEulerAnglesXYZ(eulerAngles);
+        return eulerAngles.x;
+
+    }
+
+    public static float getYawInRadian(Quaternionf quaternion) {
+        Vector3f eulerAngles = new Vector3f();
+        quaternion.getEulerAnglesXYZ(eulerAngles);
+        return eulerAngles.y;
     }
 }
