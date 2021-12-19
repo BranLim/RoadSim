@@ -4,14 +4,17 @@ import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformFloat;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class WaterShaderProgram extends ShaderProgram {
 
     private UniformMatrix4f projection = new UniformMatrix4f("uProjection");
     private UniformMatrix4f view = new UniformMatrix4f("uView");
     private UniformMatrix4f transformation = new UniformMatrix4f("uTransformation");
+    private UniformVector3f cameraPosition = new UniformVector3f("uCameraPosition");
 
     private UniformInteger reflectionTexture = new UniformInteger("uReflectionTexture");
     private UniformInteger refractionTexture = new UniformInteger("uRefractionTexture");
@@ -19,7 +22,7 @@ public class WaterShaderProgram extends ShaderProgram {
     private UniformFloat waveOffset = new UniformFloat("uWaveOffset");
 
     public WaterShaderProgram() {
-        super.addUniform(projection, view, transformation, reflectionTexture, refractionTexture, dudvTexture, waveOffset);
+        super.addUniform(projection, view, transformation,cameraPosition ,reflectionTexture, refractionTexture, dudvTexture, waveOffset);
     }
 
     @Override
@@ -53,5 +56,9 @@ public class WaterShaderProgram extends ShaderProgram {
 
     public void loadWaveOffset(float offset) {
         waveOffset.load(offset);
+    }
+
+    public void loadCameraPosition(Vector3f position){
+        cameraPosition.load(position);
     }
 }

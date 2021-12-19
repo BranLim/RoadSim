@@ -3,6 +3,7 @@
 
 in vec4 clipSpace;
 in vec2 textureCoordinates;
+in vec3 toCameraPosition;
 
 out vec4 outColour;
 
@@ -30,6 +31,10 @@ void main(){
     refractTexCoords += totalDistortion;
     refractTexCoords = clamp(refractTexCoords, 0.001, 0.999);
 
-    outColour = mix(texture(uReflectionTexture, reflectTexCoords), texture(uRefractionTexture, refractTexCoords), 0.5);
+    vec3 viewVector = normalize(toCameraPosition);
+    float refractiveFactor = dot(viewVector, vec3(0.0,1.0,0.0));
+    refractiveFactor = pow(refractiveFactor, 0.5);
+
+    outColour = mix(texture(uReflectionTexture, reflectTexCoords), texture(uRefractionTexture, refractTexCoords), refractiveFactor);
     outColour = mix(outColour, vec4(0.0,0.2, 0.4, 1.0), 0.15);
 }

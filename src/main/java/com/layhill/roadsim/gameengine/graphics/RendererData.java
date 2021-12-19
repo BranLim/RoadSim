@@ -18,6 +18,7 @@ import java.util.Map;
 public class RendererData {
 
     private Sun sun;
+    private Vector3f cameraPosition;
     private List<Light> lights;
     private Map<TexturedModel, List<Renderable>> entities;
     private Map<TexturedModel, List<Renderable>> terrains;
@@ -129,5 +130,13 @@ public class RendererData {
 
     public void setWaterRenderingStage(WaterRenderingStage waterRenderingStage) {
         this.waterRenderingStage = waterRenderingStage;
+    }
+
+    public Vector3f getCameraPosition() {
+        return cameraPosition;
+    }
+
+    public void setCameraPosition(Vector3f cameraPosition) {
+        this.cameraPosition = cameraPosition;
     }
 }

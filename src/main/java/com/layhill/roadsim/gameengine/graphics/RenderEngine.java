@@ -32,8 +32,6 @@ public class RenderEngine {
     private static final float SKY_RED = 0.05f;
     private static final float SKY_GREEN = 0.05f;
     private static final float SKY_BLUE = 0.05f;
-    private final Vector3f worldUp = new Vector3f(0, 1, 0);
-    private final Vector3f worldForward = new Vector3f(0, 0, -1);
 
     private final List<Light> lights = new ArrayList<>();
     private final Map<TexturedModel, List<Renderable>> entities = new HashMap<>();
@@ -107,7 +105,7 @@ public class RenderEngine {
     public void run(Camera camera) {
 
         long startTime = System.currentTimeMillis();
-        prepareRenderingData();
+        prepareRenderingData(camera);
         ViewSpecification viewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
         if (toRenderWater) {
             removeRenderer(waterRenderer);
@@ -174,7 +172,7 @@ public class RenderEngine {
         glDisable(GL_CLIP_DISTANCE0);
     }
 
-    private void prepareRenderingData() {
+    private void prepareRenderingData(Camera camera) {
         rendererData.setLights(lights);
         rendererData.setEntities(entities);
         rendererData.setTerrains(terrains);
@@ -187,6 +185,7 @@ public class RenderEngine {
         if (waterFrameBuffer != null) {
             rendererData.setWaterFrameBuffer(waterFrameBuffer);
         }
+        rendererData.setCameraPosition(camera.getPosition());
     }
 
     public void show(long window) {
@@ -230,4 +229,5 @@ public class RenderEngine {
     public void setToRenderWater(boolean renderWater) {
         this.toRenderWater = renderWater;
     }
+
 }

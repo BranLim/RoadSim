@@ -64,6 +64,7 @@ public class GLWaterRenderer implements Renderer {
     private void startRendering(ViewSpecification viewSpecification, RendererData rendererData) {
         shaderProgram.start();
         shaderProgram.loadCamera(viewSpecification);
+        shaderProgram.loadCameraPosition(rendererData.getCameraPosition());
 
         glBindVertexArray(waterQuad.getVaoId());
         for (int attribute : waterQuad.getAttributes()) {
