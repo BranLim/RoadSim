@@ -37,7 +37,7 @@ public class Camera {
         this.upDirection = upDirection;
         this.front = front;
         orientation = Maths.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
-        projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
+        projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 1000.0f);
         for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++) {
             frustumPlanes[i] = new Vector4f();
         }

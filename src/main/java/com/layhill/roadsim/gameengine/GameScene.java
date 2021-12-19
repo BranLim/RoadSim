@@ -71,7 +71,7 @@ public class GameScene extends Scene {
     @Override
     public void init() {
 
-        sun = new Sun(new Vector3f(-40000.f, 10000.f, -30000.f), new Vector3f(0.0f, 0.0f, 0.0f));
+        sun = new Sun(new Vector3f(-40000.f, 10000.f, -30000.f), new Vector3f(0.2f, 0.2f, 0.2f));
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
         camera.setGameScene(this);
 

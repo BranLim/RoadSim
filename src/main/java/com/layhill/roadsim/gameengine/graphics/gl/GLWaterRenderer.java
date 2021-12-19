@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.GL_BLEND_SRC_ALPHA;
+import static org.lwjgl.opengl.GL14.GL_ONE_MINUS_CONSTANT_ALPHA;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -53,6 +55,7 @@ public class GLWaterRenderer implements Renderer {
 
     @Override
     public void prepare() {
+
     }
 
     @Override
@@ -68,6 +71,8 @@ public class GLWaterRenderer implements Renderer {
     }
 
     private void startRendering(ViewSpecification viewSpecification, RendererData rendererData) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         shaderProgram.start();
         shaderProgram.loadCamera(viewSpecification);
         shaderProgram.loadCameraPosition(rendererData.getCameraPosition());
@@ -95,12 +100,17 @@ public class GLWaterRenderer implements Renderer {
             glActiveTexture(GL_TEXTURE3);
             glBindTexture(GL_TEXTURE_2D, waterNormalMap.getTextureId());
 
+            glActiveTexture(GL_TEXTURE4);
+            glBindTexture(GL_TEXTURE_2D, frameBuffer.getRefractionDepthTexture());
+
             shaderProgram.loadReflectionTexture(0);
             shaderProgram.loadRefractionTexture(1);
             shaderProgram.loadDuDvTexture(2);
             shaderProgram.loadNormalMap(3);
+            shaderProgram.loadDepthMap(4);
             shaderProgram.loadWaveOffset(waveMove);
         }
+
     }
 
     private void endRendering() {
@@ -109,6 +119,7 @@ public class GLWaterRenderer implements Renderer {
         }
         glBindVertexArray(0);
         shaderProgram.stop();
+        glDisable(GL_BLEND);
     }
 
     @Override

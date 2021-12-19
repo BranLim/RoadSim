@@ -156,14 +156,14 @@ public class RenderEngine {
         ViewSpecification reflectionViewSpecification = new ViewSpecification(camera.getProjectionMatrix(), reflectionViewMatrix);
         rendererData.setWaterRenderingStage(WaterRenderingStage.REFLECTION);
         waterFrameBuffer.bindReflectionFrameBuffer(GLResourceLoader.getInstance());
-        rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight));
+        rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight+0.5f));
 
         invokeRenderers(reflectionViewSpecification);
 
         ViewSpecification refractionViewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
         rendererData.setWaterRenderingStage(WaterRenderingStage.REFRACTION);
         waterFrameBuffer.bindRefractionFrameBuffer(GLResourceLoader.getInstance());
-        rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight));
+        rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight+0.2f));
         invokeRenderers(refractionViewSpecification);
 
         waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);

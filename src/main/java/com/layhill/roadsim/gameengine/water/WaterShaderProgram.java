@@ -21,6 +21,7 @@ public class WaterShaderProgram extends ShaderProgram {
     private UniformInteger refractionTexture = new UniformInteger("uRefractionTexture");
     private UniformInteger dudvTexture = new UniformInteger("uDuDvTexture");
     private UniformInteger normalMap = new UniformInteger("uNormalMap");
+    private UniformInteger depthMap = new UniformInteger("uDepthMap");
     private UniformFloat waveOffset = new UniformFloat("uWaveOffset");
 
     private UniformVector3f sunColour = new UniformVector3f("uSunColour");
@@ -28,7 +29,7 @@ public class WaterShaderProgram extends ShaderProgram {
 
 
     public WaterShaderProgram() {
-        super.addUniform(projection, view, transformation,cameraPosition ,reflectionTexture, refractionTexture, dudvTexture, waveOffset,normalMap,sunColour, sunDirection);
+        super.addUniform(projection, view, transformation,cameraPosition ,reflectionTexture, refractionTexture, dudvTexture, waveOffset,normalMap,sunColour, sunDirection,depthMap);
     }
 
     @Override
@@ -60,9 +61,12 @@ public class WaterShaderProgram extends ShaderProgram {
         dudvTexture.load(textureUnit);
     }
 
-
     public void loadNormalMap(int textureUnit) {
         normalMap.load(textureUnit);
+    }
+
+    public void loadDepthMap(int textureUnit) {
+        depthMap.load(textureUnit);
     }
 
     public void loadWaveOffset(float offset) {
