@@ -12,7 +12,7 @@ uniform sampler2D uRefractionTexture;
 uniform sampler2D uDuDvTexture;
 uniform float uWaveOffset;
 
-const float waveStrength = 0.02;
+const float waveStrength = 0.008;
 
 void main(){
     vec2 normaliseDeviceCoordinate = (clipSpace.xy/clipSpace.w) / 2.0 + 0.5;

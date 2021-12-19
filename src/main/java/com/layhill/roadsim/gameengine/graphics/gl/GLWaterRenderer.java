@@ -36,7 +36,7 @@ public class GLWaterRenderer implements Renderer {
 
     public GLWaterRenderer(GLResourceLoader loader) {
         waterQuad = loader.loadToVao(QUAD_VERTICES, 2);
-        Optional<RawTexture> textureOpt = TextureLoader.loadAsTextureFromFile("assets/textures/waterdudv.jpg");
+        Optional<RawTexture> textureOpt = TextureLoader.loadAsTextureFromFile("assets/textures/waterDuDv.png");
         if (textureOpt.isPresent()) {
             RawTexture rawTexture = textureOpt.get();
             waterDuDv = loader.load2DTexture(rawTexture, GL_TEXTURE_2D, true);
