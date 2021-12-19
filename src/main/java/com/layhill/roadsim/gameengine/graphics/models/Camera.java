@@ -20,6 +20,8 @@ public class Camera {
     private Vector3f position;
 
 
+    private float nearPlane;
+    private float farPlane;
     private Vector3f upDirection;
     private Vector3f front;
     private Matrix4f projection = new Matrix4f();
@@ -32,12 +34,14 @@ public class Camera {
     private float yaw;
     private float roll;
 
-    public Camera(Vector3f position, Vector3f upDirection, Vector3f front) {
+    public Camera(Vector3f position,  Vector3f upDirection, Vector3f front,float nearPlane, float farPlane) {
         this.position = position;
+        this.nearPlane = nearPlane;
+        this.farPlane = farPlane;
         this.upDirection = upDirection;
         this.front = front;
         orientation = Maths.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
-        projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 1000.0f);
+        projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, this.nearPlane, this.farPlane);
         for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++) {
             frustumPlanes[i] = new Vector4f();
         }
@@ -125,6 +129,13 @@ public class Camera {
         return upDirection;
     }
 
+    public float getNearPlane() {
+        return nearPlane;
+    }
+
+    public float getFarPlane() {
+        return farPlane;
+    }
 
     public Vector3f getForwardDirection() {
         Vector3f forwardDirection = new Vector3f();

@@ -16,6 +16,8 @@ public class WaterShaderProgram extends ShaderProgram {
     private UniformMatrix4f view = new UniformMatrix4f("uView");
     private UniformMatrix4f transformation = new UniformMatrix4f("uTransformation");
     private UniformVector3f cameraPosition = new UniformVector3f("uCameraPosition");
+    private UniformFloat farPlane = new UniformFloat("uFarPlane");
+    private UniformFloat nearPlane = new UniformFloat("uNearPlane");
 
     private UniformInteger reflectionTexture = new UniformInteger("uReflectionTexture");
     private UniformInteger refractionTexture = new UniformInteger("uRefractionTexture");
@@ -29,7 +31,8 @@ public class WaterShaderProgram extends ShaderProgram {
 
 
     public WaterShaderProgram() {
-        super.addUniform(projection, view, transformation,cameraPosition ,reflectionTexture, refractionTexture, dudvTexture, waveOffset,normalMap,sunColour, sunDirection,depthMap);
+        super.addUniform(projection, view, transformation, cameraPosition, reflectionTexture, refractionTexture,
+                dudvTexture, waveOffset, normalMap, sunColour, sunDirection, depthMap, farPlane, nearPlane);
     }
 
     @Override
@@ -73,11 +76,19 @@ public class WaterShaderProgram extends ShaderProgram {
         waveOffset.load(offset);
     }
 
-    public void loadCameraPosition(Vector3f position){
+    public void loadFarPlane(float farPlane) {
+        this.farPlane.load(farPlane);
+    }
+
+    public void loadNearPlane(float nearPlane) {
+        this.nearPlane.load(nearPlane);
+    }
+
+    public void loadCameraPosition(Vector3f position) {
         cameraPosition.load(position);
     }
 
-    public void loadSun(Sun sun){
+    public void loadSun(Sun sun) {
         sunDirection.load(sun.getDirection());
         sunColour.load(sun.getColour());
     }

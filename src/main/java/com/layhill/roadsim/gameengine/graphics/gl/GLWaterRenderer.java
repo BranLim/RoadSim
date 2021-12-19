@@ -15,13 +15,9 @@ import com.layhill.roadsim.gameengine.water.WaterShaderProgram;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
 import java.util.Optional;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.GL_BLEND_SRC_ALPHA;
-import static org.lwjgl.opengl.GL14.GL_ONE_MINUS_CONSTANT_ALPHA;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -29,7 +25,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class GLWaterRenderer implements Renderer {
 
     private final static float[] QUAD_VERTICES = {-1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1};
-    private final static float WAVE_SPEED = 0.003f;
+    private final static float WAVE_SPEED = 0.008f;
 
     private GLModel waterQuad;
     private GLTexture waterDuDv;
@@ -76,6 +72,8 @@ public class GLWaterRenderer implements Renderer {
         shaderProgram.start();
         shaderProgram.loadCamera(viewSpecification);
         shaderProgram.loadCameraPosition(rendererData.getCameraPosition());
+        shaderProgram.loadNearPlane(rendererData.getNearPlane());
+        shaderProgram.loadFarPlane(rendererData.getFarPlane());
         shaderProgram.loadSun(rendererData.getSun());
 
         glBindVertexArray(waterQuad.getVaoId());

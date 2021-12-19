@@ -46,6 +46,8 @@ public class GameScene extends Scene {
     private ParticleSystem particleSystem;
     private final Vector3f fogColour = new Vector3f(0.3f, 0.3f, 0.3f);
     private List<WaterTile> waterTiles = new ArrayList<>();
+    private float nearPlane = 1.0f;
+    private float farPlane = 1000f;
 
     private static final String skyboxMesh = "assets/models/skybox.obj";
     private final static String[] skyboxTextures = {
@@ -72,7 +74,7 @@ public class GameScene extends Scene {
     public void init() {
 
         sun = new Sun(new Vector3f(-40000.f, 10000.f, -30000.f), new Vector3f(0.2f, 0.2f, 0.2f));
-        camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f));
+        camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f), new Vector3f(0.0f, 0.0f, -1.0f), nearPlane, farPlane);
         camera.setGameScene(this);
 
         spotlight = new Spotlight(
@@ -189,7 +191,7 @@ public class GameScene extends Scene {
         for (Renderable gameObject : gameObjects) {
             renderEngine.addToQueue(gameObject);
         }
-        for (Terrain terrain: terrains){
+        for (Terrain terrain : terrains) {
             renderEngine.addTerrainsToQueue(terrain);
         }
         particleSystem.getEmitters()

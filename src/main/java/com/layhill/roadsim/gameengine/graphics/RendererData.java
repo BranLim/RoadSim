@@ -31,6 +31,8 @@ public class RendererData {
     private WaterFrameBuffer waterFrameBuffer;
     private Vector4f clipPlane;
     private WaterRenderingStage waterRenderingStage;
+    private float farPlane;
+    private float nearPlane;
 
 
     public RendererData() {
@@ -138,5 +140,21 @@ public class RendererData {
 
     public void setCameraPosition(Vector3f cameraPosition) {
         this.cameraPosition = cameraPosition;
+    }
+
+    public void setFarPlane(float farPlane) {
+        this.farPlane  = farPlane;
+    }
+
+    public void setNearPlane(float nearPlane) {
+        this.nearPlane = nearPlane;
+    }
+
+    public float getFarPlane() {
+        return farPlane;
+    }
+
+    public float getNearPlane() {
+        return nearPlane;
     }
 }

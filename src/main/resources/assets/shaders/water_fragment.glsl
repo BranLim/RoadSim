@@ -8,6 +8,8 @@ in vec3 toLightPosition;
 
 out vec4 outColour;
 
+uniform float uFarPlane;
+uniform float uNearPlane;
 uniform float uWaveOffset;
 uniform vec3 uSunColour;
 uniform sampler2D uReflectionTexture;
@@ -26,14 +28,11 @@ void main(){
     vec2 reflectTexCoords = vec2(normaliseDeviceCoordinate.x, -normaliseDeviceCoordinate.y);
     vec2 refractTexCoords = vec2(normaliseDeviceCoordinate.x, normaliseDeviceCoordinate.y);
 
-    float near = 1.0;
-    float far = 1000;
-
     float depth = texture(uDepthMap, refractTexCoords).r;
-    float floorDistance = 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
+    float floorDistance = 2.0 * uNearPlane * uFarPlane / (uFarPlane + uNearPlane - (2.0 * depth - 1.0) * (uFarPlane - uNearPlane));
 
     depth = gl_FragCoord.z;
-    float waterDistance = 2.0 * near * far / (far + near - (2.0 * depth - 1.0) * (far - near));
+    float waterDistance = 2.0 * uNearPlane * uFarPlane / (uFarPlane + uNearPlane - (2.0 * depth - 1.0) * (uFarPlane - uNearPlane));
     float waterDepth = floorDistance - waterDistance;
 
     vec2 distortedTextureCoordinates = texture(uDuDvTexture, vec2(textureCoordinates.x + uWaveOffset, textureCoordinates.y)).rg * 0.1;

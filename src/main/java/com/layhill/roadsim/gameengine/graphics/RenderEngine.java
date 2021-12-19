@@ -106,13 +106,13 @@ public class RenderEngine {
 
         long startTime = System.currentTimeMillis();
         prepareRenderingData(camera);
-        ViewSpecification viewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
+
         if (toRenderWater) {
             removeRenderer(waterRenderer);
             renderWater(camera);
             addRenderer(waterRenderer);
         }
-
+        ViewSpecification viewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
         invokeRenderers(viewSpecification);
         show(window);
 
@@ -186,6 +186,8 @@ public class RenderEngine {
             rendererData.setWaterFrameBuffer(waterFrameBuffer);
         }
         rendererData.setCameraPosition(camera.getPosition());
+        rendererData.setNearPlane(camera.getNearPlane());
+        rendererData.setFarPlane( camera.getFarPlane());
     }
 
     public void show(long window) {

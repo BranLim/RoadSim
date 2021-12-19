@@ -10,6 +10,7 @@ public class ViewSpecification {
     public ViewSpecification(Matrix4f projectionMatrix, Matrix4f viewMatrix) {
         this.projectionMatrix = projectionMatrix;
         this.viewMatrix = viewMatrix;
+
     }
 
     public Matrix4f getProjectionMatrix() {
