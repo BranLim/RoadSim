@@ -31,6 +31,7 @@ public class GLWaterRenderer implements Renderer {
 
     private GLModel waterQuad;
     private GLTexture waterDuDv;
+    private GLTexture waterNormalMap;
     private WaterShaderProgram shaderProgram;
     private float waveMove;
 
@@ -42,6 +43,11 @@ public class GLWaterRenderer implements Renderer {
             waterDuDv = loader.load2DTexture(rawTexture, GL_TEXTURE_2D, true);
         }
 
+        Optional<RawTexture> normalTextureOpt = TextureLoader.loadAsTextureFromFile("assets/textures/waterNormalMap.png");
+        if (normalTextureOpt.isPresent()) {
+            RawTexture rawTexture = normalTextureOpt.get();
+            waterNormalMap = loader.load2DTexture(rawTexture, GL_TEXTURE_2D, true);
+        }
         shaderProgram = ShaderFactory.createWaterShaderProgram();
     }
 
@@ -65,6 +71,7 @@ public class GLWaterRenderer implements Renderer {
         shaderProgram.start();
         shaderProgram.loadCamera(viewSpecification);
         shaderProgram.loadCameraPosition(rendererData.getCameraPosition());
+        shaderProgram.loadSun(rendererData.getSun());
 
         glBindVertexArray(waterQuad.getVaoId());
         for (int attribute : waterQuad.getAttributes()) {
@@ -85,9 +92,13 @@ public class GLWaterRenderer implements Renderer {
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, waterDuDv.getTextureId());
 
+            glActiveTexture(GL_TEXTURE3);
+            glBindTexture(GL_TEXTURE_2D, waterNormalMap.getTextureId());
+
             shaderProgram.loadReflectionTexture(0);
             shaderProgram.loadRefractionTexture(1);
             shaderProgram.loadDuDvTexture(2);
+            shaderProgram.loadNormalMap(3);
             shaderProgram.loadWaveOffset(waveMove);
         }
     }

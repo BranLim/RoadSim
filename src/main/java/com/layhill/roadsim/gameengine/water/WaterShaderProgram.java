@@ -6,6 +6,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.models.Sun;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -19,10 +20,15 @@ public class WaterShaderProgram extends ShaderProgram {
     private UniformInteger reflectionTexture = new UniformInteger("uReflectionTexture");
     private UniformInteger refractionTexture = new UniformInteger("uRefractionTexture");
     private UniformInteger dudvTexture = new UniformInteger("uDuDvTexture");
+    private UniformInteger normalMap = new UniformInteger("uNormalMap");
     private UniformFloat waveOffset = new UniformFloat("uWaveOffset");
 
+    private UniformVector3f sunColour = new UniformVector3f("uSunColour");
+    private UniformVector3f sunDirection = new UniformVector3f("uSunDirection");
+
+
     public WaterShaderProgram() {
-        super.addUniform(projection, view, transformation,cameraPosition ,reflectionTexture, refractionTexture, dudvTexture, waveOffset);
+        super.addUniform(projection, view, transformation,cameraPosition ,reflectionTexture, refractionTexture, dudvTexture, waveOffset,normalMap,sunColour, sunDirection);
     }
 
     @Override
@@ -54,11 +60,21 @@ public class WaterShaderProgram extends ShaderProgram {
         dudvTexture.load(textureUnit);
     }
 
+
+    public void loadNormalMap(int textureUnit) {
+        normalMap.load(textureUnit);
+    }
+
     public void loadWaveOffset(float offset) {
         waveOffset.load(offset);
     }
 
     public void loadCameraPosition(Vector3f position){
         cameraPosition.load(position);
+    }
+
+    public void loadSun(Sun sun){
+        sunDirection.load(sun.getDirection());
+        sunColour.load(sun.getColour());
     }
 }
