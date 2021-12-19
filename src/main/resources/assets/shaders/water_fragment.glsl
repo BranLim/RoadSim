@@ -18,7 +18,7 @@ uniform sampler2D uDuDvTexture;
 uniform sampler2D uNormalMap;
 uniform sampler2D uDepthMap;
 
-const float waveStrength = 0.02;
+const float waveStrength = 0.04;
 const float shineDampen = 20.;
 const float reflectivity = 0.6;
 
@@ -63,6 +63,6 @@ void main(){
 
     outColour = mix(texture(uReflectionTexture, reflectTexCoords), texture(uRefractionTexture, refractTexCoords), refractiveFactor);
     outColour = mix(outColour, vec4(0.0, 0.2, 0.4, 1.0), 0.15) + vec4(specularHighlight, 0.0);
-    outColour.a = clamp((waterDepth / 6.0), 0.001, 1.0);
+    outColour.a = clamp((waterDepth / 6.0), 0.0, 1.0);
 
 }

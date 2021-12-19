@@ -105,6 +105,12 @@ public class Camera {
         if (KeyListener.isKeyPressed(GLFW_KEY_D)) {
             position.add(orientation.positiveX(new Vector3f()).mul(distance));
         }
+        if (KeyListener.isKeyPressed(GLFW_KEY_X)){
+            position.add(orientation.positiveY(new Vector3f()).mul(distance));
+        }
+        if (KeyListener.isKeyPressed(GLFW_KEY_C)){
+            position.sub(orientation.positiveY(new Vector3f()).mul(distance));
+        }
         updateFrustum();
         for (Terrain terrain : scene.getTerrains()) {
             if (terrain.isOnThisTerrain(position.x, position.z)) {

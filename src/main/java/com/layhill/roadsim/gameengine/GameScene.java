@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 @Slf4j
@@ -149,7 +148,7 @@ public class GameScene extends Scene {
         }
         renderEngine.setSun(sun);
         renderEngine.setFogColour(fogColour);
-        if (KeyListener.isKeyPressed(GLFW_KEY_X) && !KeyListener.isKeyHeld(GLFW_KEY_X)) {
+        if (KeyListener.isKeyPressed(GLFW_KEY_G) && !KeyListener.isKeyHeld(GLFW_KEY_G)) {
             ParticleEmitterConfiguration configuration = ParticleEmitterConfiguration.builder()
                     .affectedByGravity(true)
                     .gravityEffect(.8f)
