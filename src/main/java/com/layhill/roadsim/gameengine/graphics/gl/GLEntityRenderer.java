@@ -7,7 +7,7 @@ import com.layhill.roadsim.gameengine.graphics.RendererData;
 import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.models.*;
-import com.layhill.roadsim.gameengine.utils.Transformation;
+import com.layhill.roadsim.gameengine.utils.Maths;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class GLEntityRenderer implements Renderer {
         ShaderProgram shaderProgram = renderableEntity.getTexturedModel().getMaterial().getShaderProgram();
 
         if (shaderProgram.getClass() == EntityShaderProgram.class) {
-            Matrix4f transformationMatrix = Transformation.createTransformationMatrix(renderableEntity.getPosition(),
+            Matrix4f transformationMatrix = Maths.createTransformationMatrix(renderableEntity.getPosition(),
                     renderableEntity.getRotateX(), renderableEntity.getRotateY(), renderableEntity.getRotateZ(),
                     renderableEntity.getScale());
             ((EntityShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);

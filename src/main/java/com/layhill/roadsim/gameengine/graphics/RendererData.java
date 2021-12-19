@@ -31,6 +31,7 @@ public class RendererData {
     private Vector4f clipPlane;
     private WaterRenderingStage waterRenderingStage;
 
+
     public RendererData() {
     }
 

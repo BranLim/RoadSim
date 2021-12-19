@@ -10,14 +10,10 @@ import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.utils.Maths;
-import com.layhill.roadsim.gameengine.utils.Transformation;
 import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,25 +144,18 @@ public class RenderEngine {
     }
 
     private void renderWater(Camera camera) {
+        glEnable(GL_CLIP_DISTANCE0);
         float waterHeight = 0.0f;
         List<WaterTile> waterTiles = rendererData.getWaterTiles();
         if (waterTiles != null && !waterTiles.isEmpty()) {
             waterHeight = waterTiles.get(0).getHeight();
         }
+
         float moveDistance = 2 * (camera.getPosition().y - waterHeight);
         Vector3f newCamPosition = new Vector3f(camera.getPosition())
                 .sub(0, moveDistance, 0);
-
-        Quaternionf camOrientation = camera.getOrientation();
-        float pitchAmount = Maths.getPitchInRadian(camOrientation);
-        float yawAmount = Maths.getYawInRadian(camOrientation);
-        Quaternionf newCamOrientation = new Quaternionf();
-        newCamOrientation.rotateLocalX(pitchAmount).rotateY(-yawAmount);
-
-        Matrix4f viewMatrix = Transformation.createViewMatrix(newCamPosition, newCamOrientation);
-        ViewSpecification reflectionViewSpecification = new ViewSpecification(camera.getProjectionMatrix(), viewMatrix);
-
-        glEnable(GL_CLIP_DISTANCE0);
+        Matrix4f reflectionViewMatrix = Maths.createXZReflectionViewMatrix(newCamPosition, camera.getOrientation());
+        ViewSpecification reflectionViewSpecification = new ViewSpecification(camera.getProjectionMatrix(), reflectionViewMatrix);
         rendererData.setWaterRenderingStage(WaterRenderingStage.REFLECTION);
         waterFrameBuffer.bindReflectionFrameBuffer(GLResourceLoader.getInstance());
         rendererData.setClipPlane(new Vector4f(0, 1, 0, -waterHeight));
@@ -178,10 +167,11 @@ public class RenderEngine {
         waterFrameBuffer.bindRefractionFrameBuffer(GLResourceLoader.getInstance());
         rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight));
         invokeRenderers(refractionViewSpecification);
-        glDisable(GL_CLIP_DISTANCE0);
+
         waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);
 
         rendererData.setWaterRenderingStage(WaterRenderingStage.END);
+        glDisable(GL_CLIP_DISTANCE0);
     }
 
     private void prepareRenderingData() {

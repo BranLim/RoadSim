@@ -4,7 +4,7 @@ import com.layhill.roadsim.gameengine.GameScene;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
-import com.layhill.roadsim.gameengine.utils.Transformation;
+import com.layhill.roadsim.gameengine.utils.Maths;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -28,12 +28,15 @@ public class Camera {
     private float mouseSensitivity = TURNSPEED;
     private Vector4f[] frustumPlanes = new Vector4f[NUM_OF_FRUSTUM_PLANES];
     private GameScene scene;
+    private float pitch;
+    private float yaw;
+    private float roll;
 
     public Camera(Vector3f position, Vector3f upDirection, Vector3f front) {
         this.position = position;
         this.upDirection = upDirection;
         this.front = front;
-        orientation = Transformation.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
+        orientation = Maths.createLookAt(this.position, this.front, new Vector3f(0.f, 0.f, -1.f), new Vector3f(0.f, 1.f, 0.f));
         projection.setPerspective((float) Math.toRadians(45.0f), 1920f / 1080f, 1.0f, 500.0f);
         for (int i = 0; i < NUM_OF_FRUSTUM_PLANES; i++) {
             frustumPlanes[i] = new Vector4f();
@@ -48,12 +51,16 @@ public class Camera {
         return projection;
     }
 
+    public float getPitch() {
+        return pitch;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
     public Matrix4f getViewMatrix() {
-        Matrix4f viewMatrix = new Matrix4f();
-        viewMatrix.identity()
-                .rotate(orientation)
-                .translate(new Vector3f(position).negate());
-        return viewMatrix;
+        return Maths.createViewMatrix(position, orientation);
     }
 
     public void updateFrustum() {
@@ -64,11 +71,17 @@ public class Camera {
         }
     }
 
-    public void rotate(float deltaTime) {
-        float pitchAmount = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
-        float yawAmount = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
 
-        orientation.rotateLocalX(-pitchAmount).rotateY(-yawAmount);
+    public void rotate(float deltaTime) {
+        float deltaPitch = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
+        float deltaYaw = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
+        System.out.printf("Delta PitchAmount: %f \n", deltaPitch);
+        System.out.printf("Delta YawAmount: %f \n", deltaYaw);
+        orientation.rotateLocalX(-deltaPitch).rotateY(-deltaYaw);
+        pitch += deltaPitch;
+        yaw += deltaYaw;
+        System.out.printf("Final PitchAmount: %f \n", pitch);
+        System.out.printf("Final YawAmount: %f \n", yaw);
         updateFrustum();
     }
 
@@ -104,7 +117,7 @@ public class Camera {
         return position;
     }
 
-    public Quaternionf getOrientation(){
+    public Quaternionf getOrientation() {
         return orientation;
     }
 
@@ -112,11 +125,16 @@ public class Camera {
         return upDirection;
     }
 
+
     public Vector3f getForwardDirection() {
         Vector3f forwardDirection = new Vector3f();
         Matrix4f viewMatrix = new Matrix4f();
         viewMatrix.set(getViewMatrix());
         viewMatrix.invert().transformDirection(new Vector3f(front), forwardDirection);
         return forwardDirection;
+    }
+
+    public Vector3f getFront() {
+        return front;
     }
 }

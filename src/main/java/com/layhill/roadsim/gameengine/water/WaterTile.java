@@ -2,7 +2,7 @@ package com.layhill.roadsim.gameengine.water;
 
 public class WaterTile {
 
-    public static final float TILE_SIZE = 60;
+    public static final float TILE_SIZE = 80;
 
     private float x;
     private float z;

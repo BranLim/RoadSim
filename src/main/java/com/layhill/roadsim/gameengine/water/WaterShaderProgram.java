@@ -1,10 +1,10 @@
 package com.layhill.roadsim.gameengine.water;
 
 import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
+import com.layhill.roadsim.gameengine.graphics.gl.data.UniformFloat;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import org.joml.Matrix4f;
 
 public class WaterShaderProgram extends ShaderProgram {
@@ -15,9 +15,11 @@ public class WaterShaderProgram extends ShaderProgram {
 
     private UniformInteger reflectionTexture = new UniformInteger("uReflectionTexture");
     private UniformInteger refractionTexture = new UniformInteger("uRefractionTexture");
+    private UniformInteger dudvTexture = new UniformInteger("uDuDvTexture");
+    private UniformFloat waveOffset = new UniformFloat("uWaveOffset");
 
     public WaterShaderProgram() {
-        super.addUniform(projection, view, transformation, reflectionTexture,refractionTexture );
+        super.addUniform(projection, view, transformation, reflectionTexture, refractionTexture, dudvTexture, waveOffset);
     }
 
     @Override
@@ -37,11 +39,19 @@ public class WaterShaderProgram extends ShaderProgram {
         transformation.load(modelTransformation);
     }
 
-    public void loadReflectionTexture(int textureUnit){
+    public void loadReflectionTexture(int textureUnit) {
         reflectionTexture.load(textureUnit);
     }
 
-    public void loadRefractionTexture(int textureUnit){
+    public void loadRefractionTexture(int textureUnit) {
         refractionTexture.load(textureUnit);
+    }
+
+    public void loadDuDvTexture(int textureUnit) {
+        dudvTexture.load(textureUnit);
+    }
+
+    public void loadWaveOffset(float offset) {
+        waveOffset.load(offset);
     }
 }
