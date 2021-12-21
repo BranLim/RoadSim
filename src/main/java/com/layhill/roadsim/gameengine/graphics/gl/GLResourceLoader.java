@@ -210,8 +210,15 @@ public final class GLResourceLoader {
         int frameBuffer = glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
         frameBuffers.add(frameBuffer);
-        glDrawBuffer(GL_COLOR_ATTACHMENT0);
         return frameBuffer;
+    }
+
+    public void drawToEmptyAttachment(){
+        glDrawBuffer(GL_NONE);
+    }
+
+    public void drawToColourAttachment(){
+        glDrawBuffer(GL_COLOR_ATTACHMENT0);
     }
 
     public int createTextureAttachment(int width, int height) {
@@ -246,15 +253,33 @@ public final class GLResourceLoader {
     }
 
     public int createDepthTextureAttachment(int width, int height) {
+        int textureId = create2DTexture();
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureId, 0);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        return textureId;
+    }
+
+    public int createShadowDepthTextureAttachment(int width, int height){
+        int textureId = create2DTexture();
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureId, 0);
+
+        return textureId;
+    }
+
+    private int create2DTexture() {
         int textureId = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureId);
         textureIds.add(textureId);
-
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureId, 0);
-        glBindTexture(GL_TEXTURE_2D, 0);
         return textureId;
     }
 

@@ -43,11 +43,13 @@ public class WaterFrameBuffer {
 
     public static WaterFrameBuffer createWaterFrameBuffer(GLResourceLoader loader, int reflectionWidth, int reflectionHeight, int refractionWidth, int refractionHeight) {
         int reflectionFrameBuffer = loader.createFrameBuffer();
+        loader.drawToColourAttachment();
         int reflectionTextureId = loader.createTextureAttachment(reflectionWidth, reflectionHeight);
         int reflectionDepthBuffer = loader.createDepthBufferAttachment(reflectionWidth, reflectionHeight);
         loader.unbindFrameBuffer();
 
         int refractionFrameBuffer = loader.createFrameBuffer();
+        loader.drawToColourAttachment();
         int refractionTextureId = loader.createTextureAttachment(refractionWidth, refractionHeight);
         int refractionDepthTexture = loader.createDepthTextureAttachment(refractionWidth, refractionHeight);
         loader.unbindFrameBuffer();
