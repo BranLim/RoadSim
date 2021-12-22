@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
+import com.layhill.roadsim.gameengine.graphics.FrameBufferMode;
 import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
@@ -246,9 +247,13 @@ public final class GLResourceLoader {
         return depthBuffer;
     }
 
-    public void bindFrameBuffer(int frameBuffer, int width, int height) {
+    public void bindFrameBuffer(int frameBuffer, int width, int height, FrameBufferMode frameBufferMode) {
         glBindTexture(GL_TEXTURE_2D, 0);
-        glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+        switch(frameBufferMode){
+            case READ_AND_WRITE ->glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+            case READ ->  glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
+            case WRITE ->  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
+        }
         glViewport(0, 0, width, height);
     }
 

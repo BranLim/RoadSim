@@ -1,9 +1,9 @@
 package com.layhill.roadsim.gameengine.graphics.shadows;
 
+import com.layhill.roadsim.gameengine.graphics.FrameBufferMode;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 
 public class ShadowFrameBuffer {
-
 
     private final int depthBuffer;
     private final int frameBuffer;
@@ -32,5 +32,13 @@ public class ShadowFrameBuffer {
         loader.unbindFrameBuffer();
 
         return new ShadowFrameBuffer(shadowFrameBuffer, shadowDepthTexture, width, height);
+    }
+
+    public void bind(GLResourceLoader loader){
+        loader.bindFrameBuffer(frameBuffer, width, height, FrameBufferMode.WRITE);
+    }
+
+    public void unbind(GLResourceLoader loader, int width, int height){
+        loader.unbindFrameBuffer(width,height);
     }
 }

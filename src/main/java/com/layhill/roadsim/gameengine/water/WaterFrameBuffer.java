@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.water;
 
+import com.layhill.roadsim.gameengine.graphics.FrameBufferMode;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 
 public class WaterFrameBuffer {
@@ -58,11 +59,11 @@ public class WaterFrameBuffer {
 
 
     public void bindReflectionFrameBuffer(GLResourceLoader loader) {
-        loader.bindFrameBuffer(reflectionFrameBuffer, reflectionWidth, reflectionHeight);
+        loader.bindFrameBuffer(reflectionFrameBuffer, reflectionWidth, reflectionHeight, FrameBufferMode.READ_AND_WRITE);
     }
 
     public void bindRefractionFrameBuffer(GLResourceLoader loader) {
-        loader.bindFrameBuffer(refractionFrameBuffer, refractionWidth, refractionHeight);
+        loader.bindFrameBuffer(refractionFrameBuffer, refractionWidth, refractionHeight, FrameBufferMode.READ_AND_WRITE);
     }
 
     public void unbindFrameBuffer(GLResourceLoader loader, int width, int height) {
