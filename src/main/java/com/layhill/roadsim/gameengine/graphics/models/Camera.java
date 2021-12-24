@@ -154,4 +154,8 @@ public class Camera {
     public Vector3f getFront() {
         return front;
     }
+
+    public Vector4f[] getFrustumPlanes(){
+        return frustumPlanes;
+    }
 }
