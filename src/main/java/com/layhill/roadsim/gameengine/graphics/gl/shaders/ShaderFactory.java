@@ -1,6 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
 import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.shadows.ShadowShaderProgram;
 import com.layhill.roadsim.gameengine.particles.ParticleShaderProgram;
 import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.water.WaterShaderProgram;
@@ -103,6 +104,21 @@ public class ShaderFactory {
         try {
             Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/water_vertex.glsl").orElse(null);
             Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/water_fragment.glsl").orElse(null);
+
+            shaderProgram.addShader(vertexShader);
+            shaderProgram.addShader(fragmentShader);
+            shaderProgram.init();
+        } catch (IOException e) {
+            log.error("Error loading shader from file", e);
+        }
+        return shaderProgram;
+    }
+
+    public static ShadowShaderProgram createShadowShaderProgram(){
+        ShadowShaderProgram shaderProgram = new ShadowShaderProgram();
+        try {
+            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/shadow_vertex.glsl").orElse(null);
+            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/shadow_fragment.glsl").orElse(null);
 
             shaderProgram.addShader(vertexShader);
             shaderProgram.addShader(fragmentShader);

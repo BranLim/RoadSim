@@ -6,6 +6,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.GLWaterRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.*;
+import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
@@ -46,8 +47,10 @@ public class RenderEngine {
     private List<WaterTile> waters = new ArrayList<>();
     private WaterFrameBuffer waterFrameBuffer;
     private boolean toRenderWater;
+    private boolean toRenderShadow;
     private GLWaterRenderer waterRenderer = new GLWaterRenderer(GLResourceLoader.getInstance());
     private FrameBufferSize frameBufferSize;
+    private ShadowFrameBuffer shadowFrameBuffer;
 
     public RenderEngine(long window) {
         this.window = window;
@@ -112,6 +115,9 @@ public class RenderEngine {
             renderWater(camera);
             addRenderer(waterRenderer);
         }
+        if (toRenderShadow){
+            renderShadow(camera);
+        }
         ViewSpecification viewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
         invokeRenderers(viewSpecification);
         show(window);
@@ -124,6 +130,10 @@ public class RenderEngine {
 
         long endTime = System.currentTimeMillis();
         System.out.println("Total loop time: " + (endTime - startTime) + " ms");
+    }
+
+    private void renderShadow(Camera camera) {
+
     }
 
     private void removeRenderer(Renderer renderer) {
