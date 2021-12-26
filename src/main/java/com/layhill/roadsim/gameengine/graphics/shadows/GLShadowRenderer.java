@@ -6,12 +6,12 @@ import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 
-public class ShadowRenderer implements Renderer {
+public class GLShadowRenderer implements Renderer {
 
     private ShadowShaderProgram shader;
     private GLResourceLoader loader;
 
-    public ShadowRenderer(GLResourceLoader loader){
+    public GLShadowRenderer(GLResourceLoader loader) {
         this.loader = loader;
         shader = ShaderFactory.createShadowShaderProgram();
     }
@@ -19,6 +19,7 @@ public class ShadowRenderer implements Renderer {
 
     @Override
     public void prepare() {
+        shader.start();
 
     }
 

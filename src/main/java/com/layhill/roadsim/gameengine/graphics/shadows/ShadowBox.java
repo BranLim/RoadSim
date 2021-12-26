@@ -28,11 +28,14 @@ public class ShadowBox {
     private float farPlaneHeight;
     private float farPlaneWidth;
 
-    public ShadowBox(Vector3f lightDirection, Vector3f cameraPosition, Quaternionf cameraOrientation, float fov, float aspectRatio, float cameraZNear, float cameraZFar) {
+    private Matrix4f projection = new Matrix4f();
+    private Matrix4f view = new Matrix4f();
+
+    public ShadowBox(Vector3f lightDirection, Vector3f cameraPosition, Quaternionf cameraOrientation, float fovInDegrees, float aspectRatio, float cameraZNear, float cameraZFar) {
         this.lightDirection = lightDirection;
         this.cameraPosition = cameraPosition;
         this.cameraOrientation = cameraOrientation;
-        this.fov = fov;
+        this.fov = fovInDegrees;
         this.aspectRatio = aspectRatio;
         this.cameraNearPlane = cameraZNear;
         this.cameraFarPlane = cameraZFar;
@@ -66,9 +69,9 @@ public class ShadowBox {
                 y1 = point.y;
             }
 
-            if (point.z > z2){
+            if (point.z > z2) {
                 z2 = point.z;
-            }else if (point.z < z1){
+            } else if (point.z < z1) {
                 z1 = point.z;
             }
         }
@@ -108,8 +111,7 @@ public class ShadowBox {
         float yaw = (float) Math.toDegrees(Math.atan(normalizeLightDirection.x / normalizeLightDirection.z));
         yaw = normalizeLightDirection.z > 0 ? yaw - 180 : yaw;
         yaw = -(float) Math.toRadians(yaw);
-        return new Matrix4f()
-                .identity()
+        return view.identity()
                 .rotate(pitch, new Vector3f(1, 0, 0))
                 .rotate(yaw, new Vector3f(0, 1, 0))
                 .translate(getCentre().negate());
@@ -117,11 +119,10 @@ public class ShadowBox {
 
     }
 
-    public Matrix4f calculateProjectionViewMatrix() {
-        return new Matrix4f().
+    public Matrix4f calculateProjectionMatrix() {
+        return projection.
                 identity()
-                .ortho(x1, x2, y1, y2, z1, z2)
-                .mul(calculateViewMatrix());
+                .ortho(x1, x2, y1, y2, z1, z2);
     }
 
     private Vector4f[] calculateFrustumVertices() {

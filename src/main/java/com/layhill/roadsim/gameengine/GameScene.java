@@ -9,6 +9,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.models.*;
+import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
@@ -60,6 +61,8 @@ public class GameScene extends Scene {
     private Skybox skybox;
 
     private Sun sun;
+
+    private ShadowFrameBuffer shadowFrameBuffer;
 
     public GameScene(RenderEngine renderEngine) {
         this.renderEngine = renderEngine;
@@ -130,8 +133,12 @@ public class GameScene extends Scene {
         waterTiles.add(new WaterTile(-0.5f, -.5f, -1.2f));
 
         WaterFrameBuffer frameBuffer = WaterFrameBuffer.createWaterFrameBuffer(glResourceLoader, WaterFrameBuffer.REFLECTION_WIDTH, WaterFrameBuffer.REFLECTION_HEIGHT, WaterFrameBuffer.REFRACTION_WIDTH, WaterFrameBuffer.REFRACTION_HEIGHT);
-        renderEngine.addFrameBuffer(frameBuffer);
+        renderEngine.addWaterFrameBuffer(frameBuffer);
         renderEngine.setToRenderWater(true);
+
+        shadowFrameBuffer = ShadowFrameBuffer.createFrameBuffer(glResourceLoader, 2048, 2048);
+        renderEngine.addShadowFrameBuffer(shadowFrameBuffer);
+        renderEngine.setToRenderShadow(true);
     }
 
     @Override
