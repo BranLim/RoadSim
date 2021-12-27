@@ -9,6 +9,7 @@ const int MAX_LIGHTS = 5;
 uniform mat4 uProjection;
 uniform mat4 uView;
 uniform mat4 uTransformation;
+uniform mat4 uToShadowMapSpace;
 uniform bool uEnableFog;
 uniform vec3 uSunDirection;
 uniform vec3 uLightPosition[MAX_LIGHTS];
@@ -21,6 +22,7 @@ out vec3 fToCameraCentre;
 out float fVisibility;
 out vec3 toSun;
 out vec3 toLightSource[MAX_LIGHTS];
+out vec4 shadowCoordinates;
 
 const float density = 0.0035;
 const float gradient = 3;
@@ -33,6 +35,7 @@ void main()
     gl_ClipDistance[0] = dot(worldPosition, uClipPlane);
 
     vec4 positionRelativeToCamera = uView * worldPosition;
+    shadowCoordinates = uToShadowMapSpace * worldPosition;
 
     gl_Position = uProjection * positionRelativeToCamera;
 

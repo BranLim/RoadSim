@@ -9,6 +9,7 @@ import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowBox;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLShadowRenderer;
+import com.layhill.roadsim.gameengine.graphics.shadows.ShadowRenderingStage;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
@@ -52,8 +53,10 @@ public class RenderEngine {
     private boolean toRenderShadow;
     private GLWaterRenderer waterRenderer = new GLWaterRenderer(GLResourceLoader.getInstance());
     private FrameBufferSize frameBufferSize;
+
     private ShadowFrameBuffer shadowFrameBuffer;
     private ShadowBox shadowBox;
+    private ShadowRenderingStage shadowRenderingStage = ShadowRenderingStage.END;
 
     public RenderEngine(long window) {
         this.window = window;
@@ -113,14 +116,16 @@ public class RenderEngine {
         long startTime = System.currentTimeMillis();
         prepareRenderingData(camera);
 
+        if (toRenderShadow) {
+            renderShadow(camera);
+        }
+
         if (toRenderWater) {
             removeRenderer(waterRenderer);
             renderWater(camera);
             addRenderer(waterRenderer);
         }
-        if (toRenderShadow) {
-            renderShadow(camera);
-        }
+
         ViewSpecification viewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
         invokeRenderers(viewSpecification);
         show(window);
@@ -142,10 +147,15 @@ public class RenderEngine {
     private void invokeRenderers(ViewSpecification viewSpecification) {
         startRendering();
         for (Renderer renderer : renderers) {
-            if (renderer.getClass() == GLParticleRenderer.class && toRenderWater && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
+            if (shadowRenderingStage == ShadowRenderingStage.BEGIN && toRenderShadow && renderer.getClass() != GLShadowRenderer.class) {
+                System.out.println("RenderShadow is true. Skipping non-shadow renderer");
                 continue;
             }
-            if (toRenderShadow && renderer.getClass() != GLShadowRenderer.class) {
+            if (shadowRenderingStage == ShadowRenderingStage.END && renderer.getClass() == GLShadowRenderer.class) {
+                System.out.println("Skipping shadow renderer");
+                continue;
+            }
+            if (renderer.getClass() == GLParticleRenderer.class && toRenderWater && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
                 continue;
             }
             renderer.prepare();
@@ -190,12 +200,22 @@ public class RenderEngine {
                     camera.getOrientation(), 45.f, 1920f / 1080f, camera.getNearPlane(),
                     camera.getFarPlane());
         }
-
+        shadowRenderingStage = ShadowRenderingStage.BEGIN;
         shadowFrameBuffer.bind(GLResourceLoader.getInstance());
         shadowBox.update(camera.getPosition(), camera.getOrientation());
-        ViewSpecification shadowViewSpecification = new ViewSpecification(shadowBox.calculateProjectionMatrix(), shadowBox.calculateViewMatrix());
+        Matrix4f lightProjection = shadowBox.calculateProjectionMatrix();
+        Matrix4f lightView = shadowBox.calculateViewMatrix();
+        ViewSpecification shadowViewSpecification = new ViewSpecification(lightProjection, lightView);
+        rendererData.setToShadowMapSpace(createShadowMapSpaceOffset().mul(lightProjection).mul(lightView));
         invokeRenderers(shadowViewSpecification);
         shadowFrameBuffer.unbind(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);
+        shadowRenderingStage = ShadowRenderingStage.END;
+    }
+
+    private Matrix4f createShadowMapSpaceOffset() {
+        return new Matrix4f()
+                .translate(0.5f, 0.5f, 0.5f)
+                .scale(0.5f, 0.5f, 0.5f);
     }
 
     private void prepareRenderingData(Camera camera) {
@@ -206,14 +226,18 @@ public class RenderEngine {
         rendererData.setSkybox(skybox);
         rendererData.setSun(sun);
         rendererData.setFogColour(fogColour);
+
+        rendererData.setToRenderShadow(toRenderShadow);
+        if (shadowFrameBuffer != null) {
+            rendererData.setShadowFrameBuffer(shadowFrameBuffer);
+        }
+
         rendererData.setWaterTiles(waters);
         rendererData.setToRenderWater(toRenderWater);
         if (waterFrameBuffer != null) {
             rendererData.setWaterFrameBuffer(waterFrameBuffer);
         }
-        if (shadowFrameBuffer!=null){
-            rendererData.setShadowFrameBuffer(shadowFrameBuffer);
-        }
+
         rendererData.setCameraPosition(camera.getPosition());
         rendererData.setNearPlane(camera.getNearPlane());
         rendererData.setFarPlane(camera.getFarPlane());

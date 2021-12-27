@@ -10,6 +10,7 @@ import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterTile;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -35,6 +36,8 @@ public class RendererData {
     private float farPlane;
     private float nearPlane;
     private ShadowFrameBuffer shadowFrameBuffer;
+    private Matrix4f toShadowMapSpace;
+    private boolean isToRenderShadow;
 
 
     public RendererData() {
@@ -166,5 +169,21 @@ public class RendererData {
 
     public ShadowFrameBuffer getShadowFrameBuffer() {
         return shadowFrameBuffer;
+    }
+
+    public Matrix4f getToShadowMapSpace() {
+        return toShadowMapSpace;
+    }
+
+    public void setToShadowMapSpace(Matrix4f toShadowMapSpace) {
+        this.toShadowMapSpace = toShadowMapSpace;
+    }
+
+    public void setToRenderShadow(boolean toRenderShadow) {
+        isToRenderShadow = toRenderShadow;
+    }
+
+    public boolean isToRenderShadow() {
+        return isToRenderShadow;
     }
 }

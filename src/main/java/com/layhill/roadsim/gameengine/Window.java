@@ -54,10 +54,12 @@ public class Window {
             case 1 -> {
                 RenderEngine renderEngine = new RenderEngine(glfwWindow);
                 renderEngine.addRenderer(new GLEntityRenderer());
+                renderEngine.addRenderer(new GLShadowRenderer(GLResourceLoader.getInstance()));
                 renderEngine.addRenderer(new GLTerrainRenderer());
 
                 renderEngine.addRenderer(new GLSkyRenderer());
                 renderEngine.addRenderer(new GLParticleRenderer(GLResourceLoader.getInstance()));
+
 
                 currentScene = new GameScene(renderEngine);
                 currentScene.init();

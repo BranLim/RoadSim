@@ -53,8 +53,6 @@ public class GLTerrainRenderer implements Renderer {
                     0, 0, 0,
                     renderableEntity.getScale());
             ((TerrainShaderProgram) shaderProgram).loadModelTransformation(transformationMatrix);
-
-
         }
     }
 
@@ -86,21 +84,24 @@ public class GLTerrainRenderer implements Renderer {
                         terrainShaderProgram.loadSpotlight(spotlights.get(0));
                     }
                 }
+
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
                 terrainShaderProgram.loadTexture(0);
+
                 terrainShaderProgram.loadFogColour(rendererData.getFogColour());
                 terrainShaderProgram.enableFog();
                 if (rendererData.isToRenderWater() && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
                     terrainShaderProgram.loadClipPlane(rendererData.getClipPlane());
                 }
 
-                terrainShaderProgram.loadShadowMap(5);
+                if(rendererData.isToRenderShadow()) {
+                    glActiveTexture(GL_TEXTURE1);
+                    glBindTexture(GL_TEXTURE_2D, rendererData.getShadowFrameBuffer().getDepthBuffer());
+                    terrainShaderProgram.loadShadowMapSpace(rendererData.getToShadowMapSpace());
+                    terrainShaderProgram.loadShadowMap(1);
+                }
             }
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
-
-            glActiveTexture(GL_TEXTURE5);
-            glBindTexture(GL_TEXTURE_2D, rendererData.getShadowFrameBuffer().getDepthBuffer());
-
         }
 
     }
