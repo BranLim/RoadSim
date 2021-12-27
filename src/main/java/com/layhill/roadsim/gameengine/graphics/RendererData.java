@@ -4,6 +4,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.Light;
 import com.layhill.roadsim.gameengine.graphics.models.Sun;
 import com.layhill.roadsim.gameengine.graphics.models.WaterRenderingStage;
+import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
@@ -33,6 +34,7 @@ public class RendererData {
     private WaterRenderingStage waterRenderingStage;
     private float farPlane;
     private float nearPlane;
+    private ShadowFrameBuffer shadowFrameBuffer;
 
 
     public RendererData() {
@@ -156,5 +158,9 @@ public class RendererData {
 
     public float getNearPlane() {
         return nearPlane;
+    }
+
+    public void setShadowFrameBuffer(ShadowFrameBuffer shadowFrameBuffer) {
+        this.shadowFrameBuffer = shadowFrameBuffer;
     }
 }

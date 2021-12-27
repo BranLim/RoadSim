@@ -8,7 +8,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowBox;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
-import com.layhill.roadsim.gameengine.graphics.shadows.GLShadowRenderer;
+import com.layhill.roadsim.gameengine.graphics.gl.GLShadowRenderer;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
@@ -53,6 +53,7 @@ public class RenderEngine {
     private GLWaterRenderer waterRenderer = new GLWaterRenderer(GLResourceLoader.getInstance());
     private FrameBufferSize frameBufferSize;
     private ShadowFrameBuffer shadowFrameBuffer;
+    private ShadowBox shadowBox;
 
     public RenderEngine(long window) {
         this.window = window;
@@ -184,14 +185,17 @@ public class RenderEngine {
     }
 
     private void renderShadow(Camera camera) {
-        ShadowBox shadowBox = new ShadowBox(rendererData.getSun().getDirection(), camera.getPosition(),
-                camera.getOrientation(), 45.f, 1920f / 1080f, camera.getNearPlane(),
-                camera.getFarPlane());
+        if (shadowBox == null) {
+            shadowBox = new ShadowBox(rendererData.getSun().getDirection(), camera.getPosition(),
+                    camera.getOrientation(), 45.f, 1920f / 1080f, camera.getNearPlane(),
+                    camera.getFarPlane());
+        }
 
         shadowFrameBuffer.bind(GLResourceLoader.getInstance());
+        shadowBox.update(camera.getPosition(), camera.getOrientation());
         ViewSpecification shadowViewSpecification = new ViewSpecification(shadowBox.calculateProjectionMatrix(), shadowBox.calculateViewMatrix());
         invokeRenderers(shadowViewSpecification);
-
+        shadowFrameBuffer.unbind(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);
     }
 
     private void prepareRenderingData(Camera camera) {
@@ -207,9 +211,13 @@ public class RenderEngine {
         if (waterFrameBuffer != null) {
             rendererData.setWaterFrameBuffer(waterFrameBuffer);
         }
+        if (shadowFrameBuffer!=null){
+            rendererData.setShadowFrameBuffer(shadowFrameBuffer);
+        }
         rendererData.setCameraPosition(camera.getPosition());
         rendererData.setNearPlane(camera.getNearPlane());
         rendererData.setFarPlane(camera.getFarPlane());
+
     }
 
     public void show(long window) {

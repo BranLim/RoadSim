@@ -1,6 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.shadows;
 
 import org.joml.*;
+import org.lwjgl.system.CallbackI;
 
 import java.lang.Math;
 
@@ -16,9 +17,9 @@ public class ShadowBox {
     private float y2;
     private float z1;
     private float z2;
-    private Vector3f lightDirection;
-    private Vector3f cameraPosition;
-    private final Quaternionf cameraOrientation;
+    private final Vector3f lightDirection = new Vector3f();
+    private final Vector3f cameraPosition = new Vector3f();
+    private final Quaternionf cameraOrientation = new Quaternionf();
     private float fov;
     private float aspectRatio;
     private float cameraFarPlane;
@@ -32,9 +33,9 @@ public class ShadowBox {
     private Matrix4f view = new Matrix4f();
 
     public ShadowBox(Vector3f lightDirection, Vector3f cameraPosition, Quaternionf cameraOrientation, float fovInDegrees, float aspectRatio, float cameraZNear, float cameraZFar) {
-        this.lightDirection = lightDirection;
-        this.cameraPosition = cameraPosition;
-        this.cameraOrientation = cameraOrientation;
+        this.lightDirection.set( lightDirection);
+        this.cameraPosition.set(cameraPosition);
+        this.cameraOrientation.set(cameraOrientation);
         this.fov = fovInDegrees;
         this.aspectRatio = aspectRatio;
         this.cameraNearPlane = cameraZNear;
@@ -42,7 +43,9 @@ public class ShadowBox {
         calculatePlaneWidthsAndHeights();
     }
 
-    public void update() {
+    public void update(Vector3f cameraPosition, Quaternionf cameraOrientation) {
+        cameraPosition.set(cameraPosition);
+        cameraOrientation.set(cameraOrientation);
         Vector4f[] points = calculateFrustumVertices();
 
         boolean first = true;
@@ -115,8 +118,6 @@ public class ShadowBox {
                 .rotate(pitch, new Vector3f(1, 0, 0))
                 .rotate(yaw, new Vector3f(0, 1, 0))
                 .translate(getCentre().negate());
-
-
     }
 
     public Matrix4f calculateProjectionMatrix() {
