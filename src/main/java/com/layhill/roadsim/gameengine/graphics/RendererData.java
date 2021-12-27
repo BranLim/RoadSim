@@ -163,4 +163,8 @@ public class RendererData {
     public void setShadowFrameBuffer(ShadowFrameBuffer shadowFrameBuffer) {
         this.shadowFrameBuffer = shadowFrameBuffer;
     }
+
+    public ShadowFrameBuffer getShadowFrameBuffer() {
+        return shadowFrameBuffer;
+    }
 }

@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -93,10 +92,17 @@ public class GLTerrainRenderer implements Renderer {
                 if (rendererData.isToRenderWater() && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
                     terrainShaderProgram.loadClipPlane(rendererData.getClipPlane());
                 }
+
+                terrainShaderProgram.loadShadowMap(5);
             }
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
+
+            glActiveTexture(GL_TEXTURE5);
+            glBindTexture(GL_TEXTURE_2D, rendererData.getShadowFrameBuffer().getDepthBuffer());
+
         }
+
     }
 
 
