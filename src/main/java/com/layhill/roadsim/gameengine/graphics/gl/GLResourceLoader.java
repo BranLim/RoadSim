@@ -9,6 +9,8 @@ import com.layhill.roadsim.gameengine.io.MeshLoader;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
+import org.lwjgl.opengl.GL;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -112,7 +114,7 @@ public final class GLResourceLoader {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_STATIC_DRAW);
     }
 
-    public GLTexture load2DTexture(RawTexture texture, int target, boolean enableMipmap) {
+    public GLTexture load2DTexture(RawTexture texture, int target, boolean enableMipmap, boolean enableAnisotropicFiltering, int anisotropicAmount) {
 
         int textureId = glGenTextures();
         glBindTexture(target, textureId);
@@ -131,7 +133,17 @@ public final class GLResourceLoader {
         if (enableMipmap) {
             glGenerateMipmap(target);
             glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameterf(target, GL_TEXTURE_LOD_BIAS, -0.2f);
+            if (enableAnisotropicFiltering) {
+                glTexParameterf(target, GL_TEXTURE_LOD_BIAS, 0.f);
+            } else {
+                glTexParameterf(target, GL_TEXTURE_LOD_BIAS, -0.2f);
+            }
+        }
+
+        if (enableAnisotropicFiltering && GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
+            float amount = Math.max(4f, anisotropicAmount);
+            amount = Math.min(amount, glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+            glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
         }
 
         glBindTexture(target, 0);

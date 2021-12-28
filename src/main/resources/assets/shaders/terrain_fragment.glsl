@@ -40,9 +40,9 @@ void main(){
 
     float texelSize = 1.0/uShadowMapResolution;
     float total = 0.0;
-    for (int x = -pcfCount; x<= pcfCount; x++){
-        for (int y = -pcfCount; y<=pcfCount;y++){
-            float objectNearestLight = texture(uShadowMap, shadowCoordinates.xy+ vec2(x, y) * texelSize).r;
+    for (int x = -pcfCount; x <= pcfCount; x++){
+        for (int y = -pcfCount; y <= pcfCount; y++){
+            float objectNearestLight = texture(uShadowMap, shadowCoordinates.xy + vec2(x, y) * texelSize).r;
             if (shadowCoordinates.z > objectNearestLight){
                 total += 1.0;
             }
@@ -77,7 +77,7 @@ void main(){
         totalDiffuse += calculateSpotlight(fragPosition, unitSurfaceNormal, vec3(0));
     }
 
-    vec3 finalDiffuse = max((ambient + (totalDiffuse * lightFactor)), 0.1);
+    vec3 finalDiffuse = max(((ambient + totalDiffuse) * lightFactor), 0.1);
     outputColor = vec4 (finalDiffuse, 1.0) * texture(uTexture, fTexCoord);
 
     if (uEnableFog){

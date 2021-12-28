@@ -124,10 +124,10 @@ public class GameScene extends Scene {
         GLResourceLoader glResourceLoader = GLResourceLoader.getInstance();
 
         Optional<RawTexture> fireTexture = TextureLoader.loadAsTextureFromFile("assets/textures/fire.png");
-        fireTexture.ifPresent(rawTexture -> fireParticleTexture = glResourceLoader.load2DTexture(rawTexture, GL_TEXTURE_2D, true));
+        fireTexture.ifPresent(rawTexture -> fireParticleTexture = glResourceLoader.load2DTexture(rawTexture, GL_TEXTURE_2D, true, false,0));
 
         Optional<RawTexture> rainTexture = TextureLoader.loadAsTextureFromFile("assets/textures/raindrop.png");
-        rainTexture.ifPresent(rawTexture -> rainParticleTexture = glResourceLoader.load2DTexture(rawTexture, GL_TEXTURE_2D, true));
+        rainTexture.ifPresent(rawTexture -> rainParticleTexture = glResourceLoader.load2DTexture(rawTexture, GL_TEXTURE_2D, true, false,0));
 
 
         skybox = glResourceLoader.loadSkybox(skyboxMesh, skyboxTextures);

@@ -18,7 +18,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class GLShadowRenderer implements Renderer {
 
-    public static final int SHADOW_MAP_SIZE = 2048;
+    public static final int SHADOW_MAP_SIZE = 4096;
     private ShadowShaderProgram shader;
     private GLResourceLoader loader;
 

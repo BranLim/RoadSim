@@ -38,13 +38,13 @@ public class GLWaterRenderer implements Renderer {
         Optional<RawTexture> textureOpt = TextureLoader.loadAsTextureFromFile("assets/textures/waterDuDv.png");
         if (textureOpt.isPresent()) {
             RawTexture rawTexture = textureOpt.get();
-            waterDuDv = loader.load2DTexture(rawTexture, GL_TEXTURE_2D, true);
+            waterDuDv = loader.load2DTexture(rawTexture, GL_TEXTURE_2D, true, false, 0);
         }
 
         Optional<RawTexture> normalTextureOpt = TextureLoader.loadAsTextureFromFile("assets/textures/waterNormalMap.png");
         if (normalTextureOpt.isPresent()) {
             RawTexture rawTexture = normalTextureOpt.get();
-            waterNormalMap = loader.load2DTexture(rawTexture, GL_TEXTURE_2D, true);
+            waterNormalMap = loader.load2DTexture(rawTexture, GL_TEXTURE_2D, true, false, 0);
         }
         shaderProgram = ShaderFactory.createWaterShaderProgram();
     }

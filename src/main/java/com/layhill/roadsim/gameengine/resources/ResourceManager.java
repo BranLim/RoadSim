@@ -58,7 +58,7 @@ public final class ResourceManager {
         Optional<RawTexture> textureOpt = TextureLoader.loadAsTextureFromFile(textureFilePath);
         if (textureOpt.isPresent()) {
             RawTexture rawTexture = textureOpt.get();
-            GLTexture glTexture = resourceLoader.load2DTexture(rawTexture, GL_TEXTURE_2D, true);
+            GLTexture glTexture = resourceLoader.load2DTexture(rawTexture, GL_TEXTURE_2D, true, true, 16);
             return Optional.of(new Material(glTexture));
         }
         return Optional.empty();
