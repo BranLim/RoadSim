@@ -52,7 +52,7 @@ public class RenderEngine {
     private boolean toRenderWater;
     private boolean toRenderShadow;
     private GLWaterRenderer waterRenderer = new GLWaterRenderer(GLResourceLoader.getInstance());
-    private FrameBufferSize frameBufferSize;
+    private FrameBufferSize windowFrameBufferSize;
 
     private ShadowFrameBuffer shadowFrameBuffer;
     private ShadowBox shadowBox;
@@ -60,7 +60,7 @@ public class RenderEngine {
 
     public RenderEngine(long window) {
         this.window = window;
-        frameBufferSize = Window.getInstance().getWindowFrameBufferSize();
+        windowFrameBufferSize = Window.getInstance().getWindowFrameBufferSize();
     }
 
     public void addRenderer(Renderer renderer) {
@@ -128,7 +128,7 @@ public class RenderEngine {
 
         ViewSpecification viewSpecification = new ViewSpecification(camera.getProjectionMatrix(), camera.getViewMatrix());
         invokeRenderers(viewSpecification);
-        show(window);
+        updateDisplay(window);
 
         lights.clear();
         entities.clear();
@@ -188,7 +188,7 @@ public class RenderEngine {
         rendererData.setClipPlane(new Vector4f(0, -1, 0, waterHeight + 0.2f));
         invokeRenderers(refractionViewSpecification);
 
-        waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);
+        waterFrameBuffer.unbindFrameBuffer(GLResourceLoader.getInstance(), windowFrameBufferSize.width()[0], windowFrameBufferSize.height()[0]);
 
         rendererData.setWaterRenderingStage(WaterRenderingStage.END);
         glDisable(GL_CLIP_DISTANCE0);
@@ -201,14 +201,17 @@ public class RenderEngine {
                     camera.getFarPlane());
         }
         shadowRenderingStage = ShadowRenderingStage.BEGIN;
+
         shadowFrameBuffer.bind(GLResourceLoader.getInstance());
-        shadowBox.update(camera.getPosition(), camera.getOrientation());
+
         Matrix4f lightProjection = shadowBox.calculateProjectionMatrix();
         Matrix4f lightView = shadowBox.calculateViewMatrix();
         ViewSpecification shadowViewSpecification = new ViewSpecification(lightProjection, lightView);
         rendererData.setToShadowMapSpace(createShadowMapSpaceOffset().mul(lightProjection).mul(lightView));
+        shadowBox.update(camera.getPosition(), camera.getOrientation());
         invokeRenderers(shadowViewSpecification);
-        shadowFrameBuffer.unbind(GLResourceLoader.getInstance(), frameBufferSize.width()[0], frameBufferSize.height()[0]);
+        shadowFrameBuffer.unbind(GLResourceLoader.getInstance(), windowFrameBufferSize.width()[0], windowFrameBufferSize.height()[0]);
+
         shadowRenderingStage = ShadowRenderingStage.END;
     }
 
@@ -244,7 +247,7 @@ public class RenderEngine {
 
     }
 
-    public void show(long window) {
+    public void updateDisplay(long window) {
         glfwSwapBuffers(window);
     }
 

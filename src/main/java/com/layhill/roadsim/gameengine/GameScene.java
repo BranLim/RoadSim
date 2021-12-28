@@ -5,6 +5,7 @@ import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.RenderEngine;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
+import com.layhill.roadsim.gameengine.graphics.gl.GLShadowRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
@@ -136,7 +137,7 @@ public class GameScene extends Scene {
         renderEngine.addWaterFrameBuffer(frameBuffer);
         renderEngine.setToRenderWater(true);
 
-        shadowFrameBuffer = ShadowFrameBuffer.createFrameBuffer(glResourceLoader, 2048, 2048);
+        shadowFrameBuffer = ShadowFrameBuffer.createFrameBuffer(glResourceLoader, GLShadowRenderer.SHADOW_MAP_SIZE, GLShadowRenderer.SHADOW_MAP_SIZE);
         renderEngine.addShadowFrameBuffer(shadowFrameBuffer);
         renderEngine.setToRenderShadow(true);
     }
