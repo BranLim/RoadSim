@@ -7,7 +7,7 @@ import java.lang.Math;
 
 public class ShadowBox {
 
-    private final static float MAX_DISTANCE_FOR_SHADOW_CASTING = 150;
+    private final static float MAX_DISTANCE_FOR_SHADOW_CASTING = 200;
     private final static float OFFSET = 15;
     private Vector3f UP = new Vector3f(0, 1, 0);
     private Vector3f FORWARD = new Vector3f(0, 0, -1);
@@ -110,6 +110,12 @@ public class ShadowBox {
     }
 
     public Matrix4f calculateViewMatrix() {
+
+        Vector3f centre = getCentre();
+        Matrix4f invertedLight = new Matrix4f();
+        view.invert(invertedLight);
+        Vector4f transformedCentre = invertedLight.transform(new Vector4f(centre, 1));
+
         Vector3f normalizeLightDirection = new Vector3f(lightDirection);
         normalizeLightDirection.negate().normalize();
         float pitch = (float) Math.acos(new Vector2f(normalizeLightDirection.x, normalizeLightDirection.z).length());
@@ -121,10 +127,7 @@ public class ShadowBox {
                 .rotate(pitch, new Vector3f(1, 0, 0))
                 .rotate(yaw, new Vector3f(0, 1, 0));
 
-        Vector3f centre = getCentre();
-        Matrix4f invertedLight = new Matrix4f();
-        view.invert(invertedLight);
-        Vector4f transformedCentre = invertedLight.transform(new Vector4f(centre, 1));
+
         view.translate(new Vector3f(transformedCentre.x, transformedCentre.y, transformedCentre.z).negate());
         return view;
     }
@@ -176,7 +179,7 @@ public class ShadowBox {
 
     private Vector4f calculateLightSpaceFrustumCorner(Vector3f startPoint, Vector3f direction, float width) {
         Vector3f point = new Vector3f(startPoint).add(new Vector3f(direction.x, direction.y, direction.z).normalize(width));
-        return calculateViewMatrix().transform(new Vector4f(point, 1f));
+        return view.transform(new Vector4f(point, 1f));
     }
 
 

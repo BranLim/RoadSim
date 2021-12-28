@@ -201,14 +201,13 @@ public class RenderEngine {
                     camera.getFarPlane());
         }
         shadowRenderingStage = ShadowRenderingStage.BEGIN;
-
+        shadowBox.update(camera.getPosition(), camera.getOrientation());
         shadowFrameBuffer.bind(GLResourceLoader.getInstance());
-
         Matrix4f lightProjection = shadowBox.calculateProjectionMatrix();
         Matrix4f lightView = shadowBox.calculateViewMatrix();
         ViewSpecification shadowViewSpecification = new ViewSpecification(lightProjection, lightView);
         rendererData.setToShadowMapSpace(createShadowMapSpaceOffset().mul(lightProjection).mul(lightView));
-        shadowBox.update(camera.getPosition(), camera.getOrientation());
+
         invokeRenderers(shadowViewSpecification);
         shadowFrameBuffer.unbind(GLResourceLoader.getInstance(), windowFrameBufferSize.width()[0], windowFrameBufferSize.height()[0]);
 

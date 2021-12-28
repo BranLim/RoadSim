@@ -6,5 +6,5 @@ out vec4 colour;
 uniform sampler2D uTexture;
 
 void main(){
-    colour = vec4(1.0);
+    //colour = vec4(1.0);
 }

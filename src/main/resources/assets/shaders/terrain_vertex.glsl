@@ -26,7 +26,7 @@ out vec4 shadowCoordinates;
 
 const float density = 0.0035;
 const float gradient = 3;
-const float shadowDistance = 150;
+const float shadowDistance = 200;
 const float transitionDistance = 10.0;
 
 void main()
