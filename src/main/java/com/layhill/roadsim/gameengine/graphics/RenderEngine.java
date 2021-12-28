@@ -230,6 +230,7 @@ public class RenderEngine {
         rendererData.setFogColour(fogColour);
 
         rendererData.setToRenderShadow(toRenderShadow);
+        rendererData.setShadowDistance(ShadowBox.MAX_DISTANCE_FOR_SHADOW_CASTING);
         if (shadowFrameBuffer != null) {
             rendererData.setShadowFrameBuffer(shadowFrameBuffer);
         }

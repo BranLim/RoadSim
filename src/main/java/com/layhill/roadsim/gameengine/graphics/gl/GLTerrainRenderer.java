@@ -98,6 +98,7 @@ public class GLTerrainRenderer implements Renderer {
                 if(rendererData.isToRenderShadow()) {
                     glActiveTexture(GL_TEXTURE1);
                     glBindTexture(GL_TEXTURE_2D, rendererData.getShadowFrameBuffer().getDepthBuffer());
+                    terrainShaderProgram.loadShadowDistance(rendererData.getShadowDistance());
                     terrainShaderProgram.loadShadowMapSpace(rendererData.getToShadowMapSpace());
                     terrainShaderProgram.loadShadowMap(1);
                 }

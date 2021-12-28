@@ -7,7 +7,7 @@ import java.lang.Math;
 
 public class ShadowBox {
 
-    private final static float MAX_DISTANCE_FOR_SHADOW_CASTING = 200;
+    public final static float MAX_DISTANCE_FOR_SHADOW_CASTING = 200;
     private final static float OFFSET = 15;
     private Vector3f UP = new Vector3f(0, 1, 0);
     private Vector3f FORWARD = new Vector3f(0, 0, -1);
@@ -126,7 +126,6 @@ public class ShadowBox {
         view.identity()
                 .rotate(pitch, new Vector3f(1, 0, 0))
                 .rotate(yaw, new Vector3f(0, 1, 0));
-
 
         view.translate(new Vector3f(transformedCentre.x, transformedCentre.y, transformedCentre.z).negate());
         return view;

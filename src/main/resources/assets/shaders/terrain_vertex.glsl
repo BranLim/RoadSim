@@ -14,6 +14,7 @@ uniform bool uEnableFog;
 uniform vec3 uSunDirection;
 uniform vec3 uLightPosition[MAX_LIGHTS];
 uniform vec4 uClipPlane;
+uniform float uShadowDistance;
 
 out vec3 fragPosition;
 out vec2 fTexCoord;
@@ -26,7 +27,6 @@ out vec4 shadowCoordinates;
 
 const float density = 0.0035;
 const float gradient = 3;
-const float shadowDistance = 200;
 const float transitionDistance = 10.0;
 
 void main()
@@ -54,7 +54,7 @@ void main()
         fVisibility = clamp(visibility, 0.0, 1.0);
     }
 
-    distance = distance - (shadowDistance - transitionDistance);
+    distance = distance - (uShadowDistance - transitionDistance);
     distance = distance / transitionDistance;
     shadowCoordinates.w = clamp(1.0 -  distance, 0.0, 1.0);
 

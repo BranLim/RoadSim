@@ -38,6 +38,7 @@ public class RendererData {
     private ShadowFrameBuffer shadowFrameBuffer;
     private Matrix4f toShadowMapSpace;
     private boolean isToRenderShadow;
+    private float shadowDistance;
 
 
     public RendererData() {
@@ -185,5 +186,13 @@ public class RendererData {
 
     public boolean isToRenderShadow() {
         return isToRenderShadow;
+    }
+
+    public float getShadowDistance() {
+        return shadowDistance;
+    }
+
+    public void setShadowDistance(float shadowDistance) {
+        this.shadowDistance = shadowDistance;
     }
 }

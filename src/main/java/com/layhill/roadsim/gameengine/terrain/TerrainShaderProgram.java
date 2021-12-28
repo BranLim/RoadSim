@@ -35,12 +35,13 @@ public class TerrainShaderProgram extends ShaderProgram {
 
     private UniformMatrix4f toShadowMapSpace = new UniformMatrix4f("uToShadowMapSpace");
     private UniformInteger shadowMap = new UniformInteger("uShadowMap");
+    private UniformFloat shadowDistance = new UniformFloat("uShadowDistance");
 
     public TerrainShaderProgram() {
         super.addUniform(projection, view, transformation, sunDirection, sunColour,
                 fogColour, texture, enableFog, enableSpotlight, spotlight, spotlight.getPosition(),
-                spotlight.getDirection(), this.spotlight.getColour(), this.spotlight.getCutOff(),
-                this.spotlight.getOuterCutOff(), clipPlane, toShadowMapSpace, shadowMap);
+                spotlight.getDirection(), spotlight.getColour(), spotlight.getCutOff(),
+                spotlight.getOuterCutOff(), clipPlane, toShadowMapSpace, shadowMap, shadowDistance);
 
     }
 
@@ -122,6 +123,10 @@ public class TerrainShaderProgram extends ShaderProgram {
 
     public void loadClipPlane(Vector4f plane) {
         clipPlane.load(plane);
+    }
+
+    public void loadShadowDistance(float shadowDistance){
+        this.shadowDistance.load(shadowDistance);
     }
 
     public void loadShadowMapSpace(Matrix4f shadowMapSpace) {
