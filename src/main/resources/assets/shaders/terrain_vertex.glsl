@@ -26,6 +26,8 @@ out vec4 shadowCoordinates;
 
 const float density = 0.0035;
 const float gradient = 3;
+const float shadowDistance = 150;
+const float transitionDistance = 10.0;
 
 void main()
 {
@@ -46,10 +48,15 @@ void main()
         toLightSource[i] = uLightPosition[i] - worldPosition.xyz;
     }
 
+    float distance = length(positionRelativeToCamera);
     if (uEnableFog){
-        float distance = length(positionRelativeToCamera);
         float visibility = exp(-pow((distance*density), gradient));
         fVisibility = clamp(visibility, 0.0, 1.0);
     }
+
+    distance = distance - (shadowDistance - transitionDistance);
+    distance = distance / transitionDistance;
+    shadowCoordinates.w = clamp(1.0 -  distance, 0.0, 1.0);
+
 }
 

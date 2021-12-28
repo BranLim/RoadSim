@@ -32,6 +32,9 @@ public class GLShadowRenderer implements Renderer {
 
     @Override
     public void prepare() {
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glClear(GL_DEPTH_BUFFER_BIT);
 
     }
 
@@ -41,7 +44,7 @@ public class GLShadowRenderer implements Renderer {
         for (TexturedModel model : rendererData.getEntities().keySet()) {
             prepareForRendering(model);
             for (Renderable gameObject : rendererData.getEntities().get(model)) {
-                prepareEntity(viewSpecification,gameObject);
+                prepareEntity(viewSpecification, gameObject);
                 glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
             }
             unbindTexturedModel(model);
@@ -56,7 +59,7 @@ public class GLShadowRenderer implements Renderer {
         }
     }
 
-    private void prepareEntity(ViewSpecification viewSpecification,Renderable renderableEntity) {
+    private void prepareEntity(ViewSpecification viewSpecification, Renderable renderableEntity) {
         Objects.requireNonNull(renderableEntity);
         Matrix4f transformationMatrix = Maths.createTransformationMatrix(renderableEntity.getPosition(),
                 renderableEntity.getRotateX(), renderableEntity.getRotateY(), renderableEntity.getRotateZ(),

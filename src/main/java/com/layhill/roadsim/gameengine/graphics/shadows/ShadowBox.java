@@ -7,8 +7,8 @@ import java.lang.Math;
 
 public class ShadowBox {
 
-    private final static float MAX_DISTANCE_FOR_SHADOW_CASTING = 200;
-    private final static float OFFSET = 10;
+    private final static float MAX_DISTANCE_FOR_SHADOW_CASTING = 150;
+    private final static float OFFSET = 15;
     private Vector3f UP = new Vector3f(0, 1, 0);
     private Vector3f FORWARD = new Vector3f(0, 0, -1);
     private float x1;
@@ -83,8 +83,9 @@ public class ShadowBox {
     }
 
     private void calculatePlaneWidthsAndHeights() {
-        farPlaneWidth = (float) (MAX_DISTANCE_FOR_SHADOW_CASTING * Math.tan(Math.toRadians(fov)));
-        nearPlaneWidth = (float) (cameraNearPlane * Math.tan(Math.toRadians(fov)));
+        float theta = (float) Math.tan(Math.toRadians(fov));
+        farPlaneWidth = MAX_DISTANCE_FOR_SHADOW_CASTING * theta;
+        nearPlaneWidth = cameraNearPlane * theta;
         farPlaneHeight = farPlaneWidth / aspectRatio;
         nearPlaneHeight = nearPlaneWidth / aspectRatio;
     }
@@ -110,7 +111,7 @@ public class ShadowBox {
 
     public Matrix4f calculateViewMatrix() {
         Vector3f normalizeLightDirection = new Vector3f(lightDirection);
-        normalizeLightDirection.normalize();
+        normalizeLightDirection.negate().normalize();
         float pitch = (float) Math.acos(new Vector2f(normalizeLightDirection.x, normalizeLightDirection.z).length());
 
         float yaw = (float) Math.toDegrees(Math.atan(normalizeLightDirection.x / normalizeLightDirection.z));
@@ -131,7 +132,8 @@ public class ShadowBox {
     public Matrix4f calculateProjectionMatrix() {
         return projection.
                 identity()
-                .ortho(x1, x2, y1, y2, z1, z2);
+                .ortho(x1, x2, y1, y2, z1, z2)
+                .m33(1);
     }
 
     private Vector4f[] calculateFrustumVertices() {

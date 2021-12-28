@@ -37,7 +37,7 @@ void main(){
     float objectNearestLight = texture(uShadowMap, shadowCoordinates.xy).r;
     float lightFactor = 1.0f;
     if (shadowCoordinates.z > objectNearestLight){
-        lightFactor = 1.0f - 0.4f;
+        lightFactor = 1.0f - (shadowCoordinates.w * 0.4f);
     }
 
     vec3 unitSurfaceNormal = normalize(fSurfaceNormal);

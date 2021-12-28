@@ -214,11 +214,15 @@ public final class GLResourceLoader {
         return frameBuffer;
     }
 
-    public void drawToEmptyAttachment(){
+    public void drawToEmptyAttachment() {
         glDrawBuffer(GL_NONE);
     }
 
-    public void drawToColourAttachment(){
+    public void readFromNoBuffer() {
+        glReadBuffer(GL_NONE);
+    }
+
+    public void drawToColourAttachment() {
         glDrawBuffer(GL_COLOR_ATTACHMENT0);
     }
 
@@ -249,10 +253,10 @@ public final class GLResourceLoader {
 
     public void bindFrameBuffer(int frameBuffer, int width, int height, FrameBufferMode frameBufferMode) {
         glBindTexture(GL_TEXTURE_2D, 0);
-        switch(frameBufferMode){
-            case READ_AND_WRITE ->glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-            case READ ->  glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
-            case WRITE ->  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
+        switch (frameBufferMode) {
+            case READ_AND_WRITE -> glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+            case READ -> glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBuffer);
+            case WRITE -> glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBuffer);
         }
         glViewport(0, 0, width, height);
     }
@@ -268,7 +272,7 @@ public final class GLResourceLoader {
         return textureId;
     }
 
-    public int createShadowDepthTextureAttachment(int width, int height){
+    public int createShadowDepthTextureAttachment(int width, int height) {
         int textureId = create2DTexture();
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
