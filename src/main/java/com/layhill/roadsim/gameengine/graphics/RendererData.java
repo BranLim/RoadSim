@@ -39,6 +39,7 @@ public class RendererData {
     private Matrix4f toShadowMapSpace;
     private boolean isToRenderShadow;
     private float shadowDistance;
+    private float shadowMapResolution;
 
 
     public RendererData() {
@@ -194,5 +195,13 @@ public class RendererData {
 
     public void setShadowDistance(float shadowDistance) {
         this.shadowDistance = shadowDistance;
+    }
+
+    public void setShadowMapResolution(float shadowMapResolution) {
+        this.shadowMapResolution = shadowMapResolution;
+    }
+
+    public float getShadowMapResolution() {
+        return shadowMapResolution;
     }
 }

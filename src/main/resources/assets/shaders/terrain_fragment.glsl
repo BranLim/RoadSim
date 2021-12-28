@@ -27,18 +27,30 @@ uniform vec3 uLightColour[MAX_LIGHTS];
 uniform bool enableSpotlight;
 uniform Spotlight spotlight;
 uniform sampler2D uShadowMap;
+uniform float uShadowMapResolution;
 
 out vec4 outputColor;
+
+const int pcfCount = 2;
+const float totalTexels = (pcfCount * 2.0 + 1.0) * (pcfCount * 2.0 + 1.0);
 
 vec3 calculateSpotlight(vec3 fragPosition, vec3 surfaceNormal, vec3 viewDirection);
 
 void main(){
 
-    float objectNearestLight = texture(uShadowMap, shadowCoordinates.xy).r;
-    float lightFactor = 1.0f;
-    if (shadowCoordinates.z > objectNearestLight){
-        lightFactor = 1.0f - (shadowCoordinates.w * 0.4f);
+    float texelSize = 1.0/uShadowMapResolution;
+    float total = 0.0;
+    for (int x = -pcfCount; x<= pcfCount; x++){
+        for (int y = -pcfCount; y<=pcfCount;y++){
+            float objectNearestLight = texture(uShadowMap, shadowCoordinates.xy+ vec2(x, y) * texelSize).r;
+            if (shadowCoordinates.z > objectNearestLight){
+                total += 1.0;
+            }
+        }
     }
+    total /= totalTexels;
+
+    float lightFactor = 1.0f - (total * shadowCoordinates.w);
 
     vec3 unitSurfaceNormal = normalize(fSurfaceNormal);
     vec3 unitSunDirection = normalize(-uSunDirection);
@@ -65,7 +77,7 @@ void main(){
         totalDiffuse += calculateSpotlight(fragPosition, unitSurfaceNormal, vec3(0));
     }
 
-    vec3 finalDiffuse = max((ambient + totalDiffuse), 0.1) * lightFactor;
+    vec3 finalDiffuse = max((ambient + (totalDiffuse * lightFactor)), 0.1);
     outputColor = vec4 (finalDiffuse, 1.0) * texture(uTexture, fTexCoord);
 
     if (uEnableFog){

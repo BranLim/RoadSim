@@ -1,12 +1,10 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
-import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.RendererData;
 import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
-import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowShaderProgram;
 import com.layhill.roadsim.gameengine.utils.Maths;
 import org.joml.Matrix4f;

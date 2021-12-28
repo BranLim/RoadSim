@@ -147,12 +147,8 @@ public class RenderEngine {
     private void invokeRenderers(ViewSpecification viewSpecification) {
         startRendering();
         for (Renderer renderer : renderers) {
-            if (shadowRenderingStage == ShadowRenderingStage.BEGIN && toRenderShadow && renderer.getClass() != GLShadowRenderer.class) {
-                System.out.println("RenderShadow is true. Skipping non-shadow renderer");
-                continue;
-            }
-            if (shadowRenderingStage == ShadowRenderingStage.END && renderer.getClass() == GLShadowRenderer.class) {
-                System.out.println("Skipping shadow renderer");
+            if ((shadowRenderingStage == ShadowRenderingStage.BEGIN && toRenderShadow && renderer.getClass() != GLShadowRenderer.class)
+                    ||(shadowRenderingStage == ShadowRenderingStage.END && renderer.getClass() == GLShadowRenderer.class) ) {
                 continue;
             }
             if (renderer.getClass() == GLParticleRenderer.class && toRenderWater && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
@@ -230,6 +226,7 @@ public class RenderEngine {
         rendererData.setFogColour(fogColour);
 
         rendererData.setToRenderShadow(toRenderShadow);
+        rendererData.setShadowMapResolution(GLShadowRenderer.SHADOW_MAP_SIZE);
         rendererData.setShadowDistance(ShadowBox.MAX_DISTANCE_FOR_SHADOW_CASTING);
         if (shadowFrameBuffer != null) {
             rendererData.setShadowFrameBuffer(shadowFrameBuffer);
