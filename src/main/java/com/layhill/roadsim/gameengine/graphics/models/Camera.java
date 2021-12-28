@@ -79,13 +79,9 @@ public class Camera {
     public void rotate(float deltaTime) {
         float deltaPitch = MouseListener.getDeltaY() * mouseSensitivity * deltaTime;
         float deltaYaw = MouseListener.getDeltaX() * mouseSensitivity * deltaTime;
-        System.out.printf("Delta PitchAmount: %f \n", deltaPitch);
-        System.out.printf("Delta YawAmount: %f \n", deltaYaw);
         orientation.rotateLocalX(-deltaPitch).rotateY(-deltaYaw);
         pitch += deltaPitch;
         yaw += deltaYaw;
-        System.out.printf("Final PitchAmount: %f \n", pitch);
-        System.out.printf("Final YawAmount: %f \n", yaw);
         updateFrustum();
     }
 
