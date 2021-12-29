@@ -1,5 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.gl.objects;
 
+import static org.lwjgl.opengl.GL13.*;
+
 public class GLTexture {
 
     private int textureId;
@@ -16,5 +18,18 @@ public class GLTexture {
 
     public int getTarget() {
         return target;
+    }
+
+    public void activate(int textureUnit){
+        glActiveTexture(textureUnit);
+        bind();
+    }
+
+    public void bind(){
+        glBindTexture(target, textureId);
+    }
+
+    public void unbind(){
+        glBindTexture(target, 0);
     }
 }

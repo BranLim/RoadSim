@@ -39,7 +39,7 @@ public class GLTerrainRenderer implements Renderer {
             prepareForRendering(viewSpecification, model, rendererData);
             for (Renderable gameObject : rendererData.getTerrains().get(model)) {
                 prepareEntity(gameObject);
-                render(GL_TRIANGLES, model.getRawModel().getVertexCount());
+                glDrawElements(GL_TRIANGLES,  model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
             }
             unbindTexturedModel(model);
         }
@@ -86,8 +86,7 @@ public class GLTerrainRenderer implements Renderer {
                     }
                 }
 
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(material.getDiffuseMap().getTarget(), material.getDiffuseMap().getTextureId());
+                material.getDiffuseMap().activate(GL_TEXTURE0);
                 terrainShaderProgram.loadTexture(0);
 
                 terrainShaderProgram.loadFogColour(rendererData.getFogColour());
@@ -127,7 +126,7 @@ public class GLTerrainRenderer implements Renderer {
     private void unbindTexturedModel(TexturedModel texturedModel) {
         Material material = texturedModel.getMaterial();
         if (material != null) {
-            glBindTexture(material.getDiffuseMap().getTarget(), 0);
+            material.getDiffuseMap().unbind();
             ShaderProgram shaderProgram = material.getShaderProgram();
             shaderProgram.stop();
         }
@@ -137,10 +136,6 @@ public class GLTerrainRenderer implements Renderer {
         glBindVertexArray(0);
     }
 
-
-    private void render(int renderMode, int vertexCount) {
-        glDrawElements(renderMode, vertexCount, GL_UNSIGNED_INT, 0);
-    }
 
     @Override
     public void dispose(RendererData rendererData) {
