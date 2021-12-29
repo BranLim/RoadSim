@@ -9,6 +9,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.particles.Particle;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.particles.ParticleShaderProgram;
+import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -19,12 +20,12 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 
+@Slf4j
 public class GLParticleRenderer implements Renderer {
 
     private static final float[] QUAD = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
@@ -70,7 +71,7 @@ public class GLParticleRenderer implements Renderer {
         viewMatrix.get3x3(transposedViewMatrixWithoutTranslation);
         transposedViewMatrixWithoutTranslation.transpose();
 
-        for(ParticleEmitter emitter: rendererData.getEmitters()){
+        for (ParticleEmitter emitter : rendererData.getEmitters()) {
             dataPointer = 0;
             List<Particle> particles = emitter.getParticles();
             float[] data = new float[particles.size() * INSTANCE_DATA_LENGTH];
@@ -83,7 +84,7 @@ public class GLParticleRenderer implements Renderer {
             endRendering(emitter.getParticleTexture());
         }
         long endTime = System.currentTimeMillis();
-        System.out.println("Particle rendering time: "+ (endTime - startTime) +" ms");
+        log.info(String.format("Particle rendering time: %d ms", (endTime - startTime)));
     }
 
     private void updateModelViewMatrix(Vector3f position, float rotation, float scale, Matrix4f viewMatrix, float[] data) {
@@ -142,8 +143,7 @@ public class GLParticleRenderer implements Renderer {
             glEnableVertexAttribArray(attribute);
         }
         if (particleTexture != null) {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(particleTexture.getTarget(), particleTexture.getTextureId());
+            particleTexture.activate(GL_TEXTURE0);
             shader.loadTexture(0);
         }
     }
@@ -158,7 +158,7 @@ public class GLParticleRenderer implements Renderer {
         glDepthMask(true);
         glDisable(GL_BLEND);
         if (particleTexture != null) {
-            glBindTexture(particleTexture.getTarget(), 0);
+            particleTexture.unbind();
         }
         shader.stop();
     }

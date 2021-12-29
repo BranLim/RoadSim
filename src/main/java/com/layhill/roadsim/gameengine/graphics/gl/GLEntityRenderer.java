@@ -38,7 +38,7 @@ public class GLEntityRenderer implements Renderer {
             prepareForRendering(viewSpecification, rendererData.getSun(), rendererData.getLights(), model);
             for (Renderable gameObject : rendererData.getEntities().get(model)) {
                 prepareEntity(gameObject);
-                render(GL_TRIANGLES, model.getRawModel().getVertexCount());
+                glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
             }
             unbindTexturedModel(model);
         }
@@ -82,12 +82,13 @@ public class GLEntityRenderer implements Renderer {
                     }
                 }
                 entityShaderProgram.loadSun(sun.getDirection(), sun.getColour());
+
+                material.getDiffuseMap().activate(GL_TEXTURE0);
                 entityShaderProgram.loadTexture(0);
+
                 shaderProgram.uploadFloat("uReflectivity", material.getReflectivity());
                 shaderProgram.uploadFloat("uShineDampen", material.getShineDampener());
             }
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(material.getDiffuseMap().getTarget(), material.getDiffuseMap().getTextureId());
         }
     }
 
@@ -110,7 +111,7 @@ public class GLEntityRenderer implements Renderer {
     private void unbindTexturedModel(TexturedModel texturedModel) {
         Material material = texturedModel.getMaterial();
         if (material != null) {
-            glBindTexture(material.getDiffuseMap().getTarget(), 0);
+            material.getDiffuseMap().unbind();
             ShaderProgram shaderProgram = material.getShaderProgram();
             shaderProgram.stop();
         }
@@ -118,10 +119,6 @@ public class GLEntityRenderer implements Renderer {
             glDisableVertexAttribArray(attribute);
         }
         glBindVertexArray(0);
-    }
-
-    private void render(int renderMode, int vertexCount) {
-        glDrawElements(renderMode, vertexCount, GL_UNSIGNED_INT, 0);
     }
 
     @Override
