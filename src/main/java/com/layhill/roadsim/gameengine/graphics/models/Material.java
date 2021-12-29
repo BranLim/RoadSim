@@ -12,7 +12,8 @@ public class Material {
     private float shineDampener;
     private boolean emissive;
     private float transparency;
-    private GLTexture texture;
+    private GLTexture diffuseMap;
+    private GLTexture normalMap;
     private GLTexture specularMap;
     private ShaderProgram shaderProgram;
 
@@ -20,29 +21,37 @@ public class Material {
         id = UUID.randomUUID().toString();
     }
 
-    public Material(GLTexture texture) {
+    public Material(GLTexture diffuseMap) {
         this();
-        this.texture = texture;
-        reflectivity = 1.f;
-        shineDampener = 1.f;
+        this.diffuseMap = diffuseMap;
+        reflectivity = 0.f;
+        shineDampener = 0.f;
         emissive = false;
     }
 
-    public Material(GLTexture texture, GLTexture specularMap,  ShaderProgram shaderProgram){
+    public Material(GLTexture diffuseMap, GLTexture normalMap, GLTexture specularMap, ShaderProgram shaderProgram, float reflectivity, float shineDampener){
         this();
-        this.texture = texture;
+        this.diffuseMap = diffuseMap;
+        this.normalMap = normalMap;
         this.specularMap = specularMap;
         this.shaderProgram = shaderProgram;
-        reflectivity = 1.f;
-        shineDampener = 1.f;
+        this.reflectivity = reflectivity;
+        this.shineDampener = shineDampener;
     }
 
     public String getId() {
         return id;
     }
 
-    public GLTexture getTexture() {
-        return texture;
+    public GLTexture getDiffuseMap() {
+        return diffuseMap;
+    }
+
+    public GLTexture getNormalMap(){
+        return normalMap;
+    }
+    public GLTexture getSpecularMap(){
+        return specularMap;
     }
 
     public float getReflectivity() {
@@ -61,11 +70,19 @@ public class Material {
         this.shineDampener = shineDampener;
     }
 
-    public void attachShaderProgram(ShaderProgram terrainShaderProgram) {
-        shaderProgram = terrainShaderProgram;
+    public void attachShaderProgram(ShaderProgram shaderProgram) {
+        this.shaderProgram = shaderProgram;
     }
 
     public ShaderProgram getShaderProgram() {
         return shaderProgram;
+    }
+
+    public float getTransparency() {
+        return transparency;
+    }
+
+    public void setTransparency(float transparency) {
+        this.transparency = transparency;
     }
 }

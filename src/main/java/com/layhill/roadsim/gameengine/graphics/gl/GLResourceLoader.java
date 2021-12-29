@@ -4,7 +4,7 @@ import com.layhill.roadsim.gameengine.graphics.FrameBufferMode;
 import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
-import com.layhill.roadsim.gameengine.graphics.models.Mesh;
+import com.layhill.roadsim.gameengine.graphics.mesh.Mesh;
 import com.layhill.roadsim.gameengine.io.MeshLoader;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.skybox.Skybox;

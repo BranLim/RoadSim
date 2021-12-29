@@ -1,14 +1,17 @@
 package com.layhill.roadsim.gameengine;
 
 import com.layhill.roadsim.gameengine.entities.GameObject;
+import com.layhill.roadsim.gameengine.environments.Sun;
 import com.layhill.roadsim.gameengine.graphics.RawTexture;
 import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.RenderEngine;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.GLShadowRenderer;
-import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
+import com.layhill.roadsim.gameengine.graphics.lights.Light;
+import com.layhill.roadsim.gameengine.graphics.lights.Spotlight;
 import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
 import com.layhill.roadsim.gameengine.input.KeyListener;

@@ -1,6 +1,5 @@
 package com.layhill.roadsim.gameengine.graphics;
 
-import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
 import org.joml.Vector3f;
 
 public interface Renderable {

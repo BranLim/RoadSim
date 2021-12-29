@@ -1,8 +1,8 @@
 package com.layhill.roadsim.gameengine.terrain;
 
-import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
-import com.layhill.roadsim.gameengine.graphics.models.Mesh;
+import com.layhill.roadsim.gameengine.graphics.mesh.Mesh;
 import com.layhill.roadsim.gameengine.resources.ResourceManager;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
@@ -12,9 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 
 @Slf4j
 public class TerrainGenerator {

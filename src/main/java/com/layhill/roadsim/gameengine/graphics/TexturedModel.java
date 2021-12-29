@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.graphics.gl;
+package com.layhill.roadsim.gameengine.graphics;
 
 import com.layhill.roadsim.gameengine.graphics.models.Material;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;

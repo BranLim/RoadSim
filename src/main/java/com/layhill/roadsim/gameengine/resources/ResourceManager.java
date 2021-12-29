@@ -1,11 +1,11 @@
 package com.layhill.roadsim.gameengine.resources;
 
 import com.layhill.roadsim.gameengine.graphics.RawTexture;
-import com.layhill.roadsim.gameengine.graphics.models.Mesh;
+import com.layhill.roadsim.gameengine.graphics.mesh.Mesh;
 import com.layhill.roadsim.gameengine.graphics.models.Material;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
-import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.TexturedModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLModel;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.io.MeshLoader;

@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.graphics.models;
+package com.layhill.roadsim.gameengine.water;
 
 public enum WaterRenderingStage {
 

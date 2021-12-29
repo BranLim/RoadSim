@@ -1,7 +1,7 @@
 package com.layhill.roadsim.gameengine.entities;
 
 import com.layhill.roadsim.gameengine.graphics.Renderable;
-import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.TexturedModel;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector3f;
 

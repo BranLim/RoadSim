@@ -1,6 +1,6 @@
 package com.layhill.roadsim.gameengine.io;
 
-import com.layhill.roadsim.gameengine.graphics.models.Mesh;
+import com.layhill.roadsim.gameengine.graphics.mesh.Mesh;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

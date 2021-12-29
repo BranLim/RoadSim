@@ -1,8 +1,9 @@
-package com.layhill.roadsim.gameengine.graphics.models;
+package com.layhill.roadsim.gameengine.graphics.lights;
 
+import com.layhill.roadsim.gameengine.graphics.lights.Light;
 import org.joml.Vector3f;
 
-public class Spotlight extends Light{
+public class Spotlight extends Light {
 
     private Vector3f direction;
     private float radius;

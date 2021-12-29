@@ -1,9 +1,8 @@
 package com.layhill.roadsim.gameengine.graphics;
 
-import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
-import com.layhill.roadsim.gameengine.graphics.models.Light;
-import com.layhill.roadsim.gameengine.graphics.models.Sun;
-import com.layhill.roadsim.gameengine.graphics.models.WaterRenderingStage;
+import com.layhill.roadsim.gameengine.graphics.lights.Light;
+import com.layhill.roadsim.gameengine.environments.Sun;
+import com.layhill.roadsim.gameengine.water.WaterRenderingStage;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;

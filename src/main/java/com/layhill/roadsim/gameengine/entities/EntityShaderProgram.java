@@ -3,9 +3,8 @@ package com.layhill.roadsim.gameengine.entities;
 import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
 import com.layhill.roadsim.gameengine.graphics.gl.data.*;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
-import com.layhill.roadsim.gameengine.graphics.models.Light;
-import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
+import com.layhill.roadsim.gameengine.graphics.lights.Light;
+import com.layhill.roadsim.gameengine.graphics.lights.Spotlight;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

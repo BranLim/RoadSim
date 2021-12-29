@@ -1,6 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics.gl.data;
 
-import com.layhill.roadsim.gameengine.graphics.models.Spotlight;
+import com.layhill.roadsim.gameengine.graphics.lights.Spotlight;
 
 public class UniformSpotlight extends Uniform {
 

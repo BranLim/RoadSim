@@ -1,7 +1,7 @@
 package com.layhill.roadsim.gameengine.terrain;
 
 import com.layhill.roadsim.gameengine.graphics.Renderable;
-import com.layhill.roadsim.gameengine.graphics.gl.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.TexturedModel;
 import com.layhill.roadsim.gameengine.utils.Maths;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

@@ -1,7 +1,7 @@
 package com.layhill.roadsim.gameengine.particles;
 
 import com.layhill.roadsim.gameengine.Time;
-import com.layhill.roadsim.gameengine.physics.Physics;
+import com.layhill.roadsim.gameengine.physics.PhysicsEngine;
 import org.joml.Vector3f;
 
 public class Particle {
@@ -38,7 +38,7 @@ public class Particle {
     }
 
     public boolean update() {
-        velocity.y += Physics.GRAVITY * gravityEffect * Time.getInstance().getDeltaTime();
+        velocity.y += PhysicsEngine.GRAVITY * gravityEffect * Time.getInstance().getDeltaTime();
         distanceChanged.set(velocity);
         distanceChanged.mul((float) Time.getInstance().getDeltaTime());
         position.add(distanceChanged);

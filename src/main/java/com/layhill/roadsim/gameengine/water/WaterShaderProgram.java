@@ -6,7 +6,7 @@ import com.layhill.roadsim.gameengine.graphics.gl.data.UniformInteger;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformMatrix4f;
 import com.layhill.roadsim.gameengine.graphics.gl.data.UniformVector3f;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
-import com.layhill.roadsim.gameengine.graphics.models.Sun;
+import com.layhill.roadsim.gameengine.environments.Sun;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

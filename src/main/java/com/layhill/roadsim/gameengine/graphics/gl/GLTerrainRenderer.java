@@ -1,13 +1,14 @@
 package com.layhill.roadsim.gameengine.graphics.gl;
 
-import com.layhill.roadsim.gameengine.graphics.Renderable;
-import com.layhill.roadsim.gameengine.graphics.Renderer;
-import com.layhill.roadsim.gameengine.graphics.RendererData;
-import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
+import com.layhill.roadsim.gameengine.environments.Sun;
+import com.layhill.roadsim.gameengine.graphics.*;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderProgram;
+import com.layhill.roadsim.gameengine.graphics.lights.Light;
+import com.layhill.roadsim.gameengine.graphics.lights.Spotlight;
 import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.utils.Maths;
+import com.layhill.roadsim.gameengine.water.WaterRenderingStage;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -86,7 +87,7 @@ public class GLTerrainRenderer implements Renderer {
                 }
 
                 glActiveTexture(GL_TEXTURE0);
-                glBindTexture(material.getTexture().getTarget(), material.getTexture().getTextureId());
+                glBindTexture(material.getDiffuseMap().getTarget(), material.getDiffuseMap().getTextureId());
                 terrainShaderProgram.loadTexture(0);
 
                 terrainShaderProgram.loadFogColour(rendererData.getFogColour());
@@ -126,7 +127,7 @@ public class GLTerrainRenderer implements Renderer {
     private void unbindTexturedModel(TexturedModel texturedModel) {
         Material material = texturedModel.getMaterial();
         if (material != null) {
-            glBindTexture(material.getTexture().getTarget(), 0);
+            glBindTexture(material.getDiffuseMap().getTarget(), 0);
             ShaderProgram shaderProgram = material.getShaderProgram();
             shaderProgram.stop();
         }

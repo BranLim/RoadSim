@@ -1,4 +1,4 @@
-package com.layhill.roadsim.gameengine.graphics.models;
+package com.layhill.roadsim.gameengine.environments;
 
 import org.joml.Vector3f;
 
