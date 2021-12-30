@@ -2,6 +2,7 @@ package com.layhill.roadsim.gameengine.graphics.gl.shaders;
 
 import com.layhill.roadsim.gameengine.entities.EntityShaderProgram;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowShaderProgram;
+import com.layhill.roadsim.gameengine.guis.GuiShaderProgram;
 import com.layhill.roadsim.gameengine.particles.ParticleShaderProgram;
 import com.layhill.roadsim.gameengine.terrain.TerrainShaderProgram;
 import com.layhill.roadsim.gameengine.water.WaterShaderProgram;
@@ -114,18 +115,31 @@ public class ShaderFactory {
         return shaderProgram;
     }
 
-    public static ShadowShaderProgram createShadowShaderProgram(){
+    public static ShadowShaderProgram createShadowShaderProgram() {
         ShadowShaderProgram shaderProgram = new ShadowShaderProgram();
         try {
-            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/shadow_vertex.glsl").orElse(null);
-            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/shadow_fragment.glsl").orElse(null);
-
-            shaderProgram.addShader(vertexShader);
-            shaderProgram.addShader(fragmentShader);
+            loadAndAttachShaders(shaderProgram,"assets/shaders/shadow_vertex.glsl", "assets/shaders/shadow_fragment.glsl");
             shaderProgram.init();
         } catch (IOException e) {
             log.error("Error loading shader from file", e);
         }
         return shaderProgram;
+    }
+
+    public static GuiShaderProgram createGuiShaderProgram(){
+        GuiShaderProgram shaderProgram = new GuiShaderProgram();
+        try{
+            loadAndAttachShaders(shaderProgram, "assets/shaders/gui_vertex.glsl", "assets/shaders/gui_fragment.glsl");
+            shaderProgram.init();
+        }catch(IOException e){
+            log.error("Error loading shader from file", e);
+        }
+        return shaderProgram;
+    }
+
+    private static void loadAndAttachShaders(ShaderProgram shaderProgram, String... shaderFiles) throws IOException {
+        for (var shaderFile : shaderFiles) {
+            ShaderFactory.loadShaderFromFile(shaderFile).ifPresentOrElse(shaderProgram::addShader, null);
+        }
     }
 }

@@ -7,6 +7,27 @@ import java.lang.Math;
 public class Maths {
 
     public static final float EPSILON = 0.000001f;
+
+    public static Matrix4f createTransformationmatrix(Vector2f position, Vector2f rotationInDegrees, Vector2f scale){
+        return new Matrix4f()
+                .identity()
+                .translate(position.x, position.y, 0.f)
+                .rotateX(rotationInDegrees.x)
+                .rotateY(rotationInDegrees.y)
+                .scale(scale.x, scale.y, 1);
+    }
+
+    public static Matrix4f createTransformationMatrix(Vector3f position, float rotateX, float rotateY, float rotateZ, float scale) {
+        Matrix4f matrix = new Matrix4f();
+        matrix.identity()
+                .translate(position, matrix)
+                .rotate((float) java.lang.Math.toRadians(rotateX), new Vector3f(1.f, 0.f, 0.f), matrix)
+                .rotate((float) java.lang.Math.toRadians(rotateY), new Vector3f(0.f, 1.f, 0.f), matrix)
+                .rotate((float) java.lang.Math.toRadians(rotateZ), new Vector3f(0.f, 0.f, 1.f), matrix)
+                .scale(new Vector3f(scale, scale, scale));
+        return matrix;
+    }
+
     /*
     See @link https://en.wikipedia.org/wiki/Barycentric_coordinate_system
     * */
@@ -31,17 +52,7 @@ public class Maths {
         return eulerAngles.y;
     }
 
-    public static Matrix4f createTransformationMatrix(Vector3f position, float rotateX, float rotateY, float rotateZ, float scale) {
-        Matrix4f matrix = new Matrix4f();
-        matrix.identity()
-                .translate(position, matrix)
-                .rotate((float) java.lang.Math.toRadians(rotateX), new Vector3f(1.f, 0.f, 0.f), matrix)
-                .rotate((float) java.lang.Math.toRadians(rotateY), new Vector3f(0.f, 1.f, 0.f), matrix)
-                .rotate((float) java.lang.Math.toRadians(rotateZ), new Vector3f(0.f, 0.f, 1.f), matrix)
-                .scale(new Vector3f(scale, scale, scale), matrix);
 
-        return matrix;
-    }
 
     public static Matrix4f createViewMatrix(Vector3f position, Quaternionf rotation) {
         return new Matrix4f().

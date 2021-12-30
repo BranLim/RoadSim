@@ -12,8 +12,8 @@ import static org.lwjgl.opengl.GL20.*;
 public abstract class ShaderProgram {
 
     private int programId;
-    private List<Shader> shaders = new ArrayList<>();
-    private List<Uniform> uniformData = new ArrayList<>();
+    private final List<Shader> shaders = new ArrayList<>();
+    private final List<Uniform> uniformData = new ArrayList<>();
     private boolean initialised;
 
     public ShaderProgram() {
@@ -28,7 +28,9 @@ public abstract class ShaderProgram {
     }
 
     public void init() {
-
+        if (shaders.isEmpty()) {
+            return;
+        }
         programId = glCreateProgram();
         compileShaders();
         attachCompiledShaders();
@@ -106,7 +108,7 @@ public abstract class ShaderProgram {
 
     protected abstract void bindAttributes();
 
-    protected void bindAttribute(int attribute, String variableName){
+    protected void bindAttribute(int attribute, String variableName) {
         glBindAttribLocation(programId, attribute, variableName);
     }
 
