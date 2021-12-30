@@ -20,9 +20,9 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class GLTerrainRenderer implements Renderer {
+public class TerrainRenderer implements Renderer {
 
-    public GLTerrainRenderer() {
+    public TerrainRenderer() {
 
     }
 

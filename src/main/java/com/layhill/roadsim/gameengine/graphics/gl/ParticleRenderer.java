@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL31.glDrawArraysInstanced;
 
 @Slf4j
-public class GLParticleRenderer implements Renderer {
+public class ParticleRenderer implements Renderer {
 
     private static final float[] QUAD = {-0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
     private static final int MAX_PARTICLE_INSTANCES = 500; //More means more memory bandwidth requirement
@@ -42,7 +42,7 @@ public class GLParticleRenderer implements Renderer {
     private Matrix4f modelTransformation = new Matrix4f();
     private Matrix3f transposedViewMatrixWithoutTranslation = new Matrix3f();
 
-    public GLParticleRenderer(GLResourceLoader loader) {
+    public ParticleRenderer(GLResourceLoader loader) {
         this.loader = loader;
         model = loader.loadToVao(QUAD, 2);
         vbo = loader.createUpdateableVbo(INSTANCE_DATA_LENGTH * MAX_PARTICLE_INSTANCES);

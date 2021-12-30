@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class GLWaterRenderer implements Renderer {
+public class WaterRenderer implements Renderer {
 
     private final static float[] QUAD_VERTICES = {-1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1};
     private final static float WAVE_SPEED = 0.008f;
@@ -33,7 +33,7 @@ public class GLWaterRenderer implements Renderer {
     private WaterShaderProgram shaderProgram;
     private float waveMove;
 
-    public GLWaterRenderer(GLResourceLoader loader) {
+    public WaterRenderer(GLResourceLoader loader) {
         waterQuad = loader.loadToVao(QUAD_VERTICES, 2);
         Optional<RawTexture> textureOpt = TextureLoader.loadAsTextureFromFile("assets/textures/waterDuDv.png");
         if (textureOpt.isPresent()) {

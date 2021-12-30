@@ -3,7 +3,6 @@ package com.layhill.roadsim.gameengine.graphics.gl;
 import com.layhill.roadsim.gameengine.graphics.Renderer;
 import com.layhill.roadsim.gameengine.graphics.RendererData;
 import com.layhill.roadsim.gameengine.graphics.ViewSpecification;
-import com.layhill.roadsim.gameengine.graphics.models.Camera;
 import com.layhill.roadsim.gameengine.skybox.SkyShaderProgram;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 
@@ -14,9 +13,9 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 
-public class GLSkyRenderer implements Renderer {
+public class SkyRenderer implements Renderer {
 
-    public GLSkyRenderer() {
+    public SkyRenderer() {
 
     }
 

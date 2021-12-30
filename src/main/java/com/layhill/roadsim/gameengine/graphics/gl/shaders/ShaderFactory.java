@@ -57,11 +57,7 @@ public class ShaderFactory {
     public static ShaderProgram createTerrainShaderProgram() {
         TerrainShaderProgram shaderProgram = new TerrainShaderProgram();
         try {
-            Shader vertexShader = ShaderFactory.loadShaderFromFile("assets/shaders/terrain_vertex.glsl").orElse(null);
-            Shader fragmentShader = ShaderFactory.loadShaderFromFile("assets/shaders/terrain_fragment.glsl").orElse(null);
-
-            shaderProgram.addShader(vertexShader);
-            shaderProgram.addShader(fragmentShader);
+            loadAndAttachShaders(shaderProgram, "assets/shaders/terrain_vertex.glsl", "assets/shaders/terrain_fragment.glsl");
             shaderProgram.init();
         } catch (IOException e) {
             log.error("Error loading shader from file", e);
@@ -118,7 +114,7 @@ public class ShaderFactory {
     public static ShadowShaderProgram createShadowShaderProgram() {
         ShadowShaderProgram shaderProgram = new ShadowShaderProgram();
         try {
-            loadAndAttachShaders(shaderProgram,"assets/shaders/shadow_vertex.glsl", "assets/shaders/shadow_fragment.glsl");
+            loadAndAttachShaders(shaderProgram, "assets/shaders/shadow_vertex.glsl", "assets/shaders/shadow_fragment.glsl");
             shaderProgram.init();
         } catch (IOException e) {
             log.error("Error loading shader from file", e);
@@ -126,12 +122,12 @@ public class ShaderFactory {
         return shaderProgram;
     }
 
-    public static GuiShaderProgram createGuiShaderProgram(){
+    public static GuiShaderProgram createGuiShaderProgram() {
         GuiShaderProgram shaderProgram = new GuiShaderProgram();
-        try{
+        try {
             loadAndAttachShaders(shaderProgram, "assets/shaders/gui_vertex.glsl", "assets/shaders/gui_fragment.glsl");
             shaderProgram.init();
-        }catch(IOException e){
+        } catch (IOException e) {
             log.error("Error loading shader from file", e);
         }
         return shaderProgram;

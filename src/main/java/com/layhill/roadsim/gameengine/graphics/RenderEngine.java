@@ -2,14 +2,14 @@ package com.layhill.roadsim.gameengine.graphics;
 
 import com.layhill.roadsim.gameengine.Window;
 import com.layhill.roadsim.gameengine.environments.Sun;
-import com.layhill.roadsim.gameengine.graphics.gl.GLParticleRenderer;
+import com.layhill.roadsim.gameengine.graphics.gl.ParticleRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
-import com.layhill.roadsim.gameengine.graphics.gl.GLWaterRenderer;
+import com.layhill.roadsim.gameengine.graphics.gl.WaterRenderer;
 import com.layhill.roadsim.gameengine.graphics.lights.Light;
 import com.layhill.roadsim.gameengine.graphics.models.*;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowBox;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
-import com.layhill.roadsim.gameengine.graphics.gl.GLShadowRenderer;
+import com.layhill.roadsim.gameengine.graphics.gl.ShadowRenderer;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowRenderingStage;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
@@ -53,7 +53,7 @@ public class RenderEngine {
     private WaterFrameBuffer waterFrameBuffer;
     private boolean toRenderWater;
     private boolean toRenderShadow;
-    private GLWaterRenderer waterRenderer = new GLWaterRenderer(GLResourceLoader.getInstance());
+    private WaterRenderer waterRenderer = new WaterRenderer(GLResourceLoader.getInstance());
     private FrameBufferSize windowFrameBufferSize;
 
     private ShadowFrameBuffer shadowFrameBuffer;
@@ -149,11 +149,11 @@ public class RenderEngine {
     private void invokeRenderers(ViewSpecification viewSpecification) {
         startRendering();
         for (Renderer renderer : renderers) {
-            if ((shadowRenderingStage == ShadowRenderingStage.BEGIN && toRenderShadow && renderer.getClass() != GLShadowRenderer.class)
-                    ||(shadowRenderingStage == ShadowRenderingStage.END && renderer.getClass() == GLShadowRenderer.class) ) {
+            if ((shadowRenderingStage == ShadowRenderingStage.BEGIN && toRenderShadow && renderer.getClass() != ShadowRenderer.class)
+                    ||(shadowRenderingStage == ShadowRenderingStage.END && renderer.getClass() == ShadowRenderer.class) ) {
                 continue;
             }
-            if (renderer.getClass() == GLParticleRenderer.class && toRenderWater && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
+            if (renderer.getClass() == ParticleRenderer.class && toRenderWater && rendererData.getWaterRenderingStage() != WaterRenderingStage.END) {
                 continue;
             }
             renderer.prepare();
@@ -228,7 +228,7 @@ public class RenderEngine {
         rendererData.setFogColour(fogColour);
 
         rendererData.setToRenderShadow(toRenderShadow);
-        rendererData.setShadowMapResolution(GLShadowRenderer.SHADOW_MAP_SIZE);
+        rendererData.setShadowMapResolution(ShadowRenderer.SHADOW_MAP_SIZE);
         rendererData.setShadowDistance(ShadowBox.MAX_DISTANCE_FOR_SHADOW_CASTING);
         if (shadowFrameBuffer != null) {
             rendererData.setShadowFrameBuffer(shadowFrameBuffer);

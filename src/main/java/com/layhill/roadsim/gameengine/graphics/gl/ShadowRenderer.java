@@ -13,13 +13,13 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class GLShadowRenderer implements Renderer {
+public class ShadowRenderer implements Renderer {
 
     public static final int SHADOW_MAP_SIZE = 4096;
     private ShadowShaderProgram shader;
     private GLResourceLoader loader;
 
-    public GLShadowRenderer(GLResourceLoader loader) {
+    public ShadowRenderer(GLResourceLoader loader) {
         this.loader = loader;
         shader = ShaderFactory.createShadowShaderProgram();
     }
