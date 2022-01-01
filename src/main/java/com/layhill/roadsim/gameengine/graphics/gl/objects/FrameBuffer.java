@@ -1,9 +1,13 @@
 package com.layhill.roadsim.gameengine.graphics.gl.objects;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
+
 public class FrameBuffer {
     private int frameBufferId;
     private int width;
     private int height;
+    private int[] originalViewport = new int[4]; // [x,y, width, height] => Refer to official OpenGL documentation
 
     FrameBuffer(int frameBufferId, int width, int height) {
         this.frameBufferId = frameBufferId;
@@ -22,5 +26,20 @@ public class FrameBuffer {
 
     public int getHeight() {
         return height;
+    }
+
+    public void bind() {
+        glGetIntegerv(GL_VIEWPORT, originalViewport);
+        glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+        glViewport(0, 0, width, height);
+    }
+
+    public void unbind() {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glViewport(originalViewport[0], originalViewport[1], originalViewport[2], originalViewport[3]);
+    }
+
+    public void dispose(){
+        glDeleteFramebuffers(frameBufferId);
     }
 }
