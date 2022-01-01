@@ -6,10 +6,14 @@ public class GLTexture {
 
     private int textureId;
     private int target;
+    private int width;
+    private int height;
 
-    public GLTexture(int textureId, int target) {
+    public GLTexture(int textureId, int target, int width, int height) {
         this.textureId = textureId;
         this.target = target;
+        this.width = width;
+        this.height = height;
     }
 
     public int getTextureId() {
@@ -31,5 +35,9 @@ public class GLTexture {
 
     public void unbind(){
         glBindTexture(target, 0);
+    }
+
+    public void dispose() {
+        glDeleteTextures(textureId);
     }
 }

@@ -147,7 +147,7 @@ public final class GLResourceLoader {
         }
 
         glBindTexture(target, 0);
-        return new GLTexture(textureId, target);
+        return new GLTexture(textureId, target, texture.getWidth(), texture.getHeight());
     }
 
     public Skybox loadSkybox(String meshFile, String[] texturesFiles) {
