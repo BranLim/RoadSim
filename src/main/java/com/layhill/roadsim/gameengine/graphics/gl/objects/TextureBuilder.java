@@ -1,5 +1,6 @@
 package com.layhill.roadsim.gameengine.graphics.gl.objects;
 
+import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -40,7 +41,7 @@ public class TextureBuilder {
         return this;
     }
 
-    public TextureBuilder using2DImageTexture(int levelOfDetail, int internalFormat, int border, int format, int type, ByteBuffer pixels) {
+    public TextureBuilder using2DImageTexture(int levelOfDetail, int internalFormat, int border, int format, int type, @Nullable ByteBuffer pixels) {
         checkIsBuilding();
         glTexImage2D(textureType.getType(), levelOfDetail, internalFormat, width, height, border, format, type, pixels);
         return this;

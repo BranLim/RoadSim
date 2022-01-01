@@ -14,8 +14,7 @@ public class FrameBuffer {
         this.width = width;
         this.height = height;
     }
-
-
+    
     public int getFrameBufferId() {
         return frameBufferId;
     }

@@ -7,10 +7,10 @@ public class Sun {
     private Vector3f direction;
     private Vector3f colour;
 
-
     public Sun(Vector3f direction, Vector3f colour) {
         this.direction = direction;
         this.colour = colour;
+
     }
 
 
