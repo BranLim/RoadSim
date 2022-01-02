@@ -3,15 +3,16 @@ package com.layhill.roadsim.gameengine.graphics.lights;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.*;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL14.GL_DEPTH_COMPONENT16;
 import static org.lwjgl.opengl.GL14.GL_TEXTURE_COMPARE_MODE;
 import static org.lwjgl.opengl.GL30.GL_COMPARE_REF_TO_TEXTURE;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 
-public class DirectionalLightShadowMap extends ShadowMap {
+public class SpotlightShadowMap extends ShadowMap {
 
-    public DirectionalLightShadowMap(int resolution) {
+    protected SpotlightShadowMap(int resolution) {
         super(resolution);
     }
 
@@ -27,6 +28,7 @@ public class DirectionalLightShadowMap extends ShadowMap {
                 .withTextureParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
                 .withTextureParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
                 .withTextureParameter(GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE)
+                .withTextureParameter(GL_TEXTURE_BORDER_COLOR, new float[]{1.f, 1.f, 1.f, 1.f})
                 .build();
         setTexture(texture);
 

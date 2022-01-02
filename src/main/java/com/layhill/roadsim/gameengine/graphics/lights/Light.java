@@ -4,8 +4,11 @@ import org.joml.Vector3f;
 
 public class Light {
 
+    public final static int DEFAULT_SHADOW_RESOLUTION = 1024;
     private Vector3f position;
     private Vector3f colour;
+    protected ShadowMap shadowMap;
+    protected int shadowResolution = DEFAULT_SHADOW_RESOLUTION;
 
     public Light(Vector3f position, Vector3f colour) {
         this.position = position;
@@ -24,5 +27,22 @@ public class Light {
         this.position = position;
     }
 
+    public int getShadowResolution() {
+        return shadowResolution;
+    }
 
+    public void setShadowResolution(int shadowResolution) {
+        this.shadowResolution = shadowResolution;
+        shadowMap.resize(shadowResolution);
+    }
+
+    public ShadowMap getShadowMap() {
+        return shadowMap;
+    }
+
+    public void dispose() {
+        if (shadowMap != null) {
+            shadowMap.dispose();
+        }
+    }
 }
