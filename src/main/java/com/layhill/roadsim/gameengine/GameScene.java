@@ -3,17 +3,16 @@ package com.layhill.roadsim.gameengine;
 import com.layhill.roadsim.gameengine.entities.GameObject;
 import com.layhill.roadsim.gameengine.environments.Sun;
 import com.layhill.roadsim.gameengine.graphics.RawTexture;
-import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.RenderEngine;
-import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
-import com.layhill.roadsim.gameengine.graphics.gl.ShadowRenderer;
+import com.layhill.roadsim.gameengine.graphics.Renderable;
 import com.layhill.roadsim.gameengine.graphics.TexturedModel;
+import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
 import com.layhill.roadsim.gameengine.graphics.gl.objects.GLTexture;
 import com.layhill.roadsim.gameengine.graphics.gl.shaders.ShaderFactory;
 import com.layhill.roadsim.gameengine.graphics.lights.Light;
 import com.layhill.roadsim.gameengine.graphics.lights.Spotlight;
-import com.layhill.roadsim.gameengine.graphics.models.*;
-import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
+import com.layhill.roadsim.gameengine.graphics.models.Camera;
+import com.layhill.roadsim.gameengine.graphics.models.Material;
 import com.layhill.roadsim.gameengine.input.KeyListener;
 import com.layhill.roadsim.gameengine.input.MouseListener;
 import com.layhill.roadsim.gameengine.io.TextureLoader;
@@ -33,7 +32,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_G;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 @Slf4j
@@ -63,10 +63,8 @@ public class GameScene extends Scene {
             "assets/textures/Daylight_Box_Back.jpg"
     };
     private Skybox skybox;
-
     private Sun sun;
 
-    private ShadowFrameBuffer shadowFrameBuffer;
 
     public GameScene(RenderEngine renderEngine) {
         this.renderEngine = renderEngine;
@@ -80,6 +78,9 @@ public class GameScene extends Scene {
     public void init() {
 
         sun = new Sun(new Vector3f(-40000.f, 10000.f, -30000.f), new Vector3f(0.2f, 0.2f, 0.2f));
+        renderEngine.setSun(sun);
+        renderEngine.setFogColour(fogColour);
+
         camera = new Camera(new Vector3f(0.0f, 10.0f, 50.0f), new Vector3f(0.0f, 1.0f, 0.0f),
                 new Vector3f(0.0f, 0.0f, -1.0f), nearPlane, farPlane);
         camera.setGameScene(this);
@@ -141,8 +142,6 @@ public class GameScene extends Scene {
         renderEngine.addWaterFrameBuffer(frameBuffer);
         renderEngine.setToRenderWater(true);
 
-        shadowFrameBuffer = ShadowFrameBuffer.createFrameBuffer(glResourceLoader, ShadowRenderer.SHADOW_MAP_SIZE, ShadowRenderer.SHADOW_MAP_SIZE);
-        renderEngine.addShadowFrameBuffer(shadowFrameBuffer);
         renderEngine.setToRenderShadow(true);
     }
 
@@ -158,8 +157,8 @@ public class GameScene extends Scene {
             log.info("Toggle flashlight on {}", turnOnFlashlight);
             turnOnFlashlight = !turnOnFlashlight;
         }
-        renderEngine.setSun(sun);
-        renderEngine.setFogColour(fogColour);
+
+
         if (KeyListener.isKeyPressed(GLFW_KEY_G) && !KeyListener.isKeyHeld(GLFW_KEY_G)) {
             ParticleEmitterConfiguration configuration = ParticleEmitterConfiguration.builder()
                     .affectedByGravity(true)
@@ -216,6 +215,7 @@ public class GameScene extends Scene {
 
     @Override
     public void cleanUp() {
+        sun.getLight().dispose();
         resourceManager.dispose();
         renderEngine.dispose();
         particleSystem.dispose();

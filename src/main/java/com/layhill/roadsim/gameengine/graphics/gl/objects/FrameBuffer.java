@@ -1,5 +1,7 @@
 package com.layhill.roadsim.gameengine.graphics.gl.objects;
 
+import com.layhill.roadsim.gameengine.graphics.FrameBufferMode;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
 
@@ -14,7 +16,7 @@ public class FrameBuffer {
         this.width = width;
         this.height = height;
     }
-    
+
     public int getFrameBufferId() {
         return frameBufferId;
     }
@@ -32,6 +34,17 @@ public class FrameBuffer {
         glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
         glViewport(0, 0, width, height);
     }
+
+    public void bind(FrameBufferMode mode) {
+        glGetIntegerv(GL_VIEWPORT, originalViewport);
+        switch (mode) {
+            case READ_AND_WRITE -> glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId);
+            case READ -> glBindFramebuffer(GL_READ_FRAMEBUFFER, frameBufferId);
+            case WRITE -> glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frameBufferId);
+        }
+        glViewport(0, 0, width, height);
+    }
+
 
     public void unbind() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

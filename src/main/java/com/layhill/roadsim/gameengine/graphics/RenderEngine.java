@@ -2,14 +2,14 @@ package com.layhill.roadsim.gameengine.graphics;
 
 import com.layhill.roadsim.gameengine.Window;
 import com.layhill.roadsim.gameengine.environments.Sun;
-import com.layhill.roadsim.gameengine.graphics.gl.ParticleRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.GLResourceLoader;
+import com.layhill.roadsim.gameengine.graphics.gl.ParticleRenderer;
+import com.layhill.roadsim.gameengine.graphics.gl.ShadowRenderer;
 import com.layhill.roadsim.gameengine.graphics.gl.WaterRenderer;
 import com.layhill.roadsim.gameengine.graphics.lights.Light;
-import com.layhill.roadsim.gameengine.graphics.models.*;
+import com.layhill.roadsim.gameengine.graphics.models.Camera;
+import com.layhill.roadsim.gameengine.graphics.models.FrameBufferSize;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowBox;
-import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
-import com.layhill.roadsim.gameengine.graphics.gl.ShadowRenderer;
 import com.layhill.roadsim.gameengine.graphics.shadows.ShadowRenderingStage;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
@@ -19,7 +19,9 @@ import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
 import com.layhill.roadsim.gameengine.water.WaterRenderingStage;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import lombok.extern.slf4j.Slf4j;
-import org.joml.*;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +58,6 @@ public class RenderEngine {
     private WaterRenderer waterRenderer = new WaterRenderer(GLResourceLoader.getInstance());
     private FrameBufferSize windowFrameBufferSize;
 
-    private ShadowFrameBuffer shadowFrameBuffer;
     private ShadowBox shadowBox;
     private ShadowRenderingStage shadowRenderingStage = ShadowRenderingStage.END;
 
@@ -200,15 +201,14 @@ public class RenderEngine {
         }
         shadowRenderingStage = ShadowRenderingStage.BEGIN;
         shadowBox.update(camera.getPosition(), camera.getOrientation());
-        shadowFrameBuffer.bind(GLResourceLoader.getInstance());
+        sun.getLight().getShadowMap().bind(FrameBufferMode.WRITE);
         Matrix4f lightProjection = shadowBox.calculateProjectionMatrix();
         Matrix4f lightView = shadowBox.calculateViewMatrix();
         ViewSpecification shadowViewSpecification = new ViewSpecification(lightProjection, lightView);
         rendererData.setToShadowMapSpace(createShadowMapSpaceOffset().mul(lightProjection).mul(lightView));
 
         invokeRenderers(shadowViewSpecification);
-        shadowFrameBuffer.unbind(GLResourceLoader.getInstance(), windowFrameBufferSize.width()[0], windowFrameBufferSize.height()[0]);
-
+        sun.getLight().getShadowMap().unbind();
         shadowRenderingStage = ShadowRenderingStage.END;
     }
 
@@ -230,9 +230,6 @@ public class RenderEngine {
         rendererData.setToRenderShadow(toRenderShadow);
         rendererData.setShadowMapResolution(ShadowRenderer.SHADOW_MAP_SIZE);
         rendererData.setShadowDistance(ShadowBox.MAX_DISTANCE_FOR_SHADOW_CASTING);
-        if (shadowFrameBuffer != null) {
-            rendererData.setShadowFrameBuffer(shadowFrameBuffer);
-        }
 
         rendererData.setWaterTiles(waters);
         rendererData.setToRenderWater(toRenderWater);
@@ -286,10 +283,6 @@ public class RenderEngine {
 
     public void setToRenderWater(boolean toRenderWater) {
         this.toRenderWater = toRenderWater;
-    }
-
-    public void addShadowFrameBuffer(ShadowFrameBuffer shadowFrameBuffer) {
-        this.shadowFrameBuffer = shadowFrameBuffer;
     }
 
     public void setToRenderShadow(boolean toRenderShadow) {

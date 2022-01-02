@@ -41,7 +41,7 @@ public class TextureBuilder {
         return this;
     }
 
-    public TextureBuilder using2DImageTexture(int levelOfDetail, int internalFormat, int border, int format, int type, @Nullable ByteBuffer pixels) {
+    public TextureBuilder using2DImageTexture(int levelOfDetail, int internalFormat, int border, int format, int type, ByteBuffer pixels) {
         checkIsBuilding();
         glTexImage2D(textureType.getType(), levelOfDetail, internalFormat, width, height, border, format, type, pixels);
         return this;
@@ -78,7 +78,10 @@ public class TextureBuilder {
     }
 
     public GLTexture build() {
-        return new GLTexture(textureType.getType(), textureId, width, height);
+        checkIsBuilding();
+        glBindTexture(textureType.getType(), 0);
+        isBuilding = false;
+        return new GLTexture(textureId, textureType.getType(), width, height);
     }
 
     private void checkIsBuilding() {

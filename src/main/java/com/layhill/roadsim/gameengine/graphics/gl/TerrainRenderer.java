@@ -41,7 +41,7 @@ public class TerrainRenderer implements Renderer {
                 prepareEntity(gameObject);
                 glDrawElements(GL_TRIANGLES,  model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
             }
-            unbindTexturedModel(model);
+            unbindTexturedModel(model,rendererData);
         }
     }
 
@@ -97,7 +97,7 @@ public class TerrainRenderer implements Renderer {
 
                 if(rendererData.isToRenderShadow()) {
                     glActiveTexture(GL_TEXTURE1);
-                    glBindTexture(GL_TEXTURE_2D, rendererData.getShadowFrameBuffer().getDepthBuffer());
+                    rendererData.getSun().getLight().getShadowMap().getTexture().bind();
                     terrainShaderProgram.loadShadowMapResolution(rendererData.getShadowMapResolution());
                     terrainShaderProgram.loadShadowDistance(rendererData.getShadowDistance());
                     terrainShaderProgram.loadShadowMapSpace(rendererData.getToShadowMapSpace());
@@ -123,10 +123,14 @@ public class TerrainRenderer implements Renderer {
                 .toList();
     }
 
-    private void unbindTexturedModel(TexturedModel texturedModel) {
+    private void unbindTexturedModel(TexturedModel texturedModel, RendererData rendererData) {
         Material material = texturedModel.getMaterial();
         if (material != null) {
             material.getDiffuseMap().unbind();
+/* d
+            if (rendererData.isToRenderShadow()){
+                rendererData.getSun().getLight().getShadowMap().getTexture().unbind();
+            }*/
             ShaderProgram shaderProgram = material.getShaderProgram();
             shaderProgram.stop();
         }

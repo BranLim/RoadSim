@@ -17,30 +17,29 @@ public class DirectionalLightShadowMap extends ShadowMap {
         super(size);
     }
 
-
     @Override
     protected void createFrameBuffer() {
 
         GLTexture texture = new TextureBuilder().generateTexture(TextureType.TEXTURE_2D)
                 .bindTexture()
-                .size(size, size)
-                .using2DImageTexture(0, GL_DEPTH_COMPONENT16, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null)
-                .withTextureParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-                .withTextureParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+                .size(resolution, resolution)
+                .using2DImageTexture(0, GL_DEPTH_COMPONENT16, 0, GL_DEPTH_COMPONENT, GL_FLOAT, null)
+                .withTextureParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+                .withTextureParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST)
                 .withTextureParameter(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
                 .withTextureParameter(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
                 .withTextureParameter(GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE)
                 .build();
         setTexture(texture);
 
-        FrameBuffer frameBuffer = new FrameBufferBuilder().generateFrameBuffer()
+        FrameBuffer frameBuffer = new FrameBufferBuilder()
+                .generateFrameBuffer()
                 .bindFrameBuffer()
-                .sizeFrameBuffer(size, size)
+                .sizeFrameBuffer(resolution, resolution)
                 .drawBuffers(GL_NONE)
                 .readColourBuffers(GL_NONE)
                 .withTexture(GL_DEPTH_ATTACHMENT, texture.getTextureId(), 0)
                 .build();
         setFrameBuffer(frameBuffer);
-
     }
 }

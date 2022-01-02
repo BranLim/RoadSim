@@ -62,6 +62,7 @@ public class FrameBufferBuilder {
 
     public FrameBuffer build() {
         checkIsBuildingState();
+
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             throw new FrameBufferException("Incomplete framebuffer");
         }

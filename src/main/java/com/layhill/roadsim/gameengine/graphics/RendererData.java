@@ -1,13 +1,12 @@
 package com.layhill.roadsim.gameengine.graphics;
 
-import com.layhill.roadsim.gameengine.graphics.lights.Light;
 import com.layhill.roadsim.gameengine.environments.Sun;
-import com.layhill.roadsim.gameengine.water.WaterRenderingStage;
-import com.layhill.roadsim.gameengine.graphics.shadows.ShadowFrameBuffer;
+import com.layhill.roadsim.gameengine.graphics.lights.Light;
 import com.layhill.roadsim.gameengine.particles.ParticleEmitter;
 import com.layhill.roadsim.gameengine.skybox.Skybox;
 import com.layhill.roadsim.gameengine.terrain.Terrain;
 import com.layhill.roadsim.gameengine.water.WaterFrameBuffer;
+import com.layhill.roadsim.gameengine.water.WaterRenderingStage;
 import com.layhill.roadsim.gameengine.water.WaterTile;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -34,7 +33,6 @@ public class RendererData {
     private WaterRenderingStage waterRenderingStage;
     private float farPlane;
     private float nearPlane;
-    private ShadowFrameBuffer shadowFrameBuffer;
     private Matrix4f toShadowMapSpace;
     private boolean isToRenderShadow;
     private float shadowDistance;
@@ -162,14 +160,6 @@ public class RendererData {
 
     public float getNearPlane() {
         return nearPlane;
-    }
-
-    public void setShadowFrameBuffer(ShadowFrameBuffer shadowFrameBuffer) {
-        this.shadowFrameBuffer = shadowFrameBuffer;
-    }
-
-    public ShadowFrameBuffer getShadowFrameBuffer() {
-        return shadowFrameBuffer;
     }
 
     public Matrix4f getToShadowMapSpace() {
