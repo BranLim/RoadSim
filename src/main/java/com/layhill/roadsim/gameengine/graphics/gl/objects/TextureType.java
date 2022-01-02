@@ -14,13 +14,13 @@ public enum TextureType {
     TEXTURE_2D_ARRAY(GL_TEXTURE_2D_ARRAY),
     TEXTURE_CUBE_MAP(GL_TEXTURE_CUBE_MAP);
 
-    private final int target;
+    private final int type;
 
-    TextureType(int target) {
-        this.target = target;
+    TextureType(int type) {
+        this.type = type;
     }
 
     public int getType() {
-        return target;
+        return type;
     }
 };

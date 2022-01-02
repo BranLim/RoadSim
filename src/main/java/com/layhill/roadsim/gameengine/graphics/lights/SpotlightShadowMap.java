@@ -17,9 +17,10 @@ public class SpotlightShadowMap extends ShadowMap {
     }
 
     @Override
-    protected void createFrameBuffer() {
+    protected void createShadowTexture() {
 
-        GLTexture texture = new TextureBuilder().generateTexture(TextureType.TEXTURE_2D)
+        GLTexture texture = new TextureBuilder()
+                .generateTexture(TextureType.TEXTURE_2D)
                 .bindTexture()
                 .size(resolution, resolution)
                 .using2DImageTexture(0, GL_DEPTH_COMPONENT16, 0, GL_DEPTH_COMPONENT, GL_FLOAT, null)
@@ -32,14 +33,5 @@ public class SpotlightShadowMap extends ShadowMap {
                 .build();
         setTexture(texture);
 
-        FrameBuffer frameBuffer = new FrameBufferBuilder()
-                .generateFrameBuffer()
-                .bindFrameBuffer()
-                .sizeFrameBuffer(resolution, resolution)
-                .drawBuffers(GL_NONE)
-                .readColourBuffers(GL_NONE)
-                .withTexture(GL_DEPTH_ATTACHMENT, texture.getTextureId(), 0)
-                .build();
-        setFrameBuffer(frameBuffer);
     }
 }

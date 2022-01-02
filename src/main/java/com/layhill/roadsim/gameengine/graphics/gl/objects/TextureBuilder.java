@@ -47,6 +47,12 @@ public class TextureBuilder {
         return this;
     }
 
+    public TextureBuilder using2DImageTexture(TextureTarget textureTarget,int levelOfDetail, int internalFormat, int border, int format, int type, ByteBuffer pixels) {
+        checkIsBuilding();
+        glTexImage2D(textureTarget.getTarget(), levelOfDetail, internalFormat, width, height, border, format, type, pixels);
+        return this;
+    }
+
     public TextureBuilder withTextureParameter(int parameterName, int value) {
         checkIsBuilding();
         glTexParameteri(textureType.getType(), parameterName, value);
