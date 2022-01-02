@@ -8,6 +8,7 @@ public class Light {
     private Vector3f position;
     private Vector3f colour;
     protected ShadowMap shadowMap;
+    private boolean isVisible = true;
     protected int shadowResolution = DEFAULT_SHADOW_RESOLUTION;
 
     public Light(Vector3f position, Vector3f colour) {
@@ -23,7 +24,7 @@ public class Light {
         return colour;
     }
 
-    public void setPosition(Vector3f position){
+    public void setPosition(Vector3f position) {
         this.position = position;
     }
 
@@ -44,5 +45,13 @@ public class Light {
         if (shadowMap != null) {
             shadowMap.dispose();
         }
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    public void setVisible(boolean visible) {
+        isVisible = visible;
     }
 }
